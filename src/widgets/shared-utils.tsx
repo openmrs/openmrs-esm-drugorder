@@ -1,28 +1,11 @@
-import { newWorkspaceItem } from '@openmrs/esm-api';
-import { getStartedVisit } from './visit/visit-utils';
-import { isEmpty } from 'lodash-es';
-import { startVisitPrompt } from './visit/start-visit-prompt.component';
-
 export function openWorkspaceTab<TProps = DataCaptureComponentProps, TParams = any>(
   componentToAdd: React.FC<TProps>,
   componentName: string,
   params?: TParams,
   requiresVisit = true,
 ): void {
-  if (isEmpty(getStartedVisit.value) && requiresVisit) {
-    startVisitPrompt();
-  } else {
-    newWorkspaceItem({
-      component: componentToAdd,
-      name: componentName,
-      props: {
-        match: { params: params ? params : {} },
-      },
-      inProgress: false,
-      validations: (workspaceTabs: Array<{ component: React.FC }>) =>
-        workspaceTabs.findIndex(tab => tab.component === componentToAdd),
-    });
-  }
+  // TODO
+  throw new Error('TODO! Restore visit functionality.');
 }
 
 export function capitalize(s): string {
