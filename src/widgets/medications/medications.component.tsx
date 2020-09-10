@@ -7,7 +7,9 @@ function Medications(props) {
   const match = useRouteMatch();
   return (
     <Switch>
-      <Route exact path={match.path}>
+      {/* // TODO: Evaluate whether the first route should match exact.
+        // Currently removed in order to make local development possible. */}
+      <Route path={match.path}>
         <MedicationsDetailedSummary />
       </Route>
       <Route exact path={`${match.path}/:medicationUuid`}>
