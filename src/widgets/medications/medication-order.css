@@ -159,13 +159,6 @@
   margin-top: 1.25rem;
 }
 
-.medicationOrderFooter button {
-  width: 50%;
-  border-radius: 6.25rem;
-  margin: 0.5rem 1rem;
-  cursor: pointer;
-}
-
 .omrsSelectOptions {
   display: flex;
   flex-direction: column;

@@ -5,7 +5,6 @@ import { isEmpty, debounce } from 'lodash';
 import { getDrugByName, saveNewDrugOrder, getPatientDrugOrderDetails } from './medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import MedicationOrder from './medication-order.component';
-import { useCurrentPatient } from '@openmrs/esm-api';
 import SummaryCardRow from '../../ui-components/cards/summary-card-row.component';
 import SummaryCardRowContent from '../../ui-components/cards/summary-card-row-content.component';
 import { getDosage, OrderMedication } from './medication-orders-utils';
@@ -13,8 +12,9 @@ import { useHistory, match } from 'react-router-dom';
 import { DataCaptureComponentProps } from '../shared-utils';
 import { useTranslation } from 'react-i18next';
 import { toOmrsDateString } from '../../utils/omrs-dates';
+// @ts-ignore
+import { Button, ButtonSet } from 'carbon-components-react';
 
-const NEW_MEDICATION_ACTION: string = 'NEW';
 const DISCONTINUE_MEDICATION_ACTION: string = 'DISCONTINUE';
 
 export default function MedicationOrderBasket(props: MedicationOrderBasketProps) {
@@ -26,8 +26,6 @@ export default function MedicationOrderBasket(props: MedicationOrderBasketProps)
   const [showOrderMedication, setShowOrderMedication] = useState(false);
   const [enableButtons, setEnableButtons] = useState(false);
   const [editProperty, setEditProperty] = useState([]);
-  const [isLoadingPatient, patient, patientUuid, patientErr] = useCurrentPatient();
-  let history = useHistory();
   const [editOrderItem, setEditOrderItem] = React.useState<{
     orderEdit: Boolean;
     order?: OrderMedication;
@@ -269,16 +267,14 @@ export default function MedicationOrderBasket(props: MedicationOrderBasketProps)
       )}
 
       <div className={styles.medicationOrderFooter}>
-        <button className="omrs-btn omrs-outlined-neutral" style={{ width: '50%' }} onClick={closeForm}>
-          {t('close', 'Close')}
-        </button>
-        <button
-          className={`${enableButtons ? 'omrs-btn omrs-filled-action' : 'omrs-btn omrs-outlined-neutral'}`}
-          style={{ width: '50%' }}
-          disabled={!enableButtons}
-          onClick={handleSaveOrders}>
-          {t('sign', 'Sign')}
-        </button>
+        <ButtonSet>
+          <Button kind="secondary" onClick={closeForm}>
+            {t('close', 'Close')}
+          </Button>
+          <Button kind="primary" disabled={!enableButtons} onClick={handleSaveOrders}>
+            {t('sign', 'Sign')}
+          </Button>
+        </ButtonSet>
       </div>
     </div>
   );

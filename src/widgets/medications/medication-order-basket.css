@@ -83,22 +83,6 @@
   bottom: 0;
 }
 
-.medicationOrderFooter button {
-  border-radius: 6.25rem;
-  font-weight: 500;
-  padding: 0.25rem 0rem;
-  font-size: 1rem;
-}
-
-.medicationOrderFooter button:nth-child(1) {
-  margin: 0.5rem 0.75rem 0.5rem 1rem;
-  color: var(--omrs-color-ink-medium-contrast);
-}
-
-.medicationOrderFooter button:nth-child(2) {
-  margin: 0.5rem 0.75rem 0.5rem 1rem;
-}
-
 .modal {
   position: absolute;
   z-index: 1;

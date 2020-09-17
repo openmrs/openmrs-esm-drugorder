@@ -12,6 +12,8 @@ import dayjs from 'dayjs';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { setDefaultValues, OrderMedication } from './medication-orders-utils';
+// @ts-ignore
+import { Button, ButtonSet, ComboBox, DatePicker, DatePickerInput, NumberInput } from 'carbon-components-react';
 
 const CARE_SETTINGS: string = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const ORDERER: string = 'e89cae4a-3cb3-40a2-b964-8b20dda2c985';
@@ -33,7 +35,6 @@ export default function MedicationOrder(props: MedicationOrderProps) {
   const [asNeeded, setAsNeeded] = useState(false);
   const [numRefills, setNumRefills] = useState(0);
   const [action, setAction] = useState('NEW');
-  const [quantity, setQuantity] = useState<string>(null);
   const [duration, setDuration] = React.useState(0);
   const [durationUnit, setDurationUnit] = React.useState(DAYS_DURATION_UNIT_CONCEPT);
   const [durationUnitsArray, setDurationUnitArray] = useState([]);
@@ -249,6 +250,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
     setDuration(Number($event));
   };
 
+  // @ts-ignore
   return (
     <form onSubmit={handleSubmit} className={styles.medicationOrderWrapper}>
       <SummaryCard name="Order Medication" styles={{ width: '100%' }}>
@@ -276,23 +278,21 @@ export default function MedicationOrder(props: MedicationOrderProps) {
             </div>
             {commonMedication.length > 0 &&
               dose &&
-              commonMedication[0].commonDosages.map(dosage => {
-                return (
-                  <div className={styles.medicationOrderRadio} key={dosage.dosage}>
-                    <input
-                      type="radio"
-                      name="doseUnits"
-                      id={dosage.dosage}
-                      defaultValue={dosage.numberOfPills}
-                      defaultChecked={dose === dosage.numberOfPills}
-                      onChange={$event => {
-                        setDose(Number($event.target.value));
-                      }}
-                    />
-                    <label htmlFor={dosage.dosage}>{dosage.dosage}</label>
-                  </div>
-                );
-              })}
+              commonMedication[0].commonDosages.map(dosage => (
+                <div className={styles.medicationOrderRadio} key={dosage.dosage}>
+                  <input
+                    type="radio"
+                    name="doseUnits"
+                    id={dosage.dosage}
+                    defaultValue={dosage.numberOfPills}
+                    defaultChecked={dose === dosage.numberOfPills}
+                    onChange={$event => {
+                      setDose(Number($event.target.value));
+                    }}
+                  />
+                  <label htmlFor={dosage.dosage}>{dosage.dosage}</label>
+                </div>
+              ))}
             <div className={styles.medicationOrderRadio}>
               <input type="radio" name="doseUnits" id="doseUnits1" />
               <label htmlFor="doseUnits1">other</label>
@@ -334,85 +334,38 @@ export default function MedicationOrder(props: MedicationOrderProps) {
               flexDirection: 'column',
             }}>
             <div className={styles.medicationOrderInput}>
-              <label htmlFor="startDate">Start date</label>
-              <input
-                type="date"
-                name="startDate"
-                id="startDate"
-                required
-                value={toISODatePickerFormat(startDate)}
-                onChange={evt => setStartDate(evt.target.valueAsDate)}
-              />
+              <DatePicker
+                datePickerType="range"
+                value={[startDate, endDate]}
+                onChange={([startDate, endDate]) => {
+                  setStartDate(startDate);
+                  setEndDate(endDate);
+                }}>
+                <DatePickerInput labelText="Start date" id="startDate" required />
+                <DatePickerInput labelText="End date" id="endDate" required />
+              </DatePicker>
             </div>
             <div className={styles.medicationOrderInput} style={{ flexDirection: 'row', margin: '0.625rem 0rem' }}>
               <div style={{ flex: 1 }} className={styles.omrsSelectOptions}>
-                <label htmlFor="duration">Duration</label>
-                <label htmlFor="option">
-                  <select
-                    id="option"
-                    onChange={$event => setDurationUnit($event.target.value)}
-                    defaultChecked={true}
-                    value={durationUnit}>
-                    {durationUnitsArray &&
-                      durationUnitsArray.map(durationUnit => {
-                        return (
-                          <option key={durationUnit.uuid} value={durationUnit.uuid}>
-                            {durationUnit.display}
-                          </option>
-                        );
-                      })}
-                  </select>
-                </label>
+                <NumberInput
+                  id="duration"
+                  value={duration}
+                  label="Duration"
+                  onChange={e => {
+                    // @ts-ignore
+                    handleDuractionChange(e.imaginaryTarget.value);
+                  }}
+                />
               </div>
               <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
-                <div className="omrs-increment-buttons">
-                  <div>
-                    <button
-                      type="button"
-                      className="omrs-btn-icon-medium"
-                      onClick={$event => {
-                        if (duration > 0) {
-                          setDuration(duration - 1);
-                        }
-                      }}>
-                      <svg>
-                        <use xlinkHref="#omrs-icon-remove"></use>
-                      </svg>
-                    </button>
-                  </div>
-                  <div>
-                    <input
-                      type="number"
-                      value={duration}
-                      onChange={$event => handleDuractionChange($event.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <button
-                      type="button"
-                      className="omrs-btn-icon-medium"
-                      onClick={$event => setDuration(duration + 1)}>
-                      <svg>
-                        <use xlinkHref="#omrs-icon-add"></use>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                <ComboBox
+                  id="option"
+                  placeholder="Duration"
+                  itemToString={item => (item ? item.text : '')}
+                  items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
+                  onChange={e => setDurationUnit(e.selectedItem.id)}
+                />
               </div>
-
-              <div></div>
-            </div>
-            <div className={styles.medicationOrderInput}>
-              <label htmlFor="endDate">End date</label>
-              <input
-                type="date"
-                name="endDate"
-                id="endDate"
-                required
-                autoComplete="off"
-                value={toISODatePickerFormat(endDate)}
-                onChange={$event => setEndDate($event.target.valueAsDate)}
-              />
             </div>
 
             <div
@@ -464,10 +417,12 @@ export default function MedicationOrder(props: MedicationOrderProps) {
       </div>
 
       <div className={styles.medicationOrderFooter}>
-        <button className="omrs-btn omrs-outlined-neutral">Cancel</button>
-        <button className="omrs-btn omrs-filled-action" disabled={false}>
-          Save
-        </button>
+        <ButtonSet>
+          <Button kind="secondary">Cancel</Button>
+          <Button kind="primary" type="submit">
+            Save
+          </Button>
+        </ButtonSet>
       </div>
     </form>
   );
