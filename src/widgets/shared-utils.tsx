@@ -1,4 +1,5 @@
 import { newWorkspaceItem, getNewWorkspaceItem } from '@openmrs/esm-api';
+import MedicationOrderBasket from './medications/medication-order-basket.component';
 
 export function openWorkspaceTab<TProps = DataCaptureComponentProps, TParams = any>(
   componentToAdd: React.FC<TProps>,
@@ -16,6 +17,15 @@ export function openWorkspaceTab<TProps = DataCaptureComponentProps, TParams = a
     validations: (workspaceTabs: Array<{ component: React.FC }>) =>
       workspaceTabs.findIndex(tab => tab.component === componentToAdd),
   });
+}
+
+export function openMedicationWorkspaceTab(orderUuid?: string, drugName?: string, action?: 'REVISE' | 'DISCONTINUE') {
+  const params = {
+    orderUuid,
+    drugName,
+    action,
+  };
+  openWorkspaceTab(MedicationOrderBasket, 'Medication Order Basket', params);
 }
 
 export type DataCaptureComponentProps = {
