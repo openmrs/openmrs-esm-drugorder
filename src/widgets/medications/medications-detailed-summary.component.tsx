@@ -1,5 +1,5 @@
 import React from 'react';
-import { match, Route, Link, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import SummaryCard from '../../ui-components/cards/summary-card.component';
 import styles from './medications-detailed-summary.css';
 import dayjs from 'dayjs';
@@ -8,16 +8,24 @@ import { useCurrentPatient } from '@openmrs/esm-api';
 import { useTranslation } from 'react-i18next';
 import { formatDuration, getDosage } from './medication-orders-utils';
 import { fetchPatientMedications, fetchPatientPastMedications, PatientMedications } from './medications.resource';
-import { MedicationButton } from './medication-button.component';
 import MedicationOrderBasket from './medication-order-basket.component';
-import { openWorkspaceTab } from '../shared-utils';
+import { openMedicationWorkspaceTab, openWorkspaceTab } from '../shared-utils';
 import { isEmpty } from 'lodash-es';
 import { toOmrsDateString } from '../../utils/omrs-dates';
+import {
+  OverflowMenu,
+  OverflowMenuItem,
+  StructuredListBody,
+  StructuredListCell,
+  StructuredListHead,
+  StructuredListRow,
+  StructuredListWrapper,
+} from 'carbon-components-react';
 
 export default function MedicationsDetailedSummary(props: MedicationsDetailedSummaryProps) {
   const [currentMedications, setCurrentMedications] = React.useState(null);
   const [pastMedications, setPastMedications] = React.useState(null);
-  const [isLoadingPatient, patient, patientUuid, patientErr] = useCurrentPatient();
+  const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
 
   const { t } = useTranslation();
   const match = useRouteMatch<any>();
@@ -53,89 +61,49 @@ export default function MedicationsDetailedSummary(props: MedicationsDetailedSum
               action: 'NEW',
             })
           }>
-          <table className={styles.medicationsTable}>
-            <thead>
-              <tr>
-                <td>NAME</td>
-                <td className={styles.centerItems}>STATUS</td>
-                <td className={styles.dateLabel}>START DATE</td>
-                <td>ACTIONS</td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody>
+          <StructuredListWrapper>
+            <StructuredListHead>
+              <StructuredListRow head>
+                <StructuredListCell head>Medication</StructuredListCell>
+                <StructuredListCell head>Status</StructuredListCell>
+                <StructuredListCell head>Start date</StructuredListCell>
+                <StructuredListCell head></StructuredListCell>
+              </StructuredListRow>
+            </StructuredListHead>
+            <StructuredListBody>
               {currentMedications &&
-                currentMedications.map(medication => {
-                  return (
-                    <React.Fragment key={medication.uuid}>
-                      <tr>
-                        <td>
-                          <span
-                            style={{
-                              fontWeight: 500,
-                              color: 'var(--omrs-color-ink-high-contrast)',
-                            }}>
-                            {medication?.drug?.name}
-                          </span>{' '}
-                          &mdash; {(medication?.route?.display).toLowerCase()} &mdash;{' '}
-                          {medication?.doseUnits?.display.toLowerCase()} &mdash;{' '}
-                          <span
-                            style={{
-                              color: 'var(--omrs-color-ink-medium-contrast)',
-                            }}>
-                            DOSE
-                          </span>{' '}
-                          <span
-                            style={{
-                              fontWeight: 500,
-                              color: 'var(--omrs-color-ink-high-contrast)',
-                            }}>
-                            {getDosage(medication?.drug?.strength, medication?.dose)}
-                          </span>
-                          <span>
-                            {' '}
-                            &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)} &mdash;
-                          </span>{' '}
-                          <span
-                            style={{
-                              color: 'var(--omrs-color-ink-medium-contrast)',
-                            }}>
-                            REFILLS
-                          </span>{' '}
-                          <span>{medication.numRefills}</span>{' '}
-                        </td>
-                        <td>{medication.action}</td>
-                        <td className="omrs-type-body-regular" style={{ fontFamily: 'Work Sans' }}>
-                          {dayjs(medication.dateActivated).format('DD-MMM-YYYY')}
-                        </td>
-                        <td>
-                          <MedicationButton
-                            label={'Revise'}
-                            orderUuid={medication.uuid}
-                            drugName={medication.drug.name}
-                            action={'REVISE'}
-                          />
-                          <MedicationButton
-                            label={'Discontinue'}
-                            orderUuid={medication.uuid}
-                            drugName={null}
-                            action={'DISCONTINUE'}
-                          />
-                        </td>
-                        <td style={{ textAlign: 'end' }}>
-                          <Link
-                            to={`/drugorder/patient/${match.params.patientUuid}/medication-orders/${medication.uuid}`}>
-                            <svg className="omrs-icon" fill="rgba(60, 60, 67, 0.3)">
-                              <use xlinkHref="#omrs-icon-chevron-right" />
-                            </svg>
-                          </Link>
-                        </td>
-                      </tr>
-                    </React.Fragment>
-                  );
-                })}
-            </tbody>
-          </table>
+                currentMedications.map((medication, index) => (
+                  <StructuredListRow key={index}>
+                    <StructuredListCell>
+                      {medication?.drug?.name} &mdash;
+                      <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
+                      {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
+                      {medication?.doseUnits?.display.toLowerCase()} &mdash; {medication?.route?.display.toLowerCase()}{' '}
+                      &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)} &mdash;
+                      <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}>REFILLS</span>{' '}
+                      <span>{medication.numRefills}</span>{' '}
+                    </StructuredListCell>
+                    <StructuredListCell>{medication?.action}</StructuredListCell>
+                    <StructuredListCell>{dayjs(medication.dateActivated).format('DD-MMM-YYYY')}</StructuredListCell>
+                    <StructuredListCell>
+                      <OverflowMenu>
+                        <OverflowMenuItem
+                          itemText="Revise"
+                          onClick={() => openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'REVISE')}
+                        />
+                        <OverflowMenuItem
+                          itemText="Discontinue"
+                          isDelete
+                          onClick={() =>
+                            openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'DISCONTINUE')
+                          }
+                        />
+                      </OverflowMenu>
+                    </StructuredListCell>
+                  </StructuredListRow>
+                ))}
+            </StructuredListBody>
+          </StructuredListWrapper>
         </SummaryCard>
       </React.Fragment>
     );
@@ -153,76 +121,38 @@ export default function MedicationsDetailedSummary(props: MedicationsDetailedSum
                 action: 'NEW',
               })
             }>
-            <table className={styles.medicationsTable}>
-              <thead>
-                <tr>
-                  <td>STATUS</td>
-                  <td>NAME</td>
-                  <td className={styles.dateLabel}>END DATE</td>
-                  <td></td>
-                </tr>
-              </thead>
-              <tbody>
+            <StructuredListWrapper>
+              <StructuredListHead>
+                <StructuredListRow head>
+                  <StructuredListCell head>Status</StructuredListCell>
+                  <StructuredListCell head>Medication</StructuredListCell>
+                  <StructuredListCell head>End date</StructuredListCell>
+                </StructuredListRow>
+              </StructuredListHead>
+              <StructuredListBody>
                 {pastMedications &&
-                  pastMedications.map(medication => {
-                    return (
-                      <React.Fragment key={medication.uuid}>
-                        <tr>
-                          <td className={styles.pastMedStatus}>{medication.action}</td>
-                          <td>
-                            <span
-                              style={{
-                                fontWeight: 500,
-                                color: 'var(--omrs-color-ink-high-contrast)',
-                              }}>
-                              {medication?.drug?.name}
-                            </span>{' '}
-                            &mdash; {medication?.doseUnits?.display} &mdash;{' '}
-                            {(medication?.route?.display).toLowerCase()} &mdash;{' '}
-                            <span
-                              style={{
-                                color: 'var(--omrs-color-ink-medium-contrast)',
-                              }}>
-                              DOSE
-                            </span>{' '}
-                            <span
-                              style={{
-                                fontWeight: 500,
-                                color: 'var(--omrs-color-ink-high-contrast)',
-                              }}>
-                              {getDosage(medication?.drug?.strength, medication?.dose)}
-                            </span>
-                            <span>
-                              {' '}
-                              &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)}
-                            </span>{' '}
-                            <span
-                              style={{
-                                color: 'var(--omrs-color-ink-medium-contrast)',
-                              }}>
-                              REFILLS
-                            </span>{' '}
-                            <span>{medication.numRefills}</span>
-                          </td>
-                          <td className="omrs-type-body-regular" style={{ fontFamily: 'Work Sans' }}>
-                            {dayjs(medication.dateStopped ? medication.dateStopped : medication.autoExpireDate).format(
-                              'DD-MMM-YYYY',
-                            )}
-                          </td>
-                          <td style={{ textAlign: 'end' }}>
-                            <Link
-                              to={`/drugorder/patient/${match.params.patientUuid}/medication-orders/${medication.uuid}`}>
-                              <svg className="omrs-icon" fill="rgba(60, 60, 67, 0.3)">
-                                <use xlinkHref="#omrs-icon-chevron-right" />
-                              </svg>
-                            </Link>
-                          </td>
-                        </tr>
-                      </React.Fragment>
-                    );
-                  })}
-              </tbody>
-            </table>
+                  pastMedications.map((medication, index) => (
+                    <StructuredListRow key={index}>
+                      <StructuredListCell>{medication?.action}</StructuredListCell>
+                      <StructuredListCell>
+                        {medication?.drug?.name} &mdash;
+                        <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
+                        {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
+                        {medication?.doseUnits?.display.toLowerCase()} &mdash;{' '}
+                        {medication?.route?.display.toLowerCase()} &mdash; {medication?.frequency?.display} &mdash;{' '}
+                        {formatDuration(medication)} &mdash;
+                        <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}>REFILLS</span>{' '}
+                        <span>{medication.numRefills}</span>{' '}
+                      </StructuredListCell>
+                      <StructuredListCell>
+                        {dayjs(medication.dateStopped ? medication.dateStopped : medication.autoExpireDate).format(
+                          'DD-MMM-YYYY',
+                        )}
+                      </StructuredListCell>
+                    </StructuredListRow>
+                  ))}
+              </StructuredListBody>
+            </StructuredListWrapper>
           </SummaryCard>
         </React.Fragment>
       </>
