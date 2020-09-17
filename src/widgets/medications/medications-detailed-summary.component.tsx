@@ -110,24 +110,16 @@ export default function MedicationsDetailedSummary(props: MedicationsDetailedSum
                         </td>
                         <td>
                           <MedicationButton
-                            component={MedicationOrderBasket}
-                            name={'Medication Order Basket'}
                             label={'Revise'}
                             orderUuid={medication.uuid}
                             drugName={medication.drug.name}
                             action={'REVISE'}
-                            inProgress={true}
-                            btnClass="omrs-btn omrs-text-action"
                           />
                           <MedicationButton
-                            component={MedicationOrderBasket}
-                            name={'Medication Order Basket'}
                             label={'Discontinue'}
                             orderUuid={medication.uuid}
                             drugName={null}
                             action={'DISCONTINUE'}
-                            inProgress={true}
-                            btnClass="omrs-btn omrs-text-destructive"
                           />
                         </td>
                         <td style={{ textAlign: 'end' }}>

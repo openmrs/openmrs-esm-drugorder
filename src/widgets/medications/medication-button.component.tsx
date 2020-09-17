@@ -1,11 +1,18 @@
 import React from 'react';
 import MedicationOrderBasket from './medication-order-basket.component';
 import { openWorkspaceTab } from '../shared-utils';
+import { Button } from 'carbon-components-react';
 
-export function MedicationButton(props: any) {
+export interface MedicationButtonProps {
+  orderUuid?: string;
+  drugName?: string;
+  action?: string;
+  label?: string;
+}
+
+export function MedicationButton(props: MedicationButtonProps) {
   return (
-    <button
-      className={props.btnClass ? props.btnClass : 'omrs-btn omrs-text-neutral'}
+    <Button
       onClick={() => {
         const params = {
           orderUuid: props.orderUuid,
@@ -15,6 +22,6 @@ export function MedicationButton(props: any) {
         openWorkspaceTab(MedicationOrderBasket, 'Medication Order Basket', params);
       }}>
       {props.label}
-    </button>
+    </Button>
   );
 }
