@@ -12,8 +12,16 @@ import dayjs from 'dayjs';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { setDefaultValues, OrderMedication } from './medication-orders-utils';
-// @ts-ignore
-import { Button, ButtonSet, ComboBox, DatePicker, DatePickerInput, NumberInput } from 'carbon-components-react';
+import {
+  Button,
+  // @ts-ignore
+  ButtonSet,
+  ComboBox,
+  DatePicker,
+  DatePickerInput,
+  NumberInput,
+  TextArea,
+} from 'carbon-components-react';
 
 const CARE_SETTINGS: string = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const ORDERER: string = 'e89cae4a-3cb3-40a2-b964-8b20dda2c985';
@@ -42,7 +50,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
   const [drugStrength, setDrugStrength] = useState<number>(null);
   const [startDate, setStartDate] = React.useState<Date>(new Date());
   const [endDate, setEndDate] = React.useState<Date>(new Date());
-  const [isLoadingPatient, patient, patientUuid, patientErr] = useCurrentPatient();
+  const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
   const [previousOrder, setPreviousOrder] = useState<string>(null);
   const [concept, setConcept] = useState<string>(null);
 
@@ -373,43 +381,28 @@ export default function MedicationOrder(props: MedicationOrderProps) {
               style={{
                 margin: '1.25rem 0rem 1.0625rem 0rem',
                 border: '0.0625rem solid var(--omrs-color-bg-low-contrast)',
-              }}></div>
-            <div className={styles.medicationOrderInput} style={{ width: '80%' }}>
-              <label htmlFor="refills">Refills</label>
-              <div id="refills" className="omrs-increment-buttons">
-                <div>
-                  <svg className="omrs-icon" onClick={handleDecreaseRefillClick}>
-                    <use xlinkHref="#omrs-icon-remove"></use>
-                  </svg>
-                </div>
-                <div>
-                  <span>
-                    <input
-                      type="number"
-                      value={numRefills}
-                      onChange={$event => setNumRefills(Number($event.target.value))}
-                    />
-                  </span>
-                </div>
-                <div>
-                  <svg className="omrs-icon" onClick={handleIncreaseRefillClick}>
-                    <use xlinkHref="#omrs-icon-add"></use>
-                  </svg>
-                </div>
-              </div>
-              <label htmlFor="lastDateOfRefill">Last date with refills</label>
-            </div>
+              }}
+            />
+
+            <NumberInput
+              id="refills"
+              value={duration}
+              label="Refills"
+              onChange={e => {
+                // @ts-ignore
+                setNumRefills(e.imaginaryTarget.value);
+              }}
+            />
           </div>
 
           <div className={styles.medicationContainer} style={{ width: '100%' }}>
             <div className={styles.medicationOrderInput}>
-              <label htmlFor="dosingInstructions">Dosing instructions</label>
-              <textarea
-                name="dosingInstruction"
+              <TextArea
                 id="dosingInstructionTextArea"
+                labelText="Dosing instructions"
                 rows={6}
-                defaultValue={dosingInstructions}
-                onChange={$event => setDosingInstructions($event.target.value)}
+                value={dosingInstructions}
+                onChange={e => setDosingInstructions(e.target.value)}
               />
             </div>
           </div>
@@ -439,7 +432,3 @@ type MedicationOrderProps = {
   resetParams?: any;
   orderEdit?: { orderEdit: Boolean; order?: OrderMedication };
 };
-
-function toISODatePickerFormat(date: Date): string {
-  return dayjs(date).format('YYYY-MM-DD');
-}
