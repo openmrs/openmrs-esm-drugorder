@@ -297,49 +297,56 @@ export default function MedicationOrder(props: MedicationOrderProps) {
             </FormGroup>
           </Column>
           <Column sm={{ span: 2 }}>
-            <DatePicker
-              datePickerType="range"
-              value={[startDate, endDate]}
-              onChange={([startDate, endDate]) => {
-                setStartDate(startDate);
-                setEndDate(endDate);
-              }}>
-              <DatePickerInput labelText="Start date" id="startDate" required />
-              <DatePickerInput labelText="End date" id="endDate" required />
-            </DatePicker>
+            <FormGroup legendText="Start and end date">
+              <DatePicker
+                datePickerType="range"
+                value={[startDate, endDate]}
+                onChange={([startDate, endDate]) => {
+                  setStartDate(startDate);
+                  setEndDate(endDate);
+                }}>
+                <DatePickerInput labelText="Start date" id="startDate" required />
+                <DatePickerInput labelText="End date" id="endDate" required />
+              </DatePicker>
+            </FormGroup>
             <FormGroup legendText="Duration">
+              <div style={{ display: 'flex' }}>
+                <NumberInput
+                  id="duration"
+                  value={duration}
+                  onChange={e => {
+                    // @ts-ignore
+                    handleDuractionChange(e.imaginaryTarget.value);
+                  }}
+                />
+                <ComboBox
+                  id="option"
+                  placeholder="Duration"
+                  itemToString={item => (item ? item.text : '')}
+                  items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
+                  onChange={e => setDurationUnit(e.selectedItem.id)}
+                />
+              </div>
+            </FormGroup>
+            <FormGroup legendText="Refills">
               <NumberInput
-                id="duration"
+                id="refills"
                 value={duration}
                 onChange={e => {
                   // @ts-ignore
-                  handleDuractionChange(e.imaginaryTarget.value);
+                  setNumRefills(e.imaginaryTarget.value);
                 }}
               />
-              <ComboBox
-                id="option"
-                placeholder="Duration"
-                itemToString={item => (item ? item.text : '')}
-                items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
-                onChange={e => setDurationUnit(e.selectedItem.id)}
+            </FormGroup>
+            <FormGroup legendText="Dosing instructions">
+              <TextArea
+                id="dosingInstructionTextArea"
+                labelText=""
+                rows={6}
+                value={dosingInstructions}
+                onChange={e => setDosingInstructions(e.target.value)}
               />
             </FormGroup>
-            <NumberInput
-              id="refills"
-              value={duration}
-              label="Refills"
-              onChange={e => {
-                // @ts-ignore
-                setNumRefills(e.imaginaryTarget.value);
-              }}
-            />
-            <TextArea
-              id="dosingInstructionTextArea"
-              labelText="Dosing instructions"
-              rows={6}
-              value={dosingInstructions}
-              onChange={e => setDosingInstructions(e.target.value)}
-            />
           </Column>
         </Row>
         <Row>
