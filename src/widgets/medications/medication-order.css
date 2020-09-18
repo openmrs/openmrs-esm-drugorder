@@ -44,57 +44,16 @@
 .medicationOrderDetailsContainer {
   display: flex;
   width: 100%;
-  margin: 0rem 1.25rem;
+  margin: 1rem 1.25rem;
 }
 
 .medicationContainer {
   display: flex;
   width: 50%;
-  border-radius: 0.25rem;
-  padding: 1.25rem;
-  box-shadow: 0rem 0.125rem 0.25rem rgba(0, 0, 0, 0.08),
-    0rem 0.0625rem 0.25rem rgba(0, 0, 0, 0.04);
-  background-color: rgba(249, 249, 249, 0.94);
 }
 
-.doseAndFrequency {
-  display: flex;
-  flex-direction: column;
-  font-weight: 500;
-  font-size: 1rem;
-  user-select: none;
-}
-
-.doseAndFrequency span {
-  color: var(--omrs-color-ink-medium-contrast);
-  font-weight: 700;
-}
-
-.medicationOrderRadio {
-  margin: 0.625rem 0rem 0rem 0.625rem;
-  display: flex;
-  justify-content: center;
-}
-
-.medicationOrderRadio input[type="radio"] {
-  display: none;
-}
-
-.medicationOrderRadio label {
-  color: var(--omrs-color-ink-medium-contrast);
-  background-color: var(--omrs-color-bg-low-contrast);
-  padding: 0.5rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 0.625rem;
-  border: 0.0625rem solid var(--omrs-color-bg-low-contrast);
-}
-
-.medicationOrderRadio input[type="radio"]:checked + label {
-  color: var(--omrs-color-interaction);
-  background-color: var(--omrs-color-ink-white);
-  border: 0.0625rem solid var(--omrs-color-interaction);
+.medicationContainer fieldset {
+  flex-grow: 1;
 }
 
 .medicationContainerColumnTwo {

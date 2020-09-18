@@ -19,7 +19,11 @@ import {
   ComboBox,
   DatePicker,
   DatePickerInput,
+  Form,
+  FormGroup,
   NumberInput,
+  RadioButton,
+  RadioButtonGroup,
   TextArea,
 } from 'carbon-components-react';
 
@@ -29,7 +33,7 @@ const ORAL_ROUTE_CONCEPT: string = '160240AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 const DAYS_DURATION_UNIT_CONCEPT: string = '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 
 export default function MedicationOrder(props: MedicationOrderProps) {
-  const [commonMedication, setCommonMedication] = useState([]);
+  const [commonMedications, setCommonMedication] = useState([]);
   const [drugUuid, setDrugUuid] = useState('');
   const [drugName, setDrugName] = useState('');
   const [encounterUuid, setEncounterUuid] = useState('');
@@ -104,8 +108,8 @@ export default function MedicationOrder(props: MedicationOrderProps) {
 
   useEffect(() => {
     let defaults: any;
-    if (commonMedication.length > 0 && props.editProperty.length === 0 && props.orderEdit.orderEdit === false) {
-      defaults = setDefaultValues(commonMedication);
+    if (commonMedications.length > 0 && props.editProperty.length === 0 && props.orderEdit.orderEdit === false) {
+      defaults = setDefaultValues(commonMedications);
       setDoseUnits(defaults[0].drugUnits);
       setFrequencyUuid(defaults[0].frequencyConcept);
       setDose(defaults[0].dose);
@@ -114,7 +118,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
     }
     if (props.editProperty.length > 0) {
     }
-  }, [commonMedication, props.editProperty.length, props.orderEdit.orderEdit]);
+  }, [commonMedications, props.editProperty.length, props.orderEdit.orderEdit]);
 
   //Edit default values
 
@@ -142,10 +146,10 @@ export default function MedicationOrder(props: MedicationOrderProps) {
   }, [props.editProperty]);
 
   useEffect(() => {
-    if (frequencyUuid && commonMedication.length > 0 && props.editProperty.length === 0) {
-      setFrequencyName(commonMedication[0].commonFrequencies.find(el => el.conceptUuid === frequencyUuid).name);
+    if (frequencyUuid && commonMedications.length > 0 && props.editProperty.length === 0) {
+      setFrequencyName(commonMedications[0].commonFrequencies.find(el => el.conceptUuid === frequencyUuid).name);
     }
-  }, [commonMedication, frequencyUuid, props.editProperty.length]);
+  }, [commonMedications, frequencyUuid, props.editProperty.length]);
 
   useEffect(() => {
     if (props.orderEdit.orderEdit) {
@@ -248,9 +252,33 @@ export default function MedicationOrder(props: MedicationOrderProps) {
     setDuration(Number($event));
   };
 
-  // @ts-ignore
+  const dosageChoices =
+    commonMedications[0]?.commonDosages?.map(dosage => {
+      return (
+        <RadioButton
+          key={dosage.uuid}
+          labelText={dosage.numberOfPills}
+          checked={dose === dosage.numberOfPills}
+          value="standard"
+        />
+        // <div className={styles.medicationOrderRadio} key={dosage.dosage}>
+        //   <input
+        //     type="radio"
+        //     name="doseUnits"
+        //     id={dosage.dosage}
+        //     defaultValue={dosage.numberOfPills}
+        //     defaultChecked={dose === dosage.numberOfPills}
+        //     onChange={$event => {
+        //       setDose(Number($event.target.value));
+        //     }}
+        //   />
+        //   <label htmlFor={dosage.dosage}>{dosage.dosage}</label>
+        // </div>
+      );
+    }) ?? [];
+
   return (
-    <form onSubmit={handleSubmit} className={styles.medicationOrderWrapper}>
+    <Form onSubmit={handleSubmit} className={styles.medicationOrderWrapper}>
       <SummaryCard name="Order Medication" styles={{ width: '100%' }}>
         <div className={styles.medicationHeaderSummary}>
           <table>
@@ -269,119 +297,67 @@ export default function MedicationOrder(props: MedicationOrderProps) {
         </div>
       </SummaryCard>
       <div className={styles.medicationOrderDetailsContainer}>
-        <div className={styles.medicationContainer} style={{ marginRight: '0.625rem' }}>
-          <div className={styles.doseAndFrequency}>
-            <div className={styles.medicationOrderRadio}>
-              <span>Dose</span>
-            </div>
-            {commonMedication.length > 0 &&
-              dose &&
-              commonMedication[0].commonDosages.map(dosage => (
-                <div className={styles.medicationOrderRadio} key={dosage.dosage}>
-                  <input
-                    type="radio"
-                    name="doseUnits"
-                    id={dosage.dosage}
-                    defaultValue={dosage.numberOfPills}
-                    defaultChecked={dose === dosage.numberOfPills}
-                    onChange={$event => {
-                      setDose(Number($event.target.value));
-                    }}
-                  />
-                  <label htmlFor={dosage.dosage}>{dosage.dosage}</label>
-                </div>
-              ))}
-            <div className={styles.medicationOrderRadio}>
-              <input type="radio" name="doseUnits" id="doseUnits1" />
-              <label htmlFor="doseUnits1">other</label>
-            </div>
-          </div>
-          <div className={styles.doseAndFrequency}>
-            <div className={styles.medicationOrderRadio}>
-              <span>Frequency</span>
-            </div>
-            {commonMedication.length > 0 &&
-              frequencyUuid &&
-              commonMedication[0].commonFrequencies.map(frequency => (
-                <div className={styles.medicationOrderRadio} key={frequency.conceptUuid}>
-                  <input
-                    type="radio"
-                    name="frequency"
-                    id={frequency.name}
-                    defaultValue={frequency.conceptUuid}
-                    defaultChecked={frequency.conceptUuid === frequencyUuid}
-                    onChange={$event => setFrequencyUuid($event.target.value)}
-                  />
-                  <label htmlFor={frequency.name}>{frequency.name}</label>
-                </div>
-              ))}
-            <div className={styles.medicationOrderRadio}>
-              <input type="radio" name="frequency" id="otherFrequency" />
-              <label htmlFor="otherFrequency">other</label>
-            </div>
-          </div>
+        <div className={styles.medicationContainer}>
+          <FormGroup legendText="Dose">
+            <RadioButtonGroup
+              name="dose"
+              orientation="vertical"
+              valueSelected={dose}
+              onChange={e => setDose(Number(e))}>
+              {commonMedications[0]?.commonDosages?.map(dosage => (
+                <RadioButton key={dosage.numberOfPills} value={dosage.numberOfPills} labelText={dosage.numberOfPills} />
+              )) ?? []}
+            </RadioButtonGroup>
+          </FormGroup>
+          <FormGroup legendText="Frequency">
+            <RadioButtonGroup
+              name="frequency"
+              orientation="vertical"
+              valueSelected={dose}
+              onChange={e => setFrequencyUuid(String(e))}>
+              {commonMedications[0]?.commonFrequencies?.map(frequency => (
+                <RadioButton key={frequency.conceptUuid} value={frequency.conceptUuid} labelText={frequency.name} />
+              )) ?? []}
+            </RadioButtonGroup>
+          </FormGroup>
         </div>
         <div className={styles.medicationContainerColumnTwo}>
-          <div
-            className={styles.medicationContainer}
-            style={{
-              width: '100%',
-              marginBottom: '0.625rem',
-              flexDirection: 'column',
+          <DatePicker
+            datePickerType="range"
+            value={[startDate, endDate]}
+            onChange={([startDate, endDate]) => {
+              setStartDate(startDate);
+              setEndDate(endDate);
             }}>
-            <div className={styles.medicationOrderInput}>
-              <DatePicker
-                datePickerType="range"
-                value={[startDate, endDate]}
-                onChange={([startDate, endDate]) => {
-                  setStartDate(startDate);
-                  setEndDate(endDate);
-                }}>
-                <DatePickerInput labelText="Start date" id="startDate" required />
-                <DatePickerInput labelText="End date" id="endDate" required />
-              </DatePicker>
-            </div>
-            <div className={styles.medicationOrderInput} style={{ flexDirection: 'row', margin: '0.625rem 0rem' }}>
-              <div style={{ flex: 1 }} className={styles.omrsSelectOptions}>
-                <NumberInput
-                  id="duration"
-                  value={duration}
-                  label="Duration"
-                  onChange={e => {
-                    // @ts-ignore
-                    handleDuractionChange(e.imaginaryTarget.value);
-                  }}
-                />
-              </div>
-              <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
-                <ComboBox
-                  id="option"
-                  placeholder="Duration"
-                  itemToString={item => (item ? item.text : '')}
-                  items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
-                  onChange={e => setDurationUnit(e.selectedItem.id)}
-                />
-              </div>
-            </div>
+            <DatePickerInput labelText="Start date" id="startDate" required />
+            <DatePickerInput labelText="End date" id="endDate" required />
+          </DatePicker>
+          <NumberInput
+            id="duration"
+            value={duration}
+            label="Duration"
+            onChange={e => {
+              // @ts-ignore
+              handleDuractionChange(e.imaginaryTarget.value);
+            }}
+          />
+          <ComboBox
+            id="option"
+            placeholder="Duration"
+            itemToString={item => (item ? item.text : '')}
+            items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
+            onChange={e => setDurationUnit(e.selectedItem.id)}
+          />
 
-            <div
-              className={styles.medicationOrderInput}
-              style={{
-                margin: '1.25rem 0rem 1.0625rem 0rem',
-                border: '0.0625rem solid var(--omrs-color-bg-low-contrast)',
-              }}
-            />
-
-            <NumberInput
-              id="refills"
-              value={duration}
-              label="Refills"
-              onChange={e => {
-                // @ts-ignore
-                setNumRefills(e.imaginaryTarget.value);
-              }}
-            />
-          </div>
+          <NumberInput
+            id="refills"
+            value={duration}
+            label="Refills"
+            onChange={e => {
+              // @ts-ignore
+              setNumRefills(e.imaginaryTarget.value);
+            }}
+          />
 
           <div className={styles.medicationContainer} style={{ width: '100%' }}>
             <div className={styles.medicationOrderInput}>
@@ -405,7 +381,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
           </Button>
         </ButtonSet>
       </div>
-    </form>
+    </Form>
   );
 }
 
