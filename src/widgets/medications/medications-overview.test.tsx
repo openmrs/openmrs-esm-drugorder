@@ -54,8 +54,7 @@ describe('<MedicationsOverview/>', () => {
 
     await wait(() => {
       expect(wrapper).toBeDefined();
-      expect(wrapper.getByText('Add').textContent).toBeTruthy();
-      expect(wrapper.getByText('Active Medications').textContent).toBeTruthy();
+      expect(wrapper.getByText('Active medications').textContent).toBeTruthy();
       expect(
         wrapper.getByText('This patient has no active medications recorded in the system.').textContent,
       ).toBeTruthy();
