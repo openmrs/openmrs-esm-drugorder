@@ -22,11 +22,14 @@ import {
   TableToolbarContent,
 } from 'carbon-components-react';
 import { Add16 } from '@carbon/icons-react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 export default function MedicationsDetailedSummary() {
   const [currentMedications, setCurrentMedications] = React.useState(null);
   const [pastMedications, setPastMedications] = React.useState(null);
   const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
+  const history = useHistory();
+  const match = useRouteMatch<any>();
 
   React.useEffect(() => {
     if (patientUuid) {
@@ -88,6 +91,14 @@ export default function MedicationsDetailedSummary() {
                   <TableCell>
                     <OverflowMenu>
                       <OverflowMenuItem
+                        itemText="View details"
+                        onClick={() =>
+                          history.push(
+                            `/drugorder/patient/${match.params.patientUuid}/medication-orders/${medication.uuid}`,
+                          )
+                        }
+                      />
+                      <OverflowMenuItem
                         itemText="Revise"
                         onClick={() => openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'REVISE')}
                       />
@@ -126,6 +137,7 @@ export default function MedicationsDetailedSummary() {
               <TableCell>Status</TableCell>
               <TableCell>Medication</TableCell>
               <TableCell>End date</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -146,6 +158,18 @@ export default function MedicationsDetailedSummary() {
                     {dayjs(medication.dateStopped ? medication.dateStopped : medication.autoExpireDate).format(
                       'DD-MMM-YYYY',
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <OverflowMenu>
+                      <OverflowMenuItem
+                        itemText="View details"
+                        onClick={() =>
+                          history.push(
+                            `/drugorder/patient/${match.params.patientUuid}/medication-orders/${medication.uuid}`,
+                          )
+                        }
+                      />
+                    </OverflowMenu>
                   </TableCell>
                 </TableRow>
               ))}
