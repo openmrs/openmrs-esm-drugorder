@@ -1,5 +1,4 @@
 import React from 'react';
-import SummaryCard from '../../ui-components/cards/summary-card.component';
 import EmptyState from '../../ui-components/empty-state/empty-state.component';
 import { fetchPatientMedications } from './medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
@@ -8,15 +7,14 @@ import { useTranslation } from 'react-i18next';
 import { getDosage } from './medication-orders-utils';
 import MedicationOrderBasket from './medication-order-basket.component';
 import { openMedicationWorkspaceTab, openWorkspaceTab } from '../shared-utils';
-import useChartBasePath from '../../utils/use-chart-base';
 import {
   OverflowMenu,
   OverflowMenuItem,
-  StructuredListBody,
-  StructuredListCell,
-  StructuredListHead,
-  StructuredListRow,
-  StructuredListWrapper,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
 } from 'carbon-components-react';
 
 export default function MedicationsOverview() {
@@ -36,25 +34,26 @@ export default function MedicationsOverview() {
   return (
     <>
       {patientMedications?.length > 0 ? (
-        <SummaryCard name={t('Active Medications')} styles={{ width: '100%' }}>
-          <StructuredListWrapper>
-            <StructuredListHead>
-              <StructuredListRow head>
-                <StructuredListCell head>Medication</StructuredListCell>
-                <StructuredListCell head></StructuredListCell>
-              </StructuredListRow>
-            </StructuredListHead>
-            <StructuredListBody>
+        <>
+          <h2>Active medications</h2>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Medication</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {patientMedications.map((medication, index) => (
-                <StructuredListRow key={index}>
-                  <StructuredListCell>
+                <TableRow key={index}>
+                  <TableCell>
                     {medication?.drug?.name} &mdash;
                     <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
                     {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
                     {medication?.doseUnits?.display.toLowerCase()} &mdash; {medication?.route?.display.toLowerCase()}{' '}
                     &mdash; {medication?.frequency?.display}
-                  </StructuredListCell>
-                  <StructuredListCell>
+                  </TableCell>
+                  <TableCell>
                     <OverflowMenu>
                       <OverflowMenuItem
                         itemText="Revise"
@@ -68,12 +67,12 @@ export default function MedicationsOverview() {
                         }
                       />
                     </OverflowMenu>
-                  </StructuredListCell>
-                </StructuredListRow>
+                  </TableCell>
+                </TableRow>
               ))}
-            </StructuredListBody>
-          </StructuredListWrapper>
-        </SummaryCard>
+            </TableBody>
+          </Table>
+        </>
       ) : (
         <EmptyState
           showComponent={() => openWorkspaceTab(MedicationOrderBasket, `${t('Medication Order')}`)}
