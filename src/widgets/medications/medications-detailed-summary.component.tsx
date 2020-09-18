@@ -1,11 +1,7 @@
 import React from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
-import SummaryCard from '../../ui-components/cards/summary-card.component';
-import styles from './medications-detailed-summary.css';
 import dayjs from 'dayjs';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
-import { useTranslation } from 'react-i18next';
 import { formatDuration, getDosage } from './medication-orders-utils';
 import { fetchPatientMedications, fetchPatientPastMedications, PatientMedications } from './medications.resource';
 import MedicationOrderBasket from './medication-order-basket.component';
@@ -13,22 +9,24 @@ import { openMedicationWorkspaceTab, openWorkspaceTab } from '../shared-utils';
 import { isEmpty } from 'lodash-es';
 import { toOmrsDateString } from '../../utils/omrs-dates';
 import {
+  Button,
   OverflowMenu,
   OverflowMenuItem,
-  StructuredListBody,
-  StructuredListCell,
-  StructuredListHead,
-  StructuredListRow,
-  StructuredListWrapper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableToolbar,
+  TableToolbarContent,
 } from 'carbon-components-react';
+import { Add16 } from '@carbon/icons-react';
 
-export default function MedicationsDetailedSummary(props: MedicationsDetailedSummaryProps) {
+export default function MedicationsDetailedSummary() {
   const [currentMedications, setCurrentMedications] = React.useState(null);
   const [pastMedications, setPastMedications] = React.useState(null);
   const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
-
-  const { t } = useTranslation();
-  const match = useRouteMatch<any>();
 
   React.useEffect(() => {
     if (patientUuid) {
@@ -50,188 +48,113 @@ export default function MedicationsDetailedSummary(props: MedicationsDetailedSum
     }
   }, [patientUuid]);
 
-  function displayCurrentMedications() {
-    return (
-      <React.Fragment>
-        <SummaryCard
-          name={t('Medications - current', 'Medications - current')}
-          addComponent={MedicationOrderBasket}
-          showComponent={() =>
-            openWorkspaceTab(MedicationOrderBasket, 'Medication Order', {
-              action: 'NEW',
-            })
-          }>
-          <StructuredListWrapper>
-            <StructuredListHead>
-              <StructuredListRow head>
-                <StructuredListCell head>Medication</StructuredListCell>
-                <StructuredListCell head>Status</StructuredListCell>
-                <StructuredListCell head>Start date</StructuredListCell>
-                <StructuredListCell head></StructuredListCell>
-              </StructuredListRow>
-            </StructuredListHead>
-            <StructuredListBody>
-              {currentMedications &&
-                currentMedications.map((medication, index) => (
-                  <StructuredListRow key={index}>
-                    <StructuredListCell>
-                      {medication?.drug?.name} &mdash;
-                      <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
-                      {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
-                      {medication?.doseUnits?.display.toLowerCase()} &mdash; {medication?.route?.display.toLowerCase()}{' '}
-                      &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)} &mdash;
-                      <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}>REFILLS</span>{' '}
-                      <span>{medication.numRefills}</span>{' '}
-                    </StructuredListCell>
-                    <StructuredListCell>{medication?.action}</StructuredListCell>
-                    <StructuredListCell>{dayjs(medication.dateActivated).format('DD-MMM-YYYY')}</StructuredListCell>
-                    <StructuredListCell>
-                      <OverflowMenu>
-                        <OverflowMenuItem
-                          itemText="Revise"
-                          onClick={() => openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'REVISE')}
-                        />
-                        <OverflowMenuItem
-                          itemText="Discontinue"
-                          isDelete
-                          onClick={() =>
-                            openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'DISCONTINUE')
-                          }
-                        />
-                      </OverflowMenu>
-                    </StructuredListCell>
-                  </StructuredListRow>
-                ))}
-            </StructuredListBody>
-          </StructuredListWrapper>
-        </SummaryCard>
-      </React.Fragment>
-    );
-  }
-
-  function displayPastMedications() {
-    return (
-      <>
-        <React.Fragment>
-          <SummaryCard
-            name={t('Medications - past', 'Medications - past')}
-            addComponent={MedicationOrderBasket}
-            showComponent={() =>
-              openWorkspaceTab(MedicationOrderBasket, 'Medication Order', {
-                action: 'NEW',
-              })
-            }>
-            <StructuredListWrapper>
-              <StructuredListHead>
-                <StructuredListRow head>
-                  <StructuredListCell head>Status</StructuredListCell>
-                  <StructuredListCell head>Medication</StructuredListCell>
-                  <StructuredListCell head>End date</StructuredListCell>
-                </StructuredListRow>
-              </StructuredListHead>
-              <StructuredListBody>
-                {pastMedications &&
-                  pastMedications.map((medication, index) => (
-                    <StructuredListRow key={index}>
-                      <StructuredListCell>{medication?.action}</StructuredListCell>
-                      <StructuredListCell>
-                        {medication?.drug?.name} &mdash;
-                        <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
-                        {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
-                        {medication?.doseUnits?.display.toLowerCase()} &mdash;{' '}
-                        {medication?.route?.display.toLowerCase()} &mdash; {medication?.frequency?.display} &mdash;{' '}
-                        {formatDuration(medication)} &mdash;
-                        <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}>REFILLS</span>{' '}
-                        <span>{medication.numRefills}</span>{' '}
-                      </StructuredListCell>
-                      <StructuredListCell>
-                        {dayjs(medication.dateStopped ? medication.dateStopped : medication.autoExpireDate).format(
-                          'DD-MMM-YYYY',
-                        )}
-                      </StructuredListCell>
-                    </StructuredListRow>
-                  ))}
-              </StructuredListBody>
-            </StructuredListWrapper>
-          </SummaryCard>
-        </React.Fragment>
-      </>
-    );
-  }
-
-  function displayMedications() {
-    return (
-      <>
-        <div>
-          {currentMedications && currentMedications.length > 0 ? (
-            displayCurrentMedications()
-          ) : (
-            <SummaryCard
-              name={t('Medications - current', 'Medications - current')}
-              styles={{ width: '100%' }}
-              addComponent={MedicationOrderBasket}
-              showComponent={() =>
-                openWorkspaceTab(MedicationOrderBasket, 'Medication Order', {
-                  action: 'NEW',
-                })
-              }>
-              <div className={styles.emptyMedications}>
-                <p className="omrs-bold">No current medications are documented.</p>
-              </div>
-            </SummaryCard>
-          )}
-        </div>
-        <div>
-          {pastMedications && pastMedications.length > 0 ? (
-            displayPastMedications()
-          ) : (
-            <SummaryCard
-              name={t('Medications - past', 'Medications - past')}
-              styles={{ width: '100%' }}
-              addComponent={MedicationOrderBasket}
-              showComponent={() =>
-                openWorkspaceTab(MedicationOrderBasket, 'Medication Order', {
-                  action: 'NEW',
-                })
-              }>
-              <div className={styles.emptyMedications}>
-                <p className="omrs-bold">No past medications are documented.</p>
-              </div>
-            </SummaryCard>
-          )}
-        </div>
-      </>
-    );
-  }
-
   return (
     <>
-      {(currentMedications || pastMedications) && (
-        <div className={styles.medicationsSummary}>
-          {!isEmpty(currentMedications) || !isEmpty(pastMedications) ? (
-            displayMedications()
-          ) : (
-            <SummaryCard name="Medications" styles={{ width: '100%' }}>
-              <div className={styles.emptyMedications}>
-                <p className="omrs-bold">This patient has no medication orders in the system.</p>
-                <p className="omrs-bold">
-                  <button
-                    className="omrs-btn omrs-outlined-action"
-                    onClick={() =>
-                      openWorkspaceTab(MedicationOrderBasket, 'Medication Order', {
-                        action: 'NEW',
-                      })
-                    }>
-                    Add medication order
-                  </button>
-                </p>
-              </div>
-            </SummaryCard>
-          )}
-        </div>
+      <h2>Current medications</h2>
+      <TableContainer>
+        <TableToolbar>
+          <TableToolbarContent>
+            <Button
+              renderIcon={() => <Add16 />}
+              onClick={() => openWorkspaceTab(MedicationOrderBasket, 'MedicationOrder', { action: 'NEW' })}>
+              Add
+            </Button>
+          </TableToolbarContent>
+        </TableToolbar>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Medication</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Start date</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {currentMedications?.length > 0 &&
+              currentMedications.map((medication, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    {medication?.drug?.name} &mdash;
+                    <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
+                    {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
+                    {medication?.doseUnits?.display.toLowerCase()} &mdash; {medication?.route?.display.toLowerCase()}{' '}
+                    &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)} &mdash;
+                    <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}>REFILLS</span>{' '}
+                    <span>{medication.numRefills}</span>{' '}
+                  </TableCell>
+                  <TableCell>{medication?.action}</TableCell>
+                  <TableCell>{dayjs(medication.dateActivated).format('DD-MMM-YYYY')}</TableCell>
+                  <TableCell>
+                    <OverflowMenu>
+                      <OverflowMenuItem
+                        itemText="Revise"
+                        onClick={() => openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'REVISE')}
+                      />
+                      <OverflowMenuItem
+                        itemText="Discontinue"
+                        isDelete
+                        onClick={() =>
+                          openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'DISCONTINUE')
+                        }
+                      />
+                    </OverflowMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {(!currentMedications || currentMedications.length === 0) && (
+        <p>There are no current medications recorded for this patient.</p>
+      )}
+
+      <h2>Past medications</h2>
+      <TableContainer>
+        <TableToolbar>
+          <TableToolbarContent>
+            <Button
+              renderIcon={() => <Add16 />}
+              onClick={() => openWorkspaceTab(MedicationOrderBasket, 'MedicationOrder', { action: 'NEW' })}>
+              Add
+            </Button>
+          </TableToolbarContent>
+        </TableToolbar>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Status</TableCell>
+              <TableCell>Medication</TableCell>
+              <TableCell>End date</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pastMedications?.length > 0 &&
+              pastMedications.map((medication, index) => (
+                <TableRow key={index}>
+                  <TableCell>{medication?.action}</TableCell>
+                  <TableCell>
+                    {medication?.drug?.name} &mdash;
+                    <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}> DOSE</span> &mdash;{' '}
+                    {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
+                    {medication?.doseUnits?.display.toLowerCase()} &mdash; {medication?.route?.display.toLowerCase()}{' '}
+                    &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)} &mdash;
+                    <span style={{ color: 'var(--omrs-color-ink-medium-contrast)' }}>REFILLS</span>{' '}
+                    <span>{medication.numRefills}</span>{' '}
+                  </TableCell>
+                  <TableCell>
+                    {dayjs(medication.dateStopped ? medication.dateStopped : medication.autoExpireDate).format(
+                      'DD-MMM-YYYY',
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {(!pastMedications || pastMedications.length === 0) && (
+        <p>There are no past medications recorded for this patient.</p>
       )}
     </>
   );
 }
-
-type MedicationsDetailedSummaryProps = {};

@@ -37,6 +37,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
+    "@carbon/icons-react": "^10.18.0",
     "@openmrs/esm-error-handling": "^1.1.0",
     "@openmrs/react-root-decorator": "^2.0.0",
     "@testing-library/jest-dom": "^5.7.0",

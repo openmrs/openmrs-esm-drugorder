@@ -57,9 +57,9 @@ describe('<MedicationsDetailedSummary/>', () => {
     await wait(() => {
       expect(container).toBeDefined();
       // Current medications
-      expect(getByText('Medications - current').textContent).toBeTruthy();
+      expect(getByText('Current medications').textContent).toBeTruthy();
       expect(getAllByText('Add').length).toBeGreaterThan(1);
-      expect(getByText('Medications - past').textContent).toBeTruthy();
+      expect(getByText('Past medications').textContent).toBeTruthy();
       expect(getAllByText('Medication')[0].textContent).toBeTruthy();
       expect(getAllByText('Status')[0].textContent).toBeTruthy();
       expect(getAllByText('Start date')[0].textContent).toBeTruthy();
@@ -75,21 +75,4 @@ describe('<MedicationsDetailedSummary/>', () => {
       expect(wrapper.getAllByText('12-Feb-2020')[0].textContent).toBeTruthy();
     });
   }, 6000);
-
-  it("should not display the patient's medications when they are absent", async () => {
-    mockFetchPatientMedications.mockReturnValue(of([]));
-
-    wrapper = render(
-      <BrowserRouter>
-        <MedicationsDetailedSummary />
-      </BrowserRouter>,
-    );
-
-    await wait(() => {
-      expect(wrapper).toBeDefined();
-      expect(wrapper.getByText('Medications').textContent).toBeTruthy();
-      expect(wrapper.getByText('This patient has no medication orders in the system.').textContent).toBeTruthy();
-      expect(wrapper.getByText('Add medication order').textContent).toBeTruthy();
-    });
-  });
 });
