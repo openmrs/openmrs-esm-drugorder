@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import styles from './medication-order.css';
-import SummaryCard from '../../ui-components/cards/summary-card.component';
 import commonMedicationJson from './common-medication.json';
 import {
   getDrugByName,
@@ -16,14 +14,17 @@ import {
   Button,
   // @ts-ignore
   ButtonSet,
+  Column,
   ComboBox,
   DatePicker,
   DatePickerInput,
   Form,
   FormGroup,
+  Grid,
   NumberInput,
   RadioButton,
   RadioButtonGroup,
+  Row,
   TextArea,
 } from 'carbon-components-react';
 
@@ -252,135 +253,106 @@ export default function MedicationOrder(props: MedicationOrderProps) {
     setDuration(Number($event));
   };
 
-  const dosageChoices =
-    commonMedications[0]?.commonDosages?.map(dosage => {
-      return (
-        <RadioButton
-          key={dosage.uuid}
-          labelText={dosage.numberOfPills}
-          checked={dose === dosage.numberOfPills}
-          value="standard"
-        />
-        // <div className={styles.medicationOrderRadio} key={dosage.dosage}>
-        //   <input
-        //     type="radio"
-        //     name="doseUnits"
-        //     id={dosage.dosage}
-        //     defaultValue={dosage.numberOfPills}
-        //     defaultChecked={dose === dosage.numberOfPills}
-        //     onChange={$event => {
-        //       setDose(Number($event.target.value));
-        //     }}
-        //   />
-        //   <label htmlFor={dosage.dosage}>{dosage.dosage}</label>
-        // </div>
-      );
-    }) ?? [];
-
   return (
-    <Form onSubmit={handleSubmit} className={styles.medicationOrderWrapper}>
-      <SummaryCard name="Order Medication" styles={{ width: '100%' }}>
-        <div className={styles.medicationHeaderSummary}>
-          <table>
-            <tbody>
-              <tr>
-                <td>{drugName} &#x2013; </td>
-                <td>{routeName} &#x2013; </td>
-                <td>{dosageForm} &#x2013;</td>
-                <td>
-                  DOSE <span>{`${dose} ${dosageForm}`}</span> &#x2013;
-                </td>
-                <td>{frequencyName}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </SummaryCard>
-      <div className={styles.medicationOrderDetailsContainer}>
-        <div className={styles.medicationContainer}>
-          <FormGroup legendText="Dose">
-            <RadioButtonGroup
-              name="dose"
-              orientation="vertical"
-              valueSelected={dose}
-              onChange={e => setDose(Number(e))}>
-              {commonMedications[0]?.commonDosages?.map(dosage => (
-                <RadioButton key={dosage.numberOfPills} value={dosage.numberOfPills} labelText={dosage.numberOfPills} />
-              )) ?? []}
-            </RadioButtonGroup>
-          </FormGroup>
-          <FormGroup legendText="Frequency">
-            <RadioButtonGroup
-              name="frequency"
-              orientation="vertical"
-              valueSelected={dose}
-              onChange={e => setFrequencyUuid(String(e))}>
-              {commonMedications[0]?.commonFrequencies?.map(frequency => (
-                <RadioButton key={frequency.conceptUuid} value={frequency.conceptUuid} labelText={frequency.name} />
-              )) ?? []}
-            </RadioButtonGroup>
-          </FormGroup>
-        </div>
-        <div className={styles.medicationContainerColumnTwo}>
-          <DatePicker
-            datePickerType="range"
-            value={[startDate, endDate]}
-            onChange={([startDate, endDate]) => {
-              setStartDate(startDate);
-              setEndDate(endDate);
-            }}>
-            <DatePickerInput labelText="Start date" id="startDate" required />
-            <DatePickerInput labelText="End date" id="endDate" required />
-          </DatePicker>
-          <NumberInput
-            id="duration"
-            value={duration}
-            label="Duration"
-            onChange={e => {
-              // @ts-ignore
-              handleDuractionChange(e.imaginaryTarget.value);
-            }}
-          />
-          <ComboBox
-            id="option"
-            placeholder="Duration"
-            itemToString={item => (item ? item.text : '')}
-            items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
-            onChange={e => setDurationUnit(e.selectedItem.id)}
-          />
-
-          <NumberInput
-            id="refills"
-            value={duration}
-            label="Refills"
-            onChange={e => {
-              // @ts-ignore
-              setNumRefills(e.imaginaryTarget.value);
-            }}
-          />
-
-          <div className={styles.medicationContainer} style={{ width: '100%' }}>
-            <div className={styles.medicationOrderInput}>
-              <TextArea
-                id="dosingInstructionTextArea"
-                labelText="Dosing instructions"
-                rows={6}
-                value={dosingInstructions}
-                onChange={e => setDosingInstructions(e.target.value)}
+    <Form onSubmit={handleSubmit} style={{ width: '100%' }}>
+      <Grid>
+        <Row>
+          <Column sm={{ span: 4 }}>
+            <h2>Order medication</h2>
+            <span>
+              {drugName} &#x2013; {routeName} &#x2013; {dosageForm} &#x2013; DOSE <span>{`${dose} ${dosageForm}`}</span>{' '}
+              &#x2013; {frequencyName}
+            </span>
+          </Column>
+        </Row>
+        <Row style={{ marginTop: '1rem' }}>
+          <Column>
+            <FormGroup legendText="Dose">
+              <RadioButtonGroup
+                name="dose"
+                orientation="vertical"
+                valueSelected={dose}
+                onChange={e => setDose(Number(e))}>
+                {commonMedications[0]?.commonDosages?.map(dosage => (
+                  <RadioButton
+                    key={dosage.numberOfPills}
+                    value={dosage.numberOfPills}
+                    labelText={dosage.numberOfPills}
+                  />
+                )) ?? []}
+              </RadioButtonGroup>
+            </FormGroup>
+          </Column>
+          <Column>
+            <FormGroup legendText="Frequency">
+              <RadioButtonGroup
+                name="frequency"
+                orientation="vertical"
+                valueSelected={dose}
+                onChange={e => setFrequencyUuid(String(e))}>
+                {commonMedications[0]?.commonFrequencies?.map(frequency => (
+                  <RadioButton key={frequency.conceptUuid} value={frequency.conceptUuid} labelText={frequency.name} />
+                )) ?? []}
+              </RadioButtonGroup>
+            </FormGroup>
+          </Column>
+          <Column sm={{ span: 2 }}>
+            <DatePicker
+              datePickerType="range"
+              value={[startDate, endDate]}
+              onChange={([startDate, endDate]) => {
+                setStartDate(startDate);
+                setEndDate(endDate);
+              }}>
+              <DatePickerInput labelText="Start date" id="startDate" required />
+              <DatePickerInput labelText="End date" id="endDate" required />
+            </DatePicker>
+            <FormGroup legendText="Duration">
+              <NumberInput
+                id="duration"
+                value={duration}
+                onChange={e => {
+                  // @ts-ignore
+                  handleDuractionChange(e.imaginaryTarget.value);
+                }}
               />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.medicationOrderFooter}>
-        <ButtonSet>
-          <Button kind="secondary">Cancel</Button>
-          <Button kind="primary" type="submit">
-            Save
-          </Button>
-        </ButtonSet>
-      </div>
+              <ComboBox
+                id="option"
+                placeholder="Duration"
+                itemToString={item => (item ? item.text : '')}
+                items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
+                onChange={e => setDurationUnit(e.selectedItem.id)}
+              />
+            </FormGroup>
+            <NumberInput
+              id="refills"
+              value={duration}
+              label="Refills"
+              onChange={e => {
+                // @ts-ignore
+                setNumRefills(e.imaginaryTarget.value);
+              }}
+            />
+            <TextArea
+              id="dosingInstructionTextArea"
+              labelText="Dosing instructions"
+              rows={6}
+              value={dosingInstructions}
+              onChange={e => setDosingInstructions(e.target.value)}
+            />
+          </Column>
+        </Row>
+        <Row>
+          <Column sm={{ span: 4 }}>
+            <ButtonSet>
+              <Button kind="secondary">Cancel</Button>
+              <Button kind="primary" type="submit">
+                Save
+              </Button>
+            </ButtonSet>
+          </Column>
+        </Row>
+      </Grid>
     </Form>
   );
 }
