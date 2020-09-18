@@ -173,16 +173,6 @@ export default function MedicationOrder(props: MedicationOrderProps) {
     return commonMedicationJson.filter(medication => medication.uuid === drugUuid);
   };
 
-  const handleIncreaseRefillClick = event => {
-    setNumRefills(numRefills + 1);
-  };
-
-  const handleDecreaseRefillClick = event => {
-    if (numRefills > 0) {
-      setNumRefills(numRefills - 1);
-    }
-  };
-
   const handleSubmit = $event => {
     props.resetParams();
     $event.preventDefault();
@@ -312,21 +302,19 @@ export default function MedicationOrder(props: MedicationOrderProps) {
             </div>
             {commonMedication.length > 0 &&
               frequencyUuid &&
-              commonMedication[0].commonFrequencies.map(frequency => {
-                return (
-                  <div className={styles.medicationOrderRadio} key={frequency.conceptUuid}>
-                    <input
-                      type="radio"
-                      name="frequency"
-                      id={frequency.name}
-                      defaultValue={frequency.conceptUuid}
-                      defaultChecked={frequency.conceptUuid === frequencyUuid}
-                      onChange={$event => setFrequencyUuid($event.target.value)}
-                    />
-                    <label htmlFor={frequency.name}>{frequency.name}</label>
-                  </div>
-                );
-              })}
+              commonMedication[0].commonFrequencies.map(frequency => (
+                <div className={styles.medicationOrderRadio} key={frequency.conceptUuid}>
+                  <input
+                    type="radio"
+                    name="frequency"
+                    id={frequency.name}
+                    defaultValue={frequency.conceptUuid}
+                    defaultChecked={frequency.conceptUuid === frequencyUuid}
+                    onChange={$event => setFrequencyUuid($event.target.value)}
+                  />
+                  <label htmlFor={frequency.name}>{frequency.name}</label>
+                </div>
+              ))}
             <div className={styles.medicationOrderRadio}>
               <input type="radio" name="frequency" id="otherFrequency" />
               <label htmlFor="otherFrequency">other</label>
