@@ -4,6 +4,8 @@
   "remove": "Remove",
   "close": "Close",
   "sign": "Sign",
+  "cancel": "Cancel",
+  "save": "Save",
   "ongoingWorkPrompt": "There is ongoing work, are you sure you want to close this tab?",
   "searchResultsForTerm": "Results for {searchTerm}",
   "numeroSign": "No.",
@@ -11,6 +13,14 @@
   "strength": "Strength",
   "dosageForm": "DosageForm",
   "frequency": "Frequency",
+  "dose": "Dose",
   "emptyMedicationOrderBaskedSearchHint": "You can add items to your basket by searching for them in the search field above.",
-  "emptyMedicationOrderBasket": "Your basket is currently empty."
+  "emptyMedicationOrderBasket": "Your basket is currently empty.",
+  "orderMedication": "Order Medication",
+  "startAndEndDate": "Start and end date",
+  "startDate": "Start date",
+  "endDate": "End date",
+  "duration": "Duration",
+  "refills": "Refills",
+  "dosingInstructions": "Dosing instructions"
 }
