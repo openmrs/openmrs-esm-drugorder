@@ -2,10 +2,12 @@
   "actions": "Actions",
   "edit": "Edit",
   "remove": "Remove",
+  "viewDetails": "View details",
   "close": "Close",
   "sign": "Sign",
   "cancel": "Cancel",
   "save": "Save",
+  "add": "Add",
   "ongoingWorkPrompt": "There is ongoing work, are you sure you want to close this tab?",
   "searchResultsForTerm": "Results for {searchTerm}",
   "numeroSign": "No.",
@@ -30,5 +32,14 @@
   "lastUpdated": "Last updated",
   "lastUpdatedBy": "Last updated by",
   "lastUpdatedLocation": "Last updated location",
-  "none": "None"
+  "none": "None",
+  "medicationsCurrent": "Medications - current",
+  "medicationsPast": "Medications - past",
+  "medicationOrder": "Medication Order",
+  "name": "Name",
+  "status": "Status",
+  "revise": "Revise",
+  "discontinue": "Discontinue",
+  "noCurrentMedicationsDocumented": "No current medications are documented.",
+  "noPastMedicationsDocumented": "No past medications are documented."
 }
