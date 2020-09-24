@@ -22,5 +22,13 @@
   "endDate": "End date",
   "duration": "Duration",
   "refills": "Refills",
-  "dosingInstructions": "Dosing instructions"
+  "dosingInstructions": "Dosing instructions",
+  "details": "Details",
+  "medication": "Medication",
+  "totalRefills": "Total number of refills",
+  "substitutionsPermitted": "Substitutions permitted",
+  "lastUpdated": "Last updated",
+  "lastUpdatedBy": "Last updated by",
+  "lastUpdatedLocation": "Last updated location",
+  "none": "None"
 }
