@@ -149,7 +149,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
   }, [props.editProperty]);
 
   useEffect(() => {
-    if (frequencyUuid && commonMedications.length > 0 && props.editProperty.length === 0) {
+    if (frequencyUuid && commonMedications.length > 0) {
       setFrequencyName(commonMedications[0].commonFrequencies.find(el => el.conceptUuid === frequencyUuid).name);
     }
   }, [commonMedications, frequencyUuid, props.editProperty.length]);
@@ -315,6 +315,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
               <div style={{ display: 'flex' }}>
                 <NumberInput
                   id="duration"
+                  min={0}
                   value={duration}
                   onChange={e => {
                     // @ts-ignore
@@ -330,13 +331,14 @@ export default function MedicationOrder(props: MedicationOrderProps) {
                   }}
                   itemToString={item => (item ? item.text : '')}
                   items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
-                  onChange={e => setDurationUnit(e.selectedItem.id)}
+                  onChange={e => setDurationUnit(e?.selectedItem?.id ?? durationUnit)}
                 />
               </div>
             </FormGroup>
             <FormGroup legendText={t('refills', 'Refills')}>
               <NumberInput
                 id="refills"
+                min={0}
                 value={duration}
                 onChange={e => {
                   // @ts-ignore
@@ -358,7 +360,9 @@ export default function MedicationOrder(props: MedicationOrderProps) {
         <Row>
           <Column sm={{ span: 4 }}>
             <ButtonSet>
-              <Button kind="secondary">{t('cancel', 'Cancel')}</Button>
+              <Button kind="secondary" onClick={() => props.hideModal()}>
+                {t('cancel', 'Cancel')}
+              </Button>
               <Button kind="primary" type="submit">
                 {t('save', 'Save')}
               </Button>
