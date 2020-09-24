@@ -1,1 +1,16 @@
-{}
+{
+  "actions": "Actions",
+  "edit": "Edit",
+  "remove": "Remove",
+  "close": "Close",
+  "sign": "Sign",
+  "ongoingWorkPrompt": "There is ongoing work, are you sure you want to close this tab?",
+  "searchResultsForTerm": "Results for {searchTerm}",
+  "numeroSign": "No.",
+  "drugName": "Drug Name",
+  "strength": "Strength",
+  "dosageForm": "DosageForm",
+  "frequency": "Frequency",
+  "emptyMedicationOrderBaskedSearchHint": "You can add items to your basket by searching for them in the search field above.",
+  "emptyMedicationOrderBasket": "Your basket is currently empty."
+}
