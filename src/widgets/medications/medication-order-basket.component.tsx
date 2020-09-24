@@ -6,7 +6,7 @@ import { createErrorHandler } from '@openmrs/esm-error-handling';
 import MedicationOrder from './medication-order.component';
 import { OrderMedication } from './medication-orders-utils';
 import { match } from 'react-router-dom';
-import { DataCaptureComponentProps } from '../shared-utils';
+import { DataCaptureComponentProps } from '@openmrs/esm-patient-chart-widgets';
 import { useTranslation } from 'react-i18next';
 import { toOmrsDateString } from '../../utils/omrs-dates';
 import {

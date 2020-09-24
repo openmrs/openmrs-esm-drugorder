@@ -45,7 +45,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
   const [frequencyName, setFrequencyName] = useState('');
   const [routeUuid, setRouteUuid] = useState(ORAL_ROUTE_CONCEPT);
   const [routeName, setRouteName] = useState<string>(null);
-  const [asNeeded, setAsNeeded] = useState(false);
+  const [asNeeded] = useState(false);
   const [numRefills, setNumRefills] = useState(0);
   const [action, setAction] = useState('NEW');
   const [duration, setDuration] = React.useState(0);
@@ -55,7 +55,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
   const [drugStrength, setDrugStrength] = useState<number>(null);
   const [startDate, setStartDate] = React.useState<Date>(new Date());
   const [endDate, setEndDate] = React.useState<Date>(new Date());
-  const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
+  const [, , patientUuid] = useCurrentPatient();
   const [previousOrder, setPreviousOrder] = useState<string>(null);
   const [concept, setConcept] = useState<string>(null);
 
@@ -288,7 +288,7 @@ export default function MedicationOrder(props: MedicationOrderProps) {
               <RadioButtonGroup
                 name="frequency"
                 orientation="vertical"
-                valueSelected={dose}
+                valueSelected={frequencyUuid}
                 onChange={e => setFrequencyUuid(String(e))}>
                 {commonMedications[0]?.commonFrequencies?.map(frequency => (
                   <RadioButton key={frequency.conceptUuid} value={frequency.conceptUuid} labelText={frequency.name} />
@@ -322,6 +322,10 @@ export default function MedicationOrder(props: MedicationOrderProps) {
                 <ComboBox
                   id="option"
                   placeholder="Duration"
+                  selectedItem={{
+                    id: durationUnit,
+                    text: durationUnitsArray.filter(x => x.uuid === durationUnit)[0]?.display ?? 'Days',
+                  }}
                   itemToString={item => (item ? item.text : '')}
                   items={durationUnitsArray.map(unit => ({ id: unit.uuid, text: unit.display }))}
                   onChange={e => setDurationUnit(e.selectedItem.id)}

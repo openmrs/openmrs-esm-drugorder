@@ -2,9 +2,8 @@ import React from 'react';
 import { fetchPatientMedications } from './medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
-import { useTranslation } from 'react-i18next';
 import { getDosage } from './medication-orders-utils';
-import { openMedicationWorkspaceTab, openWorkspaceTab } from '../shared-utils';
+import { openMedicationWorkspaceTab } from '../shared-utils';
 import {
   OverflowMenu,
   OverflowMenuItem,
@@ -17,8 +16,7 @@ import {
 
 export default function MedicationsOverview() {
   const [patientMedications, setPatientMedications] = React.useState(null);
-  const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
-  const { t } = useTranslation();
+  const [, , patientUuid] = useCurrentPatient();
 
   React.useEffect(() => {
     if (patientUuid) {

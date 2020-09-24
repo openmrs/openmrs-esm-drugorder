@@ -19,6 +19,10 @@ jest.mock('@openmrs/esm-api', () => ({
   useCurrentPatient: jest.fn(),
 }));
 
+jest.mock('@openmrs/esm-patient-chart-widgets', () => ({
+  openWorkspaceTab: jest.fn(),
+}));
+
 let wrapper;
 
 describe('<MedicationsOverview/>', () => {

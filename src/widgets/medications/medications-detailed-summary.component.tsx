@@ -5,7 +5,8 @@ import { useCurrentPatient } from '@openmrs/esm-api';
 import { formatDuration, getDosage } from './medication-orders-utils';
 import { fetchPatientMedications, fetchPatientPastMedications, PatientMedications } from './medications.resource';
 import MedicationOrderBasket from './medication-order-basket.component';
-import { openMedicationWorkspaceTab, openWorkspaceTab } from '../shared-utils';
+import { openMedicationWorkspaceTab } from '../shared-utils';
+import { openWorkspaceTab } from '@openmrs/esm-patient-chart-widgets';
 import { isEmpty } from 'lodash-es';
 import { toOmrsDateString } from '../../utils/omrs-dates';
 import {
@@ -27,7 +28,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 export default function MedicationsDetailedSummary() {
   const [currentMedications, setCurrentMedications] = React.useState(null);
   const [pastMedications, setPastMedications] = React.useState(null);
-  const [isLoadingPatient, patient, patientUuid] = useCurrentPatient();
+  const [, , patientUuid] = useCurrentPatient();
   const history = useHistory();
   const match = useRouteMatch<any>();
 
@@ -59,7 +60,7 @@ export default function MedicationsDetailedSummary() {
           <TableToolbarContent>
             <Button
               renderIcon={() => <Add16 />}
-              onClick={() => openWorkspaceTab(MedicationOrderBasket, 'MedicationOrder', { action: 'NEW' })}>
+              onClick={() => openWorkspaceTab(MedicationOrderBasket, 'Medication Order', { action: 'NEW' })}>
               Add
             </Button>
           </TableToolbarContent>
@@ -94,7 +95,7 @@ export default function MedicationsDetailedSummary() {
                         itemText="View details"
                         onClick={() =>
                           history.push(
-                            `/drugorder/patient/${match.params.patientUuid}/medication-orders/${medication.uuid}`,
+                            `/patient/${match.params.patientUuid}/chart/orders/medication-orders/${medication.uuid}`,
                           )
                         }
                       />
@@ -126,7 +127,7 @@ export default function MedicationsDetailedSummary() {
           <TableToolbarContent>
             <Button
               renderIcon={() => <Add16 />}
-              onClick={() => openWorkspaceTab(MedicationOrderBasket, 'MedicationOrder', { action: 'NEW' })}>
+              onClick={() => openWorkspaceTab(MedicationOrderBasket, 'Medication Order', { action: 'NEW' })}>
               Add
             </Button>
           </TableToolbarContent>
@@ -165,7 +166,7 @@ export default function MedicationsDetailedSummary() {
                         itemText="View details"
                         onClick={() =>
                           history.push(
-                            `/drugorder/patient/${match.params.patientUuid}/medication-orders/${medication.uuid}`,
+                            `/patient/${match.params.patientUuid}/chart/orders/medication-orders/${medication.uuid}`,
                           )
                         }
                       />
