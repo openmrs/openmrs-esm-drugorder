@@ -3,7 +3,7 @@ import { useRouteMatch } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
-import { getMedicationByUuid } from './medications.resource';
+import { getMedicationByUuid } from '../../utils/medications.resource';
 import { formatDuration, getDosage } from './medication-orders-utils';
 import styles from './medication-record.css';
 import { Column, FormGroup, Grid, Row } from 'carbon-components-react';

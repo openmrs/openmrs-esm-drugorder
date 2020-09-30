@@ -9,7 +9,7 @@ import {
   getPatientEncounterID,
   getPatientDrugOrderDetails,
   getDurationUnits,
-} from './medications.resource';
+} from '../../utils/medications.resource';
 import {
   mockDrugSearchResults,
   mockPatientEncounterIDResults,
@@ -24,7 +24,7 @@ const mockgetPatientEncounterID = getPatientEncounterID as jest.Mock;
 const mockgetPatientDrugOrderDetails = getPatientDrugOrderDetails as jest.Mock;
 const mockgetDurationUnits = getDurationUnits as jest.Mock;
 
-jest.mock('../medications/medications.resource', () => ({
+jest.mock('../../utils/medications.resource', () => ({
   getDrugByName: jest.fn(),
   getPatientEncounterID: jest.fn(),
   getPatientDrugOrderDetails: jest.fn(),

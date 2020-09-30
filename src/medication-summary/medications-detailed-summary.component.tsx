@@ -2,13 +2,17 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
-import { formatDuration, getDosage } from './medication-orders-utils';
-import { fetchPatientMedications, fetchPatientPastMedications, PatientMedications } from './medications.resource';
-import MedicationOrderBasket from './medication-order-basket.component';
-import { openMedicationWorkspaceTab } from '../shared-utils';
+import { formatDuration, getDosage } from '../widgets/medications/medication-orders-utils';
+import {
+  fetchPatientMedications,
+  fetchPatientPastMedications,
+  PatientMedications,
+} from '../utils/medications.resource';
+import MedicationOrderBasket from '../widgets/medications/medication-order-basket.component';
+import { openMedicationWorkspaceTab } from '../utils/shared-utils';
 import { openWorkspaceTab } from '@openmrs/esm-patient-chart-widgets';
 import { isEmpty } from 'lodash-es';
-import { toOmrsDateString } from '../../utils/omrs-dates';
+import { toOmrsDateString } from '../utils/omrs-dates';
 import {
   Button,
   OverflowMenu,

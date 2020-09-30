@@ -1,9 +1,9 @@
 import { openmrsObservableFetch, openmrsFetch, fhirBaseUrl } from '@openmrs/esm-api';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { OrderMedication } from './medication-orders-utils';
-import { toOmrsDateString } from '../../utils/omrs-dates';
-import { OpenmrsResource } from '../../types/openmrs-resource';
+import { OrderMedication } from '../widgets/medications/medication-orders-utils';
+import { toOmrsDateString } from './omrs-dates';
+import { OpenmrsResource } from '../types/openmrs-resource';
 
 const CARE_SETTING = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const DURATION_UNITS_CONCEPT = '1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';

@@ -1,9 +1,9 @@
 import React from 'react';
-import { fetchPatientMedications } from './medications.resource';
+import { fetchPatientMedications } from '../../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import { getDosage } from './medication-orders-utils';
-import { openMedicationWorkspaceTab } from '../shared-utils';
+import { openMedicationWorkspaceTab } from '../../utils/shared-utils';
 import {
   OverflowMenu,
   OverflowMenuItem,

@@ -5,7 +5,7 @@ import {
   getPatientEncounterID,
   getPatientDrugOrderDetails,
   getDurationUnits,
-} from './medications.resource';
+} from '../../utils/medications.resource';
 import dayjs from 'dayjs';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import { createErrorHandler } from '@openmrs/esm-error-handling';

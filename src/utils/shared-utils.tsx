@@ -1,4 +1,4 @@
-import MedicationOrderBasket from './medications/medication-order-basket.component';
+import MedicationOrderBasket from '../widgets/medications/medication-order-basket.component';
 import { openWorkspaceTab } from '@openmrs/esm-patient-chart-widgets';
 
 export function openMedicationWorkspaceTab(orderUuid?: string, drugName?: string, action?: 'REVISE' | 'DISCONTINUE') {

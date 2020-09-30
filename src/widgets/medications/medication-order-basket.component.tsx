@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './medication-order-basket.css';
 import { debounce } from 'lodash';
-import { getDrugByName, saveNewDrugOrder, getPatientDrugOrderDetails } from './medications.resource';
+import { getDrugByName, saveNewDrugOrder, getPatientDrugOrderDetails } from '../../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import MedicationOrder from './medication-order.component';
 import { OrderMedication } from './medication-orders-utils';

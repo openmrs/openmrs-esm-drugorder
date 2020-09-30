@@ -4,7 +4,7 @@ import { defineConfigSchema } from '@openmrs/esm-module-config';
 import openmrsRootDecorator from '@openmrs/react-root-decorator';
 import './root.css';
 import MedicationsOverview from './widgets/medications/medications-overview.component';
-import MedicationsDetailedSummary from './widgets/medications/medications-detailed-summary.component';
+import MedicationsDetailedSummary from './medication-summary/medications-detailed-summary.component';
 import MedicationRecord from './widgets/medications/medication-record.component';
 
 defineConfigSchema('@openmrs/esm-drugorder-app', {});

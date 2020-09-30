@@ -1,18 +1,18 @@
 import React from 'react';
-import { mockPatient } from '../../../__mocks__/patient.mock';
-import { mockFetchPatientMedicationsResponse } from '../../../__mocks__/medication.mock';
+import { mockPatient } from '../../__mocks__/patient.mock';
+import { mockFetchPatientMedicationsResponse } from '../../__mocks__/medication.mock';
 import { cleanup, render, wait } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import { of } from 'rxjs/internal/observable/of';
-import { fetchPatientMedications, fetchPatientPastMedications } from './medications.resource';
+import { fetchPatientMedications, fetchPatientPastMedications } from '../utils/medications.resource';
 import MedicationsDetailedSummary from './medications-detailed-summary.component';
 
 const mockUseCurrentPatient = useCurrentPatient as jest.Mock;
 const mockFetchPatientMedications = fetchPatientMedications as jest.Mock;
 const mockfetchPatientPastMedications = fetchPatientPastMedications as jest.Mock;
 
-jest.mock('./medications.resource', () => ({
+jest.mock('../utils/medications.resource', () => ({
   fetchPatientMedications: jest.fn(),
   fetchPatientPastMedications: jest.fn(),
 }));
