@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, Tag } from 'carbon-components-react';
-import { useTranslation } from 'react-i18next';
-import styles from './floating-order-basket-button.css';
 import { ShoppingBag16 } from '@carbon/icons-react';
+import { useTranslation } from 'react-i18next';
+import styles from './floating-order-basket-button.scss';
 
 export default function FloatingOrderBasketButton() {
   const { t } = useTranslation();
