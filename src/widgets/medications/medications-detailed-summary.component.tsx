@@ -25,6 +25,7 @@ import {
 import { Add16 } from '@carbon/icons-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import FloatingOrderBasketButton from './floating-order-basket-button.component';
 
 export default function MedicationsDetailedSummary() {
   const [currentMedications, setCurrentMedications] = React.useState(null);
@@ -183,6 +184,7 @@ export default function MedicationsDetailedSummary() {
       {(!pastMedications || pastMedications.length === 0) && (
         <p>{t('noPastMedicationsDocumented', 'No past medications are documented.')}</p>
       )}
+      <FloatingOrderBasketButton />
     </>
   );
 }

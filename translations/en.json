@@ -42,5 +42,7 @@
   "discontinue": "Discontinue",
   "noCurrentMedicationsDocumented": "No current medications are documented.",
   "noPastMedicationsDocumented": "No past medications are documented.",
-  "activeMedications": "Active Medications"
+  "activeMedications": "Active Medications",
+
+  "orderBasket": "Order Basket"
 }
