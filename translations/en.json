@@ -42,7 +42,9 @@
   "discontinue": "Discontinue",
   "noCurrentMedicationsDocumented": "No current medications are documented.",
   "noPastMedicationsDocumented": "No past medications are documented.",
-  "activeMedications": "Active Medications",
 
-  "orderBasket": "Order Basket"
+  "medications": "Medications",
+  "activeMedications": "Active Medications",
+  "orderBasket": "Order Basket",
+  "medicationDurationAndUnit": "for {duration} {durationUnit}"
 }

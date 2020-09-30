@@ -29,7 +29,7 @@ export type PatientMedications = {
   dosingInstructions: string | null;
   drug: {
     name: string;
-    strenght: string;
+    strength: string;
     concept: OpenmrsResource;
   };
   duration: number;

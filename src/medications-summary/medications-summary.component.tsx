@@ -15,6 +15,7 @@ import { isEmpty } from 'lodash-es';
 import { toOmrsDateString } from '../utils/omrs-dates';
 import {
   Button,
+  DataTable,
   OverflowMenu,
   OverflowMenuItem,
   Table,
@@ -24,14 +25,18 @@ import {
   TableHead,
   TableRow,
   TableToolbar,
+  TableToolbarAction,
   TableToolbarContent,
+  TableToolbarMenu,
 } from 'carbon-components-react';
 import { Add16 } from '@carbon/icons-react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import FloatingOrderBasketButton from './floating-order-basket-button.component';
+import styles from './medications-summary.scss';
+import ActiveMedications from './active-medications.component';
 
-export default function MedicationsDetailedSummary() {
+export default function MedicationsSummary() {
   const [currentMedications, setCurrentMedications] = React.useState(null);
   const [pastMedications, setPastMedications] = React.useState(null);
   const [, , patientUuid] = useCurrentPatient();
@@ -61,72 +66,7 @@ export default function MedicationsDetailedSummary() {
 
   return (
     <>
-      <h2>{t('medicationsCurrent', 'Medications - current')}</h2>
-      <TableContainer>
-        <TableToolbar>
-          <TableToolbarContent>
-            <Button
-              renderIcon={() => <Add16 />}
-              onClick={() =>
-                openWorkspaceTab(MedicationOrderBasket, t('medicationOrder', 'Medication Order'), { action: 'NEW' })
-              }>
-              {t('add', 'Add')}
-            </Button>
-          </TableToolbarContent>
-        </TableToolbar>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>{t('name', 'Name')}</TableCell>
-              <TableCell>{t('status', 'Status')}</TableCell>
-              <TableCell>{t('startDate', 'Start date')}</TableCell>
-              <TableCell>{t('actions', 'Actions')}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {currentMedications?.length > 0 &&
-              currentMedications.map((medication, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    {medication?.drug?.name} &mdash; {t('dose', 'Dose')}
-                    &mdash; {getDosage(medication?.drug?.strength, medication?.dose).toLowerCase()} &mdash;{' '}
-                    {medication?.doseUnits?.display.toLowerCase()} &mdash; {medication?.route?.display.toLowerCase()}{' '}
-                    &mdash; {medication?.frequency?.display} &mdash; {formatDuration(medication)} &mdash;
-                    {t('refills', 'Refills')} <span>{medication.numRefills}</span>{' '}
-                  </TableCell>
-                  <TableCell>{medication?.action}</TableCell>
-                  <TableCell>{dayjs(medication.dateActivated).format('DD-MMM-YYYY')}</TableCell>
-                  <TableCell>
-                    <OverflowMenu>
-                      <OverflowMenuItem
-                        itemText={t('viewDetails', 'View details')}
-                        onClick={() =>
-                          history.push(
-                            `/patient/${match.params.patientUuid}/chart/orders/medication-orders/${medication.uuid}`,
-                          )
-                        }
-                      />
-                      <OverflowMenuItem
-                        itemText={t('revise', 'Revise')}
-                        onClick={() => openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'REVISE')}
-                      />
-                      <OverflowMenuItem
-                        itemText={t('discontinue', 'Discontinue')}
-                        isDelete
-                        onClick={() =>
-                          openMedicationWorkspaceTab(medication?.uuid, medication?.drug?.name, 'DISCONTINUE')
-                        }
-                      />
-                    </OverflowMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      {(!currentMedications || currentMedications.length === 0) && (
-        <p>{t('noCurrentMedicationsDocumented', 'No current medications are documented.')}</p>
-      )}
+      <ActiveMedications activeMedications={currentMedications} />
 
       <h2 style={{ marginTop: '2rem' }}>{t('medicationsPast', 'Medications - past')}</h2>
       <TableContainer>
