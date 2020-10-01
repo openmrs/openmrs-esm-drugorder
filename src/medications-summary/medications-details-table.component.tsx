@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   DataTable,
+  Pagination,
   Table,
   TableBody,
   TableCell,
@@ -22,17 +23,13 @@ import { Add16, Error16, Renew16 } from '@carbon/icons-react';
 import { capitalize } from 'lodash-es';
 import styles from './medications-details-table.scss';
 import { compare } from '../utils/compare';
+import { paginate } from '../utils/pagination';
 
 export interface ActiveMedicationsProps {
   title: string;
   medications: Array<PatientMedications>;
   showEndMedicationColumn: boolean;
   showAddNewButton: boolean;
-}
-
-interface CustomSortableTableCell {
-  sortKey: string;
-  content: unknown;
 }
 
 export default function MedicationsDetailsTable({
@@ -42,6 +39,9 @@ export default function MedicationsDetailsTable({
   showAddNewButton,
 }: ActiveMedicationsProps) {
   const { t } = useTranslation();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [currentMedicationPage] = paginate(medications, page, pageSize);
 
   const initialTableHeaderDefinitions = [
     { key: 'end', header: t('end', 'End'), isSortable: true, isVisible: showEndMedicationColumn },
@@ -50,7 +50,7 @@ export default function MedicationsDetailsTable({
     { key: 'reorder', header: t('reorder', 'Reorder'), isSortable: false, isVisible: true },
   ];
 
-  const initialTableRowDefinitions = medications.map((medication, id) => ({
+  const initialTableRowDefinitions = currentMedicationPage.map((medication, id) => ({
     id: `${id}`,
     end: (
       <Button
@@ -147,6 +147,16 @@ export default function MedicationsDetailsTable({
               ))}
             </TableBody>
           </Table>
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            pageSizes={[10, 20, 30, 40, 50]}
+            totalItems={medications.length}
+            onChange={({ page, pageSize }) => {
+              setPage(page);
+              setPageSize(pageSize);
+            }}
+          />
         </TableContainer>
       )}
     </DataTable>
