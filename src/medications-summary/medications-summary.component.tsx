@@ -37,7 +37,7 @@ import styles from './medications-summary.scss';
 import ActiveMedications from './active-medications.component';
 
 export default function MedicationsSummary() {
-  const [currentMedications, setCurrentMedications] = React.useState(null);
+  const [activeMedications, setCurrentMedications] = React.useState(null);
   const [pastMedications, setPastMedications] = React.useState(null);
   const [, , patientUuid] = useCurrentPatient();
   const history = useHistory();
@@ -66,7 +66,11 @@ export default function MedicationsSummary() {
 
   return (
     <>
-      <ActiveMedications activeMedications={currentMedications} />
+      <h1 className={styles.productiveHeading06} style={{ marginBottom: '2rem' }}>
+        {t('medications', 'Medications')}
+      </h1>
+
+      <ActiveMedications activeMedications={activeMedications ?? []} />
 
       <h2 style={{ marginTop: '2rem' }}>{t('medicationsPast', 'Medications - past')}</h2>
       <TableContainer>

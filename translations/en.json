@@ -46,5 +46,8 @@
   "medications": "Medications",
   "activeMedications": "Active Medications",
   "orderBasket": "Order Basket",
-  "medicationDurationAndUnit": "for {duration} {durationUnit}"
+  "medicationDurationAndUnit": "for {duration} {durationUnit}",
+  "endButtonTooltip": "End",
+  "reorderButtonTooltip": "Reorder",
+  "noActiveMedicationsAvailable": "No active medications are available. You can document new medications via the Order Basket."
 }
