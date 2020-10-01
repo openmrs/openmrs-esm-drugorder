@@ -32,7 +32,7 @@ export interface ActiveMedicationsProps {
 
 interface CustomSortableTableCell {
   sortKey: string;
-  display: unknown;
+  content: unknown;
 }
 
 export default function MedicationsDetailsTable({
@@ -98,7 +98,7 @@ export default function MedicationsDetailsTable({
     tableHeadersToDisplay.some(header => header.key in row),
   );
 
-  const sortRow = (cellA: CustomSortableTableCell, cellB: CustomSortableTableCell, { sortDirection, sortStates }) => {
+  const sortRow = (cellA, cellB, { sortDirection, sortStates }) => {
     return sortDirection === sortStates.DESC
       ? compare(cellB.sortKey, cellA.sortKey)
       : compare(cellA.sortKey, cellB.sortKey);
