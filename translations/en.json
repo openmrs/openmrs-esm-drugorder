@@ -45,6 +45,7 @@
 
   "medications": "Medications",
   "activeMedications": "Active Medications",
+  "pastMedications": "Past Medications",
   "orderBasket": "Order Basket",
   "medicationDurationAndUnit": "for {duration} {durationUnit}",
   "endButtonTooltip": "End",
