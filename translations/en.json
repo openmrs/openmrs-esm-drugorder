@@ -3,7 +3,6 @@
   "edit": "Edit",
   "remove": "Remove",
   "viewDetails": "View details",
-  "close": "Close",
   "sign": "Sign",
   "cancel": "Cancel",
   "save": "Save",
@@ -50,5 +49,10 @@
   "medicationDurationAndUnit": "for {duration} {durationUnit}",
   "endButtonTooltip": "End",
   "reorderButtonTooltip": "Reorder",
-  "noActiveMedicationsAvailable": "No active medications are available. You can document new medications via the Order Basket."
+  "noActiveMedicationsAvailable": "No active medications are available. You can document new medications via the Order Basket.",
+
+  "close": "Close",
+  "searchFieldPlaceholder": "Search for an order (e.g. \"Aspirin\")",
+  "alreadyAddedToBasket": "Already Added to Basket",
+  "drugOrders": "Drug orders"
 }

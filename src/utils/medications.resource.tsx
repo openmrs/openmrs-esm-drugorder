@@ -27,11 +27,7 @@ export type PatientMedications = {
   dose: number;
   doseUnits: OpenmrsResource;
   dosingInstructions: string | null;
-  drug: {
-    name: string;
-    strength: string;
-    concept: OpenmrsResource;
-  };
+  drug: Drug;
   duration: number;
   durationUnits: OpenmrsResource;
   encounter: OpenmrsResource;
@@ -57,6 +53,12 @@ export type PatientMedications = {
   route: OpenmrsResource;
   scheduleDate: null;
   urgency: string;
+};
+
+export type Drug = {
+  name: string;
+  strength: string;
+  concept: OpenmrsResource;
 };
 
 type PatientMedicationFetchResponse = {
