@@ -1,9 +1,9 @@
 import { useHistory } from 'react-router-dom';
 
 /**
- * A hook similar to `useState` which allows reading and writing the value of a query parameter.
+ * A hook similar to `useState` which reads from and writes to a query parameter.
  * @param name The name of the query parameter.
- * @param fallbackValue A value to be returned instead of null (in case no such query parameter is available).
+ * @param fallbackValue A value to be returned instead of `null` (in case no such query parameter is available).
  */
 export function useQueryParameter(
   name: string,

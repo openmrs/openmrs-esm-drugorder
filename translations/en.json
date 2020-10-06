@@ -56,6 +56,6 @@
   "alreadyAddedToBasket": "Already Added to Basket",
   "drugOrders": "Drug orders",
   "searchTermsSuggestedFor": "Suggested for {suggestion}",
-  "searchResultsExactMatchesForTerm": "{count} exact matches for \"{searchTerm}\"",
+  "searchResultsExactMatchesForTerm": "{count} exact match(es) for \"{searchTerm}\"",
   "clearSearchResults": "Clear Results"
 }

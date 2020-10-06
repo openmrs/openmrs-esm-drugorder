@@ -6,7 +6,7 @@ import { Drug, getDrugByName } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import OrderBasketSearchSuggestions from './order-basket-search-suggestions';
-import { useQueryParameter } from '../utils/use-query.parameter';
+import { useQueryParameter } from '../utils/use-query-parameter.hook';
 
 export interface OrderBasketSearchProps {
   onDrugSelected: (drug: Drug) => void;
@@ -56,7 +56,7 @@ export default function OrderBasketSearch({ onDrugSelected }: OrderBasketSearchP
             <div style={{ margin: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span className={styles.label01}>
-                  {t('searchResultsExactMatchesForTerm', '{count} exact matches for "{searchTerm}"', {
+                  {t('searchResultsExactMatchesForTerm', '{count} exact match(es) for "{searchTerm}"', {
                     count: searchResults.length,
                     searchTerm,
                   })}
