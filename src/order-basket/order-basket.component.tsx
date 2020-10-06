@@ -19,7 +19,7 @@ export default function OrderBasket() {
   const { t } = useTranslation();
 
   const onDrugSearchResultSelected = (drug: Drug) => {
-    console.warn('Drug selected:', drug);
+    // TODO: Open 'Edit Medication' window.
   };
 
   return (

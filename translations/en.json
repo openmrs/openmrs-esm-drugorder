@@ -55,5 +55,7 @@
   "searchFieldPlaceholder": "Search for an order (e.g. \"Aspirin\")",
   "alreadyAddedToBasket": "Already Added to Basket",
   "drugOrders": "Drug orders",
-  "searchResultsSuggestedFor": "Suggested for {suggestion}"
+  "searchTermsSuggestedFor": "Suggested for {suggestion}",
+  "searchResultsExactMatchesForTerm": "{count} exact matches for \"{searchTerm}\"",
+  "clearSearchResults": "Clear Results"
 }
