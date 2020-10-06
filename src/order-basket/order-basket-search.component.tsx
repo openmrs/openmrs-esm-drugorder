@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Link, Search, Tile } from 'carbon-components-react';
+import { Search } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import styles from './order-basket-search.scss';
 import { Drug, getDrugByName } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
-import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import OrderBasketSearchSuggestions from './order-basket-search-suggestions';
 import { useQueryParameter } from '../utils/use-query-parameter.hook';
+import OrderBasketSearchResults from './order-basket-search-results';
 
 export interface OrderBasketSearchProps {
   onDrugSelected: (drug: Drug) => void;
@@ -50,47 +50,14 @@ export default function OrderBasketSearch({ onDrugSelected }: OrderBasketSearchP
             hide={() => setShowSuggestionsPopup(false)}
           />
         )}
-
-        {!!searchTerm && searchResults && searchResults.length > 0 && (
-          <>
-            <div style={{ margin: '1rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span className={styles.label01}>
-                  {t('searchResultsExactMatchesForTerm', '{count} exact match(es) for "{searchTerm}"', {
-                    count: searchResults.length,
-                    searchTerm,
-                  })}
-                </span>
-                <Link onClick={() => setSearchTerm('')}>{t('clearSearchResults', 'Clear Results')}</Link>
-              </div>
-
-              {searchResults.map((result, index) => (
-                <Tile key={index} style={{ marginTop: '5px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Medication16 style={{ flex: '0 0 auto', marginRight: '20px' }} />
-                    <div style={{ flex: '1 1 auto' }}>
-                      <p>
-                        <strong>
-                          {result.concept.display} {result.strength}
-                        </strong>
-                        <br />
-                        <span className={styles.label01}>Capsule &mdash; Something else &mdash; $</span>
-                      </p>
-                    </div>
-                    <Button
-                      style={{ flex: '0 0 auto' }}
-                      kind="ghost"
-                      hasIconOnly={true}
-                      renderIcon={() => <ShoppingBag16 />}
-                      iconDescription="Order"
-                      onClick={() => handleSearchResultClicked(result)}
-                    />
-                  </div>
-                </Tile>
-              ))}
-            </div>
-          </>
-        )}
+        <div style={{ margin: '1rem' }}>
+          <OrderBasketSearchResults
+            searchTerm={searchTerm}
+            searchResults={searchResults}
+            setSearchTerm={setSearchTerm}
+            onSearchResultClicked={handleSearchResultClicked}
+          />
+        </div>
       </div>
     </>
   );

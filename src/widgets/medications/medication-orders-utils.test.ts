@@ -1,5 +1,5 @@
 import { formatDuration, getDosage, setDefaultValues } from './medication-orders-utils';
-import commonMedicationJson from './common-medication.json';
+import commonMedicationJson from '../../api/common-medication.json';
 
 describe('MedicationOrderUtils', () => {
   it('should return the correct dosage', () => {

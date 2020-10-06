@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import commonMedicationJson from './common-medication.json';
+import commonMedicationJson from '../../api/common-medication.json';
 import {
   getDrugByName,
   getPatientEncounterID,

@@ -23,11 +23,6 @@ const suggestions = [
     strength: '1000mg',
     dosageUnit: 'Capsule',
   },
-  {
-    name: 'Emtricitabine',
-    strength: '1000mg',
-    dosageUnit: 'Capsule',
-  },
 ];
 
 export default function OrderBasketSearchSuggestions({
