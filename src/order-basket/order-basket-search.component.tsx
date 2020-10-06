@@ -7,14 +7,12 @@ import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import OrderBasketSearchSuggestions from './order-basket-search-suggestions';
 import { useQueryParameter } from '../utils/use-query.parameter';
-import { useHistory, useLocation } from 'react-router-dom';
 
 export interface OrderBasketSearchProps {
   onDrugSelected: (drug: Drug) => void;
 }
 
 export default function OrderBasketSearch({ onDrugSelected }: OrderBasketSearchProps) {
-  const history = useHistory();
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useQueryParameter('q', '');
   const [searchResults, setSearchResults] = useState<Array<Drug>>([]);
