@@ -1,24 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './order-basket-search.scss';
 import { Button, Link, Tile } from 'carbon-components-react';
-import { Drug } from '../utils/medications.resource';
+import { Drug, getDrugByName } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
+import { createErrorHandler } from '@openmrs/esm-error-handling';
 
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
-  searchResults: Array<Drug>;
   setSearchTerm: (value: string) => void;
   onSearchResultClicked: (result: Drug) => void;
 }
 
 export default function OrderBasketSearchResults({
   searchTerm,
-  searchResults,
   setSearchTerm,
   onSearchResultClicked,
 }: OrderBasketSearchResultsProps) {
   const { t } = useTranslation();
+  const [searchResults, setSearchResults] = useState<Array<Drug>>([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    getDrugByName(searchTerm, abortController).then(
+      response => setSearchResults(response.data.results),
+      createErrorHandler,
+    );
+    return () => abortController.abort();
+  }, [searchTerm]);
+
+  const handleSearchResultClicked = (drug: Drug) => {
+    setSearchTerm('');
+    setSearchResults([]);
+    onSearchResultClicked(drug);
+  };
 
   return (
     <>
@@ -53,7 +68,7 @@ export default function OrderBasketSearchResults({
                   hasIconOnly={true}
                   renderIcon={() => <ShoppingBag16 />}
                   iconDescription="Order"
-                  onClick={() => onSearchResultClicked(result)}
+                  onClick={() => handleSearchResultClicked(result)}
                 />
               </div>
             </Tile>

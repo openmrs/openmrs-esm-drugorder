@@ -18,13 +18,13 @@ import { Drug } from '../utils/medications.resource';
 export default function OrderBasket() {
   const { t } = useTranslation();
 
-  const onDrugSearchResultSelected = (drug: Drug) => {
+  const handleSearchResultClicked = (drug: Drug) => {
     // TODO: Open 'Edit Medication' window.
   };
 
   return (
     <>
-      <OrderBasketSearch onDrugSelected={onDrugSearchResultSelected} />
+      <OrderBasketSearch onSearchResultClicked={handleSearchResultClicked} />
       <div style={{ margin: '0 1rem' }}>
         <h2 className={styles.productiveHeading03} style={{ marginTop: '1.5rem' }}>
           {t('alreadyAddedToBasket', 'Already Added to Basket')}
