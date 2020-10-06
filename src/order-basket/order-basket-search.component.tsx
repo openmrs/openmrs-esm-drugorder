@@ -1,47 +1,61 @@
 import React, { useEffect, useState } from 'react';
-import { Search, Table, TableBody, TableCell, TableRow, Tile } from 'carbon-components-react';
+import { Search } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
-import _ from 'lodash-es';
 import styles from './order-basket-search.scss';
 import { Drug, getDrugByName } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
+import { Idea16 } from '@carbon/icons-react';
+import SearchResultsPopup from '../components/search-results-popup.component';
+import SearchResult from '../components/search-result.component';
+import _ from 'lodash-es';
 
-export interface OrderBasketSearchProps {}
+export interface OrderBasketSearchProps {
+  onDrugSelected: (drug: Drug) => void;
+}
 
-// eslint-disable-next-line no-empty-pattern
-export default function OrderBasketSearch({}: OrderBasketSearchProps) {
+export default function OrderBasketSearch({ onDrugSelected }: OrderBasketSearchProps) {
   const { t } = useTranslation();
-  const [searchTerm, setSearchTerm] = useState<string | null>(null);
-  const [searchResults, setSearchResults] = useState<Array<Drug> | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<Array<Drug>>([]);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    getDrugByName(searchTerm, abortController).then(
-      response => setSearchResults(response.data.results),
-      createErrorHandler,
-    );
-  }, [searchTerm]);
+  const doSearch = _.debounce(() => {
+    getDrugByName(searchTerm).then(response => setSearchResults(response.data.results), createErrorHandler);
+  }, 300);
+
+  const handleSearchTermChanged = (newSearchTerm: string) => {
+    setSearchTerm(newSearchTerm);
+    doSearch();
+  };
+
+  const handleSearchResultClicked = (drug: Drug) => {
+    setSearchTerm('');
+    setSearchResults([]);
+    onDrugSelected(drug);
+  };
 
   return (
     <>
       <div className={styles.searchContainer}>
         <Search
+          value={searchTerm}
           placeHolderText={t('searchFieldPlaceholder', 'Search for an order (e.g. "Aspirin")')}
           labelText={t('searchFieldPlaceholder', 'Search for an order (e.g. "Aspirin")')}
-          onChange={e => setSearchTerm(e.currentTarget.value)}
+          onChange={e => handleSearchTermChanged(e.currentTarget?.value ?? '')}
         />
         {!!searchTerm && searchResults && searchResults.length > 0 && (
-          <Tile className={styles.searchResultsPopup} light={true}>
-            <Table>
-              <TableBody>
-                {searchResults.map((result, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{_.capitalize(result.name)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Tile>
+          <SearchResultsPopup
+            title={t('searchResultsSuggestedFor', 'Suggested for {suggestion}', { suggestion: 'FILL ME' })}>
+            {/* TODO: Title: Design said 'Suggested for HIV Visit' here. -> Find out where the info comes from. */}
+            {searchResults.map((result, index) => (
+              <SearchResult key={index} onClick={() => handleSearchResultClicked(result)}>
+                <div key={index} style={{ display: 'flex' }}>
+                  <Idea16 style={{ margin: 'auto 8px auto 0px' }} />
+                  <strong>{result.concept.display}</strong> &nbsp;·&nbsp; {result.strength} &nbsp;·&nbsp; Capsule
+                  {/* TODO: Don't hard-code 'Capsule'. */}
+                </div>
+              </SearchResult>
+            ))}
+          </SearchResultsPopup>
         )}
       </div>
     </>

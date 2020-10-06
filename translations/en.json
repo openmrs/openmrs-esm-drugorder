@@ -54,5 +54,6 @@
   "close": "Close",
   "searchFieldPlaceholder": "Search for an order (e.g. \"Aspirin\")",
   "alreadyAddedToBasket": "Already Added to Basket",
-  "drugOrders": "Drug orders"
+  "drugOrders": "Drug orders",
+  "searchResultsSuggestedFor": "Suggested for {suggestion}"
 }

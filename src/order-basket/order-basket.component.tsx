@@ -13,13 +13,18 @@ import {
   TableRow,
 } from 'carbon-components-react';
 import { TrashCan16 } from '@carbon/icons-react';
+import { Drug } from '../utils/medications.resource';
 
 export default function OrderBasket() {
   const { t } = useTranslation();
 
+  const onDrugSearchResultSelected = (drug: Drug) => {
+    console.warn('Drug selected:', drug);
+  };
+
   return (
     <>
-      <OrderBasketSearch />
+      <OrderBasketSearch onDrugSelected={onDrugSearchResultSelected} />
       <div style={{ margin: '0 1rem' }}>
         <h2 className={styles.productiveHeading03} style={{ marginTop: '1.5rem' }}>
           {t('alreadyAddedToBasket', 'Already Added to Basket')}
@@ -43,7 +48,7 @@ export default function OrderBasket() {
                         NEW
                       </strong>
                       <br />
-                      <strong>Chloroamphenicol</strong> 0.5& &mdash; Chlorsig &mdash; eye-drops &mdash; right eye
+                      <strong>Chloroamphenicol</strong> 0.5% &mdash; Chlorsig &mdash; eye-drops &mdash; right eye
                       <br />
                       <strong>1 drop</strong> <span className={styles.label01}>SUPPLY</span> 10 mL for 4 days
                     </p>

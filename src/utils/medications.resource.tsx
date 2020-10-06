@@ -55,11 +55,15 @@ export type PatientMedications = {
   urgency: string;
 };
 
-export type Drug = {
+export interface Drug {
+  uuid: string;
   name: string;
   strength: string;
-  concept: OpenmrsResource;
-};
+  concept: DrugConcept;
+  dosageForm: Array<OpenmrsResource>;
+}
+
+export interface DrugConcept extends OpenmrsResource {}
 
 type PatientMedicationFetchResponse = {
   results: Array<PatientMedications>;
@@ -107,11 +111,11 @@ export function fetchPatientPastMedications(patientID: string, status: string): 
   );
 }
 
-export function getDrugByName(drugName: string, abortController: AbortController) {
+export function getDrugByName(drugName: string, abortController?: AbortController) {
   return openmrsFetch(
     `/ws/rest/v1/drug?q=${drugName}&v=custom:(uuid,name,strength,dosageForm:(display,uuid),concept)`,
     {
-      signal: abortController.signal,
+      signal: abortController?.signal,
     },
   );
 }
