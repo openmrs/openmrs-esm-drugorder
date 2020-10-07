@@ -4,6 +4,24 @@
   float: right;
 }
 
+.fullWidthDatePickerContainer {
+  :global .bx--date-picker {
+    width: 100%;
+
+    :global .bx--date-picker-container {
+      width: 100%;
+
+      :global .bx--date-picker-input__wrapper {
+        width: 100%;
+
+        :global .bx--date-picker__input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
 .fullHeightTextAreaContainer {
   :global .bx--form-item {
     height: 100%;

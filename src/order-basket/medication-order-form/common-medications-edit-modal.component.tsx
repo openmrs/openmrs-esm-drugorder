@@ -43,9 +43,12 @@ export default function CommonMedicationsEditModal({
       secondaryButtonText={t('cancel', 'Cancel')}
       primaryButtonDisabled={!selectedItem}
       onRequestSubmit={() => onSave(selectedItem)}
-      onRequestClose={onCancel}>
+      onRequestClose={() => {
+        onCancel();
+        setSelectedItem(initialSelectedItem);
+      }}>
       <ComboBox
-        id="commonMedicationSelected"
+        id={`commonMedicationSelected-${modalHeading}`}
         items={items}
         selectedItem={selectedItem}
         placeholder={comboBoxPlaceholder}

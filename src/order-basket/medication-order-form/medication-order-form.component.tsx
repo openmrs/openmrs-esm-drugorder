@@ -38,6 +38,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
   const [isDoseModalOpen, setIsDoseModalOpen] = useState(false);
   const [isFrequencyModalOpen, setIsFrequencyModalOpen] = useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
+  const [isPrnReasonVisible, setIsPrnReasonVisible] = useState(false);
   const commonMedication = getCommonMedicationByUuid(order.drug.uuid);
 
   return (
@@ -51,7 +52,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
             <h3 className={styles.productiveHeading02} style={{ marginTop: '0.5rem' }}>
               {t('dosageInstructions', '1. Dosage Instructions')}
             </h3>
-            <p>
+            <p style={{ marginTop: '1rem' }}>
               <strong>{order.commonMedicationName}</strong> &mdash; {order.route.name} &mdash; {order.dosageUnit.name}{' '}
               &mdash;
               <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;
@@ -63,13 +64,14 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
               id="freeTextDosageToggle"
               aria-label={t('freeTextDosage', 'Free Text Dosage')}
               labelText={t('freeTextDosage', 'Free Text Dosage')}
-              onChange={() => {}}
+              onToggle={setIsPrnReasonVisible}
+              onChange={() => {} /* Required by the typings, but we don't need it. */}
             />
           </Column>
         </Row>
 
-        <Row>
-          <Column sm={12} md={12} lg={12}>
+        <Row style={{ marginTop: '1rem' }}>
+          <Column md={8}>
             <CommonMedicationsTable
               items={[
                 { header: 'Name', value: order.commonMedicationName, wrapValueInStrong: true, canEdit: false },
@@ -98,7 +100,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
             />
           </Column>
         </Row>
-        <Row>
+        <Row style={{ marginTop: '1rem' }}>
           <Column className={styles.fullHeightTextAreaContainer}>
             <TextArea
               labelText={t('patientInstructions', 'Patient Instructions')}
@@ -112,29 +114,32 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
             <FormGroup legendText={t('prn', 'P.R.N.')}>
               <Checkbox id="prn" labelText={t('takeAsNeeded', 'Take As Needed')} />
             </FormGroup>
-            <div className={styles.fullHeightTextAreaContainer}>
+            <div
+              className={styles.fullHeightTextAreaContainer}
+              style={isPrnReasonVisible ? {} : { visibility: 'hidden' }}>
               <TextArea
                 labelText={t('prnReason', 'P.R.N. Reason')}
                 placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
+                rows={3}
               />
             </div>
           </Column>
         </Row>
-        <Row>
-          <Column sm={12} md={12} lg={12}>
+        <Row style={{ marginTop: '2rem' }}>
+          <Column md={8}>
             <h3 className={styles.productiveHeading02}>{t('prescriptionDuration', '2. Prescription Duration')}</h3>
           </Column>
         </Row>
-        <Row>
-          <Column sm={6} md={6} lg={6}>
+        <Row style={{ marginTop: '1rem' }}>
+          <Column md={4} className={styles.fullWidthDatePickerContainer}>
             <DatePicker datePickerType="single">
               <DatePickerInput id="startDatePicker" placeholder="mm/dd/yyyy" labelText={t('startDate', 'Start Date')} />
             </DatePicker>
           </Column>
-          <Column sm={3} md={3} lg={3}>
+          <Column md={2}>
             <NumberInput id="durationInput" value={0} label={t('duration', 'Duration')} />
           </Column>
-          <Column sm={3} md={3} lg={3}>
+          <Column md={2}>
             <FormGroup legendText={t('durationUnit', 'Duration Unit')}>
               <ComboBox
                 id="durationUnitPlaceholder"
@@ -145,34 +150,34 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
           </Column>
         </Row>
         <Row>
-          <Column sm={12} md={12} lg={12}>
+          <Column md={8}>
             <h3 className={styles.productiveHeading02}>{t('dispensingInformation', '3. Dispensing Information')}</h3>
           </Column>
         </Row>
-        <Row>
-          <Column sm={6} md={6} lg={6}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormGroup legendText={t('quantityDispensed', 'Quantity Dispensed')} style={{ flex: '1 1 0px' }}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span>
-                    <strong>{order.quantityDispensed ?? 0}</strong> {t('quantityDispensedPills', 'pills')}
-                  </span>
-                  <Button
-                    kind="ghost"
-                    hasIconOnly={true}
-                    renderIcon={() => <Edit16 />}
-                    iconDescription={t('edit', 'Edit')}
-                  />
-                </div>
-              </FormGroup>
-              <FormGroup legendText={t('prescriptionRefills', 'Prescription Refills')}>
-                <NumberInput id="prescriptionRefills" value={0} style={{ flex: '1 1 0px' }} />
-              </FormGroup>
-            </div>
+        <Row style={{ marginTop: '1rem' }}>
+          <Column md={2}>
+            <FormGroup legendText={t('quantityDispensed', 'Quantity Dispensed')}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span>
+                  <strong>{order.quantityDispensed ?? 0}</strong> {t('quantityDispensedPills', 'pills')}
+                </span>
+                <Button
+                  kind="ghost"
+                  hasIconOnly={true}
+                  renderIcon={() => <Edit16 />}
+                  iconDescription={t('edit', 'Edit')}
+                />
+              </div>
+            </FormGroup>
+          </Column>
+          <Column md={2}>
+            <FormGroup legendText={t('prescriptionRefills', 'Prescription Refills')}>
+              <NumberInput id="prescriptionRefills" value={0} />
+            </FormGroup>
           </Column>
         </Row>
         <Row>
-          <Column sm={12} md={12} lg={12}>
+          <Column md={8}>
             <TextInput
               id="indication"
               labelText={t('indication', 'Indication')}
@@ -183,7 +188,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
         </Row>
       </Grid>
 
-      <ButtonSet>
+      <ButtonSet style={{ marginTop: '2rem' }}>
         <Button kind="secondary" onClick={close}>
           {t('cancel', 'Cancel')}
         </Button>
