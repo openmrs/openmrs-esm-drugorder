@@ -203,6 +203,7 @@ export default function MedicationOrderForm({
             <FormGroup legendText={t('quantityDispensed', 'Quantity Dispensed')}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span>
+                  {/*TODO: Make this function*/}
                   <strong>{order.quantityDispensed}</strong> {t('quantityDispensedPills', 'pills')}
                 </span>
                 <Button
