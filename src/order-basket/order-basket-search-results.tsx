@@ -34,7 +34,7 @@ export default function OrderBasketSearchResults({
 
   return (
     <>
-      {!!searchTerm && searchResults && searchResults.length > 0 && (
+      {!!searchTerm && (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span className={styles.label01}>
@@ -56,7 +56,7 @@ export default function OrderBasketSearchResults({
                       {result.drug.concept.display} ({result.dosage?.dosage})
                     </strong>
                     <br />
-                    <span className={styles.label01}>{result.dosageUnit?.name} &mdash; Something else &mdash; $</span>
+                    <span className={styles.label01}>{result.dosageUnit?.name}</span>
                   </p>
                 </div>
                 <Button
