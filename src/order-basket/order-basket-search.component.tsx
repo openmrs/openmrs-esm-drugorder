@@ -8,7 +8,7 @@ import OrderBasketSearchResults from './order-basket-search-results';
 import { MedicationOrder } from './types';
 
 export interface OrderBasketSearchProps {
-  onSearchResultClicked: (searchResult: MedicationOrder) => void;
+  onSearchResultClicked: (searchResult: MedicationOrder, directlyAddToBasket: boolean) => void;
 }
 
 export default function OrderBasketSearch({ onSearchResultClicked }: OrderBasketSearchProps) {

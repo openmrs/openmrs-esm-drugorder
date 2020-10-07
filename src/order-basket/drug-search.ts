@@ -28,6 +28,7 @@ function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<Medic
       for (const frequency of commonMedication.commonFrequencies) {
         for (const route of commonMedication.route) {
           yield {
+            action: 'NEW',
             drug,
             dosage,
             dosageUnit,

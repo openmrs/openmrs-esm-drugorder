@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './order-basket-search.scss';
-import { Button, Link, Tile } from 'carbon-components-react';
+import { Button, ClickableTile, Link } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
@@ -10,7 +10,7 @@ import { MedicationOrder } from './types';
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  onSearchResultClicked: (searchResult: MedicationOrder) => void;
+  onSearchResultClicked: (searchResult: MedicationOrder, directlyAddToBasket: boolean) => void;
 }
 
 export default function OrderBasketSearchResults({
@@ -27,10 +27,10 @@ export default function OrderBasketSearchResults({
     return () => abortController.abort();
   }, [searchTerm]);
 
-  const handleSearchResultClicked = (searchResult: MedicationOrder) => {
+  const handleSearchResultClicked = (searchResult: MedicationOrder, directlyAddToBasket: boolean) => {
     setSearchTerm('');
     setSearchResults([]);
-    onSearchResultClicked(searchResult);
+    onSearchResultClicked(searchResult, directlyAddToBasket);
   };
 
   return (
@@ -48,7 +48,10 @@ export default function OrderBasketSearchResults({
           </div>
 
           {searchResults.map((result, index) => (
-            <Tile key={index} style={{ marginTop: '5px' }}>
+            <ClickableTile
+              key={index}
+              style={{ marginTop: '5px' }}
+              handleClick={() => handleSearchResultClicked(result, false)}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Medication16 style={{ flex: '0 0 auto', marginRight: '20px' }} />
                 <div style={{ flex: '1 1 auto' }}>
@@ -57,7 +60,9 @@ export default function OrderBasketSearchResults({
                       {result.drug.concept.display} ({result.dosage?.dosage})
                     </strong>
                     <br />
-                    <span className={styles.label01}>{result.dosageUnit?.name}</span>
+                    <span className={styles.label01}>{result.dosageUnit.name}</span> &mdash;{' '}
+                    <span className={styles.label01}>{result.frequency.name}</span> &mdash;{' '}
+                    <span className={styles.label01}>{result.route.name}</span>
                   </p>
                 </div>
                 <Button
@@ -65,11 +70,11 @@ export default function OrderBasketSearchResults({
                   kind="ghost"
                   hasIconOnly={true}
                   renderIcon={() => <ShoppingBag16 />}
-                  iconDescription="Order"
-                  onClick={() => handleSearchResultClicked(result)}
+                  iconDescription={t('directlyAddToBasket', 'Immediately add to basket')}
+                  onClick={() => handleSearchResultClicked(result, true)}
                 />
               </div>
-            </Tile>
+            </ClickableTile>
           ))}
         </>
       )}

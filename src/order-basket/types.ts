@@ -8,6 +8,7 @@ import {
 import { OpenmrsResource } from '../types/openmrs-resource';
 
 export interface MedicationOrder {
+  action: 'NEW' | undefined;
   drug: Drug;
   commonMedicationName: string;
   dosage: CommonMedicationDosage;
@@ -24,3 +25,8 @@ export interface MedicationOrder {
   prescriptionRefills?: number;
   indication?: string;
 }
+
+export const daysDurationUnit = {
+  uuid: '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+  display: 'Days',
+};

@@ -1,1 +1,6 @@
 @import '../root';
+
+.actionLabelNew {
+  @extend .productiveHeading01;
+  color: $support-02;
+}

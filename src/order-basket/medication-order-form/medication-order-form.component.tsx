@@ -19,7 +19,7 @@ import {
 } from 'carbon-components-react';
 import styles from './medication-order-form.scss';
 import { useTranslation } from 'react-i18next';
-import { MedicationOrder } from '../types';
+import { daysDurationUnit, MedicationOrder } from '../types';
 import CommonMedicationsTable from './common-medications-table.component';
 import CommonMedicationsEditModal from './common-medications-edit-modal.component';
 import { getCommonMedicationByUuid } from '../../api/common-medication';
@@ -33,11 +33,6 @@ export interface MedicationOrderFormProps {
   onCancel: () => void;
 }
 
-const defaultDurationUnit = {
-  uuid: '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-  display: 'Days',
-};
-
 export default function MedicationOrderForm({
   initialOrder,
   durationUnits,
@@ -45,18 +40,7 @@ export default function MedicationOrderForm({
   onCancel,
 }: MedicationOrderFormProps) {
   const { t } = useTranslation();
-  const [order, setOrder] = useState({
-    patientInstructions: '',
-    prnTakeAsNeeded: false,
-    prnReason: '',
-    startDate: new Date(),
-    duration: 1,
-    durationUnit: defaultDurationUnit,
-    quantityDispensed: 0,
-    prescriptionRefills: 0,
-    indication: '',
-    ...initialOrder,
-  });
+  const [order, setOrder] = useState(initialOrder);
   const [isDoseModalOpen, setIsDoseModalOpen] = useState(false);
   const [isFrequencyModalOpen, setIsFrequencyModalOpen] = useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
@@ -181,7 +165,7 @@ export default function MedicationOrderForm({
                 onChange={({ selectedItem }) =>
                   !!selectedItem
                     ? setOrder({ ...order, durationUnit: { uuid: selectedItem.id, display: selectedItem.text } })
-                    : setOrder({ ...order, durationUnit: defaultDurationUnit })
+                    : setOrder({ ...order, durationUnit: daysDurationUnit })
                 }
               />
             </FormGroup>
