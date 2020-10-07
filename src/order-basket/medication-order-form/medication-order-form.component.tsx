@@ -10,10 +10,7 @@ import {
   DatePickerInput,
   Form,
   FormGroup,
-  FormItem,
   Grid,
-  Modal,
-  ModalWrapper,
   NumberInput,
   Row,
   TextArea,
@@ -36,12 +33,10 @@ export interface MedicationOrderFormProps {
   onCancel: () => void;
 }
 
-const defaultDurationUnit: OpenmrsResource = {
+const defaultDurationUnit = {
   uuid: '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
   display: 'Days',
 };
-
-const defaultDuration = 1;
 
 export default function MedicationOrderForm({
   initialOrder,
@@ -55,7 +50,7 @@ export default function MedicationOrderForm({
     prnTakeAsNeeded: false,
     prnReason: '',
     startDate: new Date(),
-    duration: defaultDuration,
+    duration: 1,
     durationUnit: defaultDurationUnit,
     quantityDispensed: 0,
     prescriptionRefills: 0,
@@ -79,9 +74,8 @@ export default function MedicationOrderForm({
               {t('dosageInstructions', '1. Dosage Instructions')}
             </h3>
             <p style={{ marginTop: '1rem' }}>
-              <strong>{order.commonMedicationName}</strong> &mdash; {order.route.name} &mdash; {order.dosageUnit.name}{' '}
-              &mdash;
-              <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;
+              <strong>{order.commonMedicationName}</strong> &mdash; {order.route.name} &mdash; {order.dosageUnit.name}
+              &mdash; <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;{' '}
               <strong>{order.dosage.dosage}</strong>
             </p>
           </Column>
