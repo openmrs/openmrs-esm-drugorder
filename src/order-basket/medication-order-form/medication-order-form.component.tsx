@@ -3,13 +3,20 @@ import {
   Button,
   // @ts-ignore
   ButtonSet,
+  Checkbox,
   Column,
   ComboBox,
+  DatePicker,
+  DatePickerInput,
+  FormGroup,
   FormItem,
   Grid,
   Modal,
   ModalWrapper,
+  NumberInput,
   Row,
+  TextArea,
+  TextInput,
   ToggleSmall,
 } from 'carbon-components-react';
 import styles from './medication-order-form.scss';
@@ -18,6 +25,7 @@ import { MedicationOrder } from '../types';
 import CommonMedicationsTable from './common-medications-table.component';
 import CommonMedicationsEditModal from './common-medications-edit-modal.component';
 import { getCommonMedicationByUuid } from '../../api/common-medication';
+import { Edit16 } from '@carbon/icons-react';
 
 export interface MedicationOrderFormProps {
   initialOrder: MedicationOrder;
@@ -61,7 +69,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
         </Row>
 
         <Row>
-          <Column>
+          <Column sm={12} md={12} lg={12}>
             <CommonMedicationsTable
               items={[
                 { header: 'Name', value: order.commonMedicationName, wrapValueInStrong: true, canEdit: false },
@@ -87,6 +95,89 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
                   onEditClick: () => setIsRouteModalOpen(true),
                 },
               ]}
+            />
+          </Column>
+        </Row>
+        <Row>
+          <Column className={styles.fullHeightTextAreaContainer}>
+            <TextArea
+              labelText={t('patientInstructions', 'Patient Instructions')}
+              placeholder={t(
+                'patientInstructionsPlaceholder',
+                'Additional dosing instructions (e.g. "Take after eating")',
+              )}
+            />
+          </Column>
+          <Column>
+            <FormGroup legendText={t('prn', 'P.R.N.')}>
+              <Checkbox id="prn" labelText={t('takeAsNeeded', 'Take As Needed')} />
+            </FormGroup>
+            <div className={styles.fullHeightTextAreaContainer}>
+              <TextArea
+                labelText={t('prnReason', 'P.R.N. Reason')}
+                placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
+              />
+            </div>
+          </Column>
+        </Row>
+        <Row>
+          <Column sm={12} md={12} lg={12}>
+            <h3 className={styles.productiveHeading02}>{t('prescriptionDuration', '2. Prescription Duration')}</h3>
+          </Column>
+        </Row>
+        <Row>
+          <Column sm={6} md={6} lg={6}>
+            <DatePicker datePickerType="single">
+              <DatePickerInput id="startDatePicker" placeholder="mm/dd/yyyy" labelText={t('startDate', 'Start Date')} />
+            </DatePicker>
+          </Column>
+          <Column sm={3} md={3} lg={3}>
+            <NumberInput id="durationInput" value={0} label={t('duration', 'Duration')} />
+          </Column>
+          <Column sm={3} md={3} lg={3}>
+            <FormGroup legendText={t('durationUnit', 'Duration Unit')}>
+              <ComboBox
+                id="durationUnitPlaceholder"
+                items={[]}
+                placeholder={t('durationUnitPlaceholder', 'Duration Unit')}
+              />
+            </FormGroup>
+          </Column>
+        </Row>
+        <Row>
+          <Column sm={12} md={12} lg={12}>
+            <h3 className={styles.productiveHeading02}>{t('dispensingInformation', '3. Dispensing Information')}</h3>
+          </Column>
+        </Row>
+        <Row>
+          <Column sm={6} md={6} lg={6}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <FormGroup legendText={t('quantityDispensed', 'Quantity Dispensed')} style={{ flex: '1 1 0px' }}>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span>
+                    <strong>{order.quantityDispensed ?? 0}</strong> {t('quantityDispensedPills', 'pills')}
+                  </span>
+                  <Button
+                    kind="ghost"
+                    hasIconOnly={true}
+                    renderIcon={() => <Edit16 />}
+                    iconDescription={t('edit', 'Edit')}
+                  />
+                </div>
+              </FormGroup>
+              <FormGroup legendText={t('prescriptionRefills', 'Prescription Refills')}>
+                <NumberInput id="prescriptionRefills" value={0} style={{ flex: '1 1 0px' }} />
+              </FormGroup>
+            </div>
+          </Column>
+        </Row>
+        <Row>
+          <Column sm={12} md={12} lg={12}>
+            <TextInput
+              id="indication"
+              labelText={t('indication', 'Indication')}
+              placeholder={t('indicationPlaceholder', 'e.g. "Hypertension"')}
+              onChange={e => setOrder({ ...order, indication: e.target.value })}
             />
           </Column>
         </Row>

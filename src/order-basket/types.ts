@@ -13,4 +13,6 @@ export interface MedicationOrder {
   dosageUnit: CommonMedicationDosageUnit;
   frequency: CommonMedicationFrequency;
   route: CommonMedicationRoute;
+  indication?: string;
+  quantityDispensed?: number;
 }
