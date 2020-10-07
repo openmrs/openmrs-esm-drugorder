@@ -8,6 +8,7 @@ import {
   ComboBox,
   DatePicker,
   DatePickerInput,
+  Form,
   FormGroup,
   FormItem,
   Grid,
@@ -26,23 +27,48 @@ import CommonMedicationsTable from './common-medications-table.component';
 import CommonMedicationsEditModal from './common-medications-edit-modal.component';
 import { getCommonMedicationByUuid } from '../../api/common-medication';
 import { Edit16 } from '@carbon/icons-react';
+import { OpenmrsResource } from '../../types/openmrs-resource';
 
 export interface MedicationOrderFormProps {
   initialOrder: MedicationOrder;
-  close: () => void;
+  durationUnits: Array<OpenmrsResource>;
+  onSign: (finalizedOrder: MedicationOrder) => void;
+  onCancel: () => void;
 }
 
-export default function MedicationOrderForm({ initialOrder, close }: MedicationOrderFormProps) {
+const defaultDurationUnit: OpenmrsResource = {
+  uuid: '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+  display: 'Days',
+};
+
+const defaultDuration = 1;
+
+export default function MedicationOrderForm({
+  initialOrder,
+  durationUnits,
+  onSign,
+  onCancel,
+}: MedicationOrderFormProps) {
   const { t } = useTranslation();
-  const [order, setOrder] = useState(initialOrder);
+  const [order, setOrder] = useState({
+    patientInstructions: '',
+    prnTakeAsNeeded: false,
+    prnReason: '',
+    startDate: new Date(),
+    duration: defaultDuration,
+    durationUnit: defaultDurationUnit,
+    quantityDispensed: 0,
+    prescriptionRefills: 0,
+    indication: '',
+    ...initialOrder,
+  });
   const [isDoseModalOpen, setIsDoseModalOpen] = useState(false);
   const [isFrequencyModalOpen, setIsFrequencyModalOpen] = useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
-  const [isPrnReasonVisible, setIsPrnReasonVisible] = useState(false);
   const commonMedication = getCommonMedicationByUuid(order.drug.uuid);
 
   return (
-    <>
+    <Form onSubmit={() => onSign(order)}>
       <h2 className={styles.productiveHeading03} style={{ marginTop: '1.5rem' }}>
         {t('orderForm', 'Order Form')}
       </h2>
@@ -64,7 +90,6 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
               id="freeTextDosageToggle"
               aria-label={t('freeTextDosage', 'Free Text Dosage')}
               labelText={t('freeTextDosage', 'Free Text Dosage')}
-              onToggle={setIsPrnReasonVisible}
               onChange={() => {} /* Required by the typings, but we don't need it. */}
             />
           </Column>
@@ -108,19 +133,28 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
                 'patientInstructionsPlaceholder',
                 'Additional dosing instructions (e.g. "Take after eating")',
               )}
+              value={order.patientInstructions}
+              onChange={e => setOrder({ ...order, patientInstructions: e.target.value })}
             />
           </Column>
           <Column>
             <FormGroup legendText={t('prn', 'P.R.N.')}>
-              <Checkbox id="prn" labelText={t('takeAsNeeded', 'Take As Needed')} />
+              <Checkbox
+                id="prn"
+                labelText={t('takeAsNeeded', 'Take As Needed')}
+                checked={order.prnTakeAsNeeded}
+                onChange={newValue => setOrder({ ...order, prnTakeAsNeeded: newValue })}
+              />
             </FormGroup>
             <div
               className={styles.fullHeightTextAreaContainer}
-              style={isPrnReasonVisible ? {} : { visibility: 'hidden' }}>
+              style={order.prnTakeAsNeeded ? {} : { visibility: 'hidden' }}>
               <TextArea
                 labelText={t('prnReason', 'P.R.N. Reason')}
                 placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
                 rows={3}
+                value={order.prnReason}
+                onChange={e => setOrder({ ...order, prnReason: e.target.value })}
               />
             </div>
           </Column>
@@ -132,19 +166,29 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
         </Row>
         <Row style={{ marginTop: '1rem' }}>
           <Column md={4} className={styles.fullWidthDatePickerContainer}>
-            <DatePicker datePickerType="single">
+            <DatePicker
+              datePickerType="single"
+              value={[order.startDate]}
+              onChange={([newStartDate]) => setOrder({ ...order, startDate: newStartDate })}>
               <DatePickerInput id="startDatePicker" placeholder="mm/dd/yyyy" labelText={t('startDate', 'Start Date')} />
             </DatePicker>
           </Column>
           <Column md={2}>
-            <NumberInput id="durationInput" value={0} label={t('duration', 'Duration')} />
+            <NumberInput id="durationInput" value={order.duration} label={t('duration', 'Duration')} />
           </Column>
           <Column md={2}>
             <FormGroup legendText={t('durationUnit', 'Duration Unit')}>
               <ComboBox
                 id="durationUnitPlaceholder"
-                items={[]}
+                selectedItem={{ id: order.durationUnit.uuid, text: order.durationUnit.display }}
+                items={durationUnits.map(unit => ({ id: unit.uuid, text: unit.display }))}
+                itemToString={item => item?.text}
                 placeholder={t('durationUnitPlaceholder', 'Duration Unit')}
+                onChange={({ selectedItem }) =>
+                  !!selectedItem
+                    ? setOrder({ ...order, durationUnit: { uuid: selectedItem.id, display: selectedItem.text } })
+                    : setOrder({ ...order, durationUnit: defaultDurationUnit })
+                }
               />
             </FormGroup>
           </Column>
@@ -159,7 +203,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
             <FormGroup legendText={t('quantityDispensed', 'Quantity Dispensed')}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span>
-                  <strong>{order.quantityDispensed ?? 0}</strong> {t('quantityDispensedPills', 'pills')}
+                  <strong>{order.quantityDispensed}</strong> {t('quantityDispensedPills', 'pills')}
                 </span>
                 <Button
                   kind="ghost"
@@ -172,7 +216,17 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
           </Column>
           <Column md={2}>
             <FormGroup legendText={t('prescriptionRefills', 'Prescription Refills')}>
-              <NumberInput id="prescriptionRefills" value={0} />
+              <NumberInput
+                id="prescriptionRefills"
+                value={order.prescriptionRefills}
+                onChange={e =>
+                  setOrder({
+                    ...order,
+                    // @ts-ignore
+                    prescriptionRefills: Number(e.imaginaryTarget.value),
+                  })
+                }
+              />
             </FormGroup>
           </Column>
         </Row>
@@ -182,6 +236,7 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
               id="indication"
               labelText={t('indication', 'Indication')}
               placeholder={t('indicationPlaceholder', 'e.g. "Hypertension"')}
+              value={order.indication}
               onChange={e => setOrder({ ...order, indication: e.target.value })}
             />
           </Column>
@@ -189,10 +244,10 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
       </Grid>
 
       <ButtonSet style={{ marginTop: '2rem' }}>
-        <Button kind="secondary" onClick={close}>
+        <Button kind="secondary" onClick={onCancel}>
           {t('cancel', 'Cancel')}
         </Button>
-        <Button kind="primary" onClick={close}>
+        <Button kind="primary" type="submit">
           {t('save', 'Save')}
         </Button>
       </ButtonSet>
@@ -247,6 +302,6 @@ export default function MedicationOrderForm({ initialOrder, close }: MedicationO
         }}
         onCancel={() => setIsRouteModalOpen(false)}
       />
-    </>
+    </Form>
   );
 }

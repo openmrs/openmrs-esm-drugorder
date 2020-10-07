@@ -86,5 +86,6 @@
   "indication": "Indication",
   "indicationPlaceholder": "e.g. \"Hypertension\"",
 
+  "validationFieldRequired": "Required.",
   "validationNoItemSelected": "Please select one of the available items."
 }

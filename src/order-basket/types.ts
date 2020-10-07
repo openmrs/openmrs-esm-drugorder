@@ -5,6 +5,7 @@ import {
   CommonMedicationFrequency,
   CommonMedicationRoute,
 } from '../api/common-medication';
+import { OpenmrsResource } from '../types/openmrs-resource';
 
 export interface MedicationOrder {
   drug: Drug;
@@ -13,6 +14,13 @@ export interface MedicationOrder {
   dosageUnit: CommonMedicationDosageUnit;
   frequency: CommonMedicationFrequency;
   route: CommonMedicationRoute;
-  indication?: string;
+  patientInstructions?: string;
+  prnTakeAsNeeded?: boolean;
+  prnReason?: string;
+  startDate?: Date;
+  durationUnit?: OpenmrsResource;
+  duration?: number;
   quantityDispensed?: number;
+  prescriptionRefills?: number;
+  indication?: string;
 }

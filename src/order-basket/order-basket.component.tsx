@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './order-basket.scss';
 import OrderBasketSearch from './order-basket-search.component';
@@ -15,11 +15,15 @@ import {
 import { TrashCan16 } from '@carbon/icons-react';
 import MedicationOrderForm from './medication-order-form/medication-order-form.component';
 import { MedicationOrder } from './types';
+import { getDurationUnits } from '../utils/medications.resource';
+import { createErrorHandler } from '@openmrs/esm-error-handling';
+import { OpenmrsResource } from '../types/openmrs-resource';
 
 export default function OrderBasket() {
   const { t } = useTranslation();
   const [itemToEdit, setItemToEdit] = useState<MedicationOrder | null>(null);
   const [isMedicationOrderFormVisible, setIsMedicationOrderFormVisible] = useState(false);
+  const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
 
   const handleSearchResultClicked = (searchResult: MedicationOrder) => {
     setItemToEdit(searchResult);
@@ -31,11 +35,25 @@ export default function OrderBasket() {
     setItemToEdit(null);
   };
 
+  useEffect(() => {
+    const abortController = new AbortController();
+    getDurationUnits(abortController).then(res => setDurationUnits(res.data.answers), createErrorHandler);
+    return () => abortController.abort();
+  }, []);
+
   return (
     <>
       {isMedicationOrderFormVisible ? (
         <div style={{ margin: '0 1rem' }}>
-          <MedicationOrderForm initialOrder={itemToEdit} close={closeMedicationOrderForm} />
+          <MedicationOrderForm
+            durationUnits={durationUnits}
+            initialOrder={itemToEdit}
+            onSign={finalizedOrder => {
+              console.warn(finalizedOrder);
+              closeMedicationOrderForm();
+            }}
+            onCancel={closeMedicationOrderForm}
+          />
         </div>
       ) : (
         <>
