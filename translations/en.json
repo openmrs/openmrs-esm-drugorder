@@ -57,5 +57,19 @@
   "drugOrders": "Drug orders",
   "searchTermsSuggestedFor": "Suggested for {suggestion}",
   "searchResultsExactMatchesForTerm": "{count} exact match(es) for \"{searchTerm}\"",
-  "clearSearchResults": "Clear Results"
+  "clearSearchResults": "Clear Results",
+
+  "orderForm": "Order Form",
+  "dosageInstructions": "1. Dosage Instructions",
+  "editDosageModalHeading": "Edit Dose",
+  "editDoseComboBoxPlaceholder": "Dose",
+  "editDoseComboBoxTitle": "Enter Dose",
+  "editFrequencyModalHeading": "Edit Frequency",
+  "editFrequencyComboBoxPlaceholder": "Frequency",
+  "editFrequencyComboBoxTitle": "Enter Frequency",
+  "editRouteModalHeading": "Edit Route",
+  "editRouteComboBoxPlaceholder": "Route",
+  "editRouteComboBoxTitle": "Enter Route",
+
+  "validationNoItemSelected": "Please select one of the available items."
 }

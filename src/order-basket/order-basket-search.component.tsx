@@ -5,10 +5,10 @@ import styles from './order-basket-search.scss';
 import OrderBasketSearchSuggestions from './order-basket-search-suggestions';
 import { useQueryParameter } from '../utils/use-query-parameter.hook';
 import OrderBasketSearchResults from './order-basket-search-results';
-import { SearchResult } from './drug-search';
+import { MedicationOrder } from './types';
 
 export interface OrderBasketSearchProps {
-  onSearchResultClicked: (searchResult: SearchResult) => void;
+  onSearchResultClicked: (searchResult: MedicationOrder) => void;
 }
 
 export default function OrderBasketSearch({ onSearchResultClicked }: OrderBasketSearchProps) {

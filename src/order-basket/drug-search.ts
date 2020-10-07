@@ -1,15 +1,6 @@
 import { Drug, getDrugByName } from '../utils/medications.resource';
-import {
-  CommonMedicationDosage,
-  CommonMedicationDosageUnit,
-  getCommonMedicationByUuid,
-} from '../api/common-medication';
-
-export interface SearchResult {
-  drug: Drug;
-  dosage: CommonMedicationDosage;
-  dosageUnit: CommonMedicationDosageUnit;
-}
+import { getCommonMedicationByUuid } from '../api/common-medication';
+import { MedicationOrder } from './types';
 
 export async function searchMedications(searchTerm: string, abortController: AbortController) {
   const drugs = await searchDrugsInBackend(searchTerm, abortController);
@@ -22,7 +13,7 @@ async function searchDrugsInBackend(searchTerm: string, abortController: AbortCo
   return res.data.results;
 }
 
-function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<SearchResult> {
+function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<MedicationOrder> {
   const commonMedication = getCommonMedicationByUuid(drug.uuid);
 
   // If no common medication entry exists for the current drug, there is no point in displaying it in the search results,
@@ -34,7 +25,11 @@ function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<Searc
 
   for (const dosageUnit of commonMedication.dosageUnits) {
     for (const dosage of commonMedication.commonDosages) {
-      yield { drug, dosage, dosageUnit };
+      for (const frequency of commonMedication.commonFrequencies) {
+        for (const route of commonMedication.route) {
+          yield { drug, dosage, dosageUnit, frequency, route, commonMedicationName: commonMedication.name };
+        }
+      }
     }
   }
 }

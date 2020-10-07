@@ -1,0 +1,13 @@
+@import '../../root';
+
+/*
+ * Overrides the modal's height with a fixed value.
+ * This is necessary because Carbon's modal doesn't interact correctly with a ComboBox (which is used here).
+ * When the ComboBox's popup menu appears, it doesn't properly pop-up, but instead gets hidden behind a scroll bar.
+ * You can try it out by simply removing this style.
+ */
+.commonMedicationsEditModal {
+  div[role=dialog] {
+    height: 480px !important;
+  }
+}

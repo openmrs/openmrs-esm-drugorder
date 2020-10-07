@@ -4,12 +4,13 @@ import { Button, Link, Tile } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
-import { searchMedications, SearchResult } from './drug-search';
+import { searchMedications } from './drug-search';
+import { MedicationOrder } from './types';
 
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  onSearchResultClicked: (searchResult: SearchResult) => void;
+  onSearchResultClicked: (searchResult: MedicationOrder) => void;
 }
 
 export default function OrderBasketSearchResults({
@@ -18,7 +19,7 @@ export default function OrderBasketSearchResults({
   onSearchResultClicked,
 }: OrderBasketSearchResultsProps) {
   const { t } = useTranslation();
-  const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
+  const [searchResults, setSearchResults] = useState<Array<MedicationOrder>>([]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -26,7 +27,7 @@ export default function OrderBasketSearchResults({
     return () => abortController.abort();
   }, [searchTerm]);
 
-  const handleSearchResultClicked = (searchResult: SearchResult) => {
+  const handleSearchResultClicked = (searchResult: MedicationOrder) => {
     setSearchTerm('');
     setSearchResults([]);
     onSearchResultClicked(searchResult);
