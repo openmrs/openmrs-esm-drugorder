@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Search } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import styles from './order-basket-search.scss';
-import { Drug } from '../utils/medications.resource';
 import OrderBasketSearchSuggestions from './order-basket-search-suggestions';
 import { useQueryParameter } from '../utils/use-query-parameter.hook';
 import OrderBasketSearchResults from './order-basket-search-results';
+import { SearchResult } from './drug-search';
 
 export interface OrderBasketSearchProps {
-  onSearchResultClicked: (drug: Drug) => void;
+  onSearchResultClicked: (searchResult: SearchResult) => void;
 }
 
 export default function OrderBasketSearch({ onSearchResultClicked }: OrderBasketSearchProps) {

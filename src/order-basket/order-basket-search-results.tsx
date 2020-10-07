@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import styles from './order-basket-search.scss';
 import { Button, Link, Tile } from 'carbon-components-react';
-import { Drug, getDrugByName } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
+import { searchMedications, SearchResult } from './drug-search';
 
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  onSearchResultClicked: (result: Drug) => void;
+  onSearchResultClicked: (searchResult: SearchResult) => void;
 }
 
 export default function OrderBasketSearchResults({
@@ -18,21 +18,18 @@ export default function OrderBasketSearchResults({
   onSearchResultClicked,
 }: OrderBasketSearchResultsProps) {
   const { t } = useTranslation();
-  const [searchResults, setSearchResults] = useState<Array<Drug>>([]);
+  const [searchResults, setSearchResults] = useState<Array<SearchResult>>([]);
 
   useEffect(() => {
     const abortController = new AbortController();
-    getDrugByName(searchTerm, abortController).then(
-      response => setSearchResults(response.data.results),
-      createErrorHandler,
-    );
+    searchMedications(searchTerm, abortController).then(setSearchResults, createErrorHandler);
     return () => abortController.abort();
   }, [searchTerm]);
 
-  const handleSearchResultClicked = (drug: Drug) => {
+  const handleSearchResultClicked = (searchResult: SearchResult) => {
     setSearchTerm('');
     setSearchResults([]);
-    onSearchResultClicked(drug);
+    onSearchResultClicked(searchResult);
   };
 
   return (
@@ -56,10 +53,10 @@ export default function OrderBasketSearchResults({
                 <div style={{ flex: '1 1 auto' }}>
                   <p>
                     <strong>
-                      {result.concept.display} {result.strength}
+                      {result.drug.concept.display} ({result.dosage?.dosage})
                     </strong>
                     <br />
-                    <span className={styles.label01}>Capsule &mdash; Something else &mdash; $</span>
+                    <span className={styles.label01}>{result.dosageUnit?.name} &mdash; Something else &mdash; $</span>
                   </p>
                 </div>
                 <Button

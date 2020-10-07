@@ -1,8 +1,38 @@
 import commonMedications from './common-medication.json';
 
-type InnerArrayType<T> = T extends Array<infer Inner> ? Inner : T;
+export interface CommonMedication {
+  name: string;
+  uuid: string;
+  strength: string;
+  dosageUnits: Array<CommonMedicationDosageUnit>;
+  route: Array<CommonMedicationRoute>;
+  commonFrequencies: Array<CommonMedicationFrequency>;
+  commonDosages: Array<CommonMedicationDosage>;
+}
 
-export type CommonMedication = InnerArrayType<typeof commonMedications>;
+export interface CommonMedicationDosageUnit {
+  uuid: string;
+  name: string;
+  selected?: boolean;
+}
+
+export interface CommonMedicationRoute {
+  name: string;
+  conceptUuid: string;
+  selected?: boolean;
+}
+
+export interface CommonMedicationFrequency {
+  name: string;
+  conceptUuid: string;
+  selected?: boolean;
+}
+
+export interface CommonMedicationDosage {
+  dosage: string;
+  numberOfPills: number;
+  selected?: boolean;
+}
 
 export function getCommonMedicationByUuid(uuid: string): CommonMedication | undefined {
   return commonMedications.filter(x => x.uuid === uuid)[0];

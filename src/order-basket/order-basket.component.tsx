@@ -13,12 +13,12 @@ import {
   TableRow,
 } from 'carbon-components-react';
 import { TrashCan16 } from '@carbon/icons-react';
-import { Drug } from '../utils/medications.resource';
+import { SearchResult } from './drug-search';
 
 export default function OrderBasket() {
   const { t } = useTranslation();
 
-  const handleSearchResultClicked = (drug: Drug) => {
+  const handleSearchResultClicked = (searchResult: SearchResult) => {
     // TODO: Open 'Edit Medication' window.
   };
 
