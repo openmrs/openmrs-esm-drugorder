@@ -4,6 +4,9 @@ import styles from './order-basket.scss';
 import OrderBasketSearch from './order-basket-search.component';
 import {
   Button,
+  // @ts-ignore
+  ButtonSet,
+  Form,
   Loading,
   Table,
   TableBody,
@@ -21,9 +24,12 @@ import { getDurationUnits } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
 import _ from 'lodash-es';
+import { orderDrugs } from './drug-ordering';
+import { useCurrentPatient } from '@openmrs/esm-api';
 
 export default function OrderBasket() {
   const { t } = useTranslation();
+  const [, , patientUuid] = useCurrentPatient();
   const [itemToEdit, setItemToEdit] = useState<MedicationOrder | null>(null);
   const [isMedicationOrderFormVisible, setIsMedicationOrderFormVisible] = useState(false);
   const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
@@ -57,6 +63,12 @@ export default function OrderBasket() {
   const handleMedicationOrderFormSubmit = (finalizedOrder: MedicationOrder) => {
     closeMedicationOrderForm();
     setOrders([...orders, finalizedOrder]);
+  };
+
+  const handleSaveClicked = () => {
+    const abortController = new AbortController();
+    orderDrugs(orders, patientUuid, abortController).then(() => {});
+    return () => abortController.abort();
   };
 
   const closeMedicationOrderForm = () => {
@@ -132,6 +144,14 @@ export default function OrderBasket() {
               </>
             )}
           </div>
+
+          <ButtonSet style={{ marginTop: '2rem' }}>
+            {/*TODO: Add cancel functionality*/}
+            <Button kind="secondary">{t('cancel', 'Cancel')}</Button>
+            <Button kind="primary" onClick={handleSaveClicked}>
+              {t('save', 'Save')}
+            </Button>
+          </ButtonSet>
         </>
       )}
     </>

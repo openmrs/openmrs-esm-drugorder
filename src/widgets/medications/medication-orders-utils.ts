@@ -88,8 +88,8 @@ export type OrderMedication = {
   routeName?: string;
   frequencyUuid?: string;
   frequencyName?: string;
-  asNeeded?: string;
-  numRefills?: string;
+  asNeeded?: boolean;
+  numRefills?: number;
   action?: string | null;
   quantity?: Number;
   quantityUnits?: string;

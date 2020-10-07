@@ -60,7 +60,7 @@ export interface Drug {
   name: string;
   strength: string;
   concept: DrugConcept;
-  dosageForm: Array<OpenmrsResource>;
+  dosageForm: OpenmrsResource;
 }
 
 export interface DrugConcept extends OpenmrsResource {}
