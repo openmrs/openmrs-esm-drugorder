@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineConfigSchema } from '@openmrs/esm-module-config';
+import { defineConfigSchema } from '@openmrs/esm-config';
 import openmrsRootDecorator from '@openmrs/react-root-decorator';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import OrderBasketShell from './order-basket/order-basket-shell.component';

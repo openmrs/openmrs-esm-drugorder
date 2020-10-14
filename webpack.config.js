@@ -1,6 +1,7 @@
-const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin').CleanWebpackPlugin;
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const path = require("path");
+const CleanWebpackPlugin = require("clean-webpack-plugin").CleanWebpackPlugin;
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const { peerDependencies } = require('./package.json');
 
 const cssLoader = {
   loader: 'css-loader',
@@ -12,7 +13,10 @@ const cssLoader = {
 };
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/index.ts'),
+  entry: [
+    path.resolve(__dirname, "src/set-public-path.ts"),
+    path.resolve(__dirname, "src/index.ts"),
+  ],
   output: {
     filename: 'openmrs-esm-drugorder.js',
     libraryTarget: 'system',
@@ -30,7 +34,7 @@ module.exports = {
         test: /\.m?(js|ts|tsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
         },
       },
       {
@@ -43,16 +47,16 @@ module.exports = {
       },
     ],
   },
-  devtool: 'sourcemap',
+  devtool: "sourcemap",
   devServer: {
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Origin": "*",
     },
     disableHostCheck: true,
   },
-  externals: [/^@openmrs\/esm.*/, 'i18next', 'single-spa', 'react', 'react-dom', 'react-i18next', 'react-router-dom'],
+  externals: Object.keys(peerDependencies),
   plugins: [new ForkTsCheckerWebpackPlugin(), new CleanWebpackPlugin()],
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js'],
+    extensions: [".tsx", ".ts", ".jsx", ".js"],
   },
 };
