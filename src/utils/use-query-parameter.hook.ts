@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 /**
  * A hook similar to `useState` which reads from and writes to a query parameter.
@@ -10,9 +10,10 @@ export function useQueryParameter(
   fallbackValue: string = null,
 ): [string | null, (newValue: string) => void] {
   const history = useHistory();
-  const current = new URLSearchParams(history.location.search).get(name) ?? fallbackValue;
+  const location = useLocation();
+  const current = new URLSearchParams(location.search).get(name) ?? fallbackValue;
   const setCurrent = (value: string) => {
-    const params = new URLSearchParams(history.location.search);
+    const params = new URLSearchParams(location.search);
     params.set(name, value);
     history.push({
       ...history.location,
