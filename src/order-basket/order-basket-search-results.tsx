@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from './order-basket-search.scss';
+import styles from './order-basket-search-results.scss';
 import { Button, ClickableTile, Link, Pagination } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
@@ -54,6 +54,7 @@ export default function OrderBasketSearchResults({
           {currentSearchResultPage.map((result, index) => (
             <ClickableTile
               key={index}
+              className={styles.searchResultTile}
               style={{ marginTop: '5px' }}
               handleClick={() => handleSearchResultClicked(result, false)}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
