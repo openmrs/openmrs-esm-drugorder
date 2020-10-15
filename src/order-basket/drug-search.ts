@@ -35,6 +35,7 @@ function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<Medic
             frequency,
             route,
             commonMedicationName: commonMedication.name,
+            isFreeTextDosage: false,
           };
         }
       }

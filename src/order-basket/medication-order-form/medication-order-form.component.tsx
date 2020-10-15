@@ -57,50 +57,68 @@ export default function MedicationOrderForm({
             <h3 className={styles.productiveHeading02} style={{ marginTop: '0.5rem' }}>
               {t('dosageInstructions', '1. Dosage Instructions')}
             </h3>
-            <p style={{ marginTop: '1rem' }}>
-              <strong>{order.commonMedicationName}</strong> &mdash; {order.route.name} &mdash; {order.dosageUnit.name}
-              &mdash; <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;{' '}
-              <strong>{order.dosage.dosage}</strong>
-            </p>
+            {order.isFreeTextDosage ? (
+              <p>
+                <strong>{order.commonMedicationName}</strong> &mdash; {order.freeTextDosage}
+              </p>
+            ) : (
+              <p style={{ marginTop: '1rem' }}>
+                <strong>{order.commonMedicationName}</strong> &mdash; {order.route.name} &mdash; {order.dosageUnit.name}
+                &mdash; <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;{' '}
+                <strong>{order.dosage.dosage}</strong>
+              </p>
+            )}
           </Column>
           <Column className={styles.pullColumnContentRight}>
             <ToggleSmall
               id="freeTextDosageToggle"
               aria-label={t('freeTextDosage', 'Free Text Dosage')}
               labelText={t('freeTextDosage', 'Free Text Dosage')}
+              toggled={order.isFreeTextDosage}
               onChange={() => {} /* Required by the typings, but we don't need it. */}
+              onToggle={value => setOrder({ ...order, isFreeTextDosage: value })}
             />
           </Column>
         </Row>
 
         <Row style={{ marginTop: '1rem' }}>
           <Column md={8}>
-            <CommonMedicationsTable
-              items={[
-                { header: 'Name', value: order.commonMedicationName, wrapValueInStrong: true, canEdit: false },
-                {
-                  header: 'Dose',
-                  value: order.dosage.dosage,
-                  wrapValueInStrong: true,
-                  canEdit: true,
-                  onEditClick: () => setIsDoseModalOpen(true),
-                },
-                {
-                  header: 'Frequency',
-                  value: order.frequency.name,
-                  wrapValueInStrong: false,
-                  canEdit: true,
-                  onEditClick: () => setIsFrequencyModalOpen(true),
-                },
-                {
-                  header: 'Route',
-                  value: order.route.name,
-                  wrapValueInStrong: false,
-                  canEdit: true,
-                  onEditClick: () => setIsRouteModalOpen(true),
-                },
-              ]}
-            />
+            {order.isFreeTextDosage ? (
+              <TextInput
+                id="freeTextDosage"
+                labelText={t('freeTextDosage', 'Free Text Dosage')}
+                placeholder={t('freeTextDosage', 'Free Text Dosage')}
+                value={order.freeTextDosage}
+                onChange={e => setOrder({ ...order, freeTextDosage: e.target.value })}
+              />
+            ) : (
+              <CommonMedicationsTable
+                items={[
+                  { header: 'Name', value: order.commonMedicationName, wrapValueInStrong: true, canEdit: false },
+                  {
+                    header: 'Dose',
+                    value: order.dosage.dosage,
+                    wrapValueInStrong: true,
+                    canEdit: true,
+                    onEditClick: () => setIsDoseModalOpen(true),
+                  },
+                  {
+                    header: 'Frequency',
+                    value: order.frequency.name,
+                    wrapValueInStrong: false,
+                    canEdit: true,
+                    onEditClick: () => setIsFrequencyModalOpen(true),
+                  },
+                  {
+                    header: 'Route',
+                    value: order.route.name,
+                    wrapValueInStrong: false,
+                    canEdit: true,
+                    onEditClick: () => setIsRouteModalOpen(true),
+                  },
+                ]}
+              />
+            )}
           </Column>
         </Row>
         <Row style={{ marginTop: '1rem' }}>

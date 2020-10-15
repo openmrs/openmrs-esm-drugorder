@@ -115,8 +115,17 @@ export default function OrderBasket() {
                       <p>
                         <span className={styles.actionLabelNew}>{_.capitalize(order.action.toLowerCase())}</span>
                         <br />
-                        <strong>{order.drug.concept.display}</strong> &mdash; <strong>{order.dosage.dosage}</strong>
-                        &mdash; {order.dosageUnit.name} &mdash; {order.route.name} &mdash; {order.frequency.name}
+                        {order.isFreeTextDosage ? (
+                          <>
+                            <strong>{order.drug.concept.display}</strong> &mdash; {order.freeTextDosage}
+                          </>
+                        ) : (
+                          <>
+                            <strong>{order.drug.concept.display}</strong> & mdash;{' '}
+                            <strong>{order.dosage.dosage}</strong>
+                            &mdash; {order.dosageUnit.name} &mdash; {order.route.name} &mdash; {order.frequency.name}
+                          </>
+                        )}
                         <br />
                         <span className={styles.label01}>{t('refills', 'Refills').toUpperCase()}</span>{' '}
                         {order.prescriptionRefills} &mdash;{' '}

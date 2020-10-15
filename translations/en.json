@@ -92,6 +92,7 @@
   "prescriptionRefills": "Prescription Refills",
   "indication": "Indication",
   "indicationPlaceholder": "e.g. \"Hypertension\"",
+  "freeTextDosage": "Free Text Dosage",
 
   "validationFieldRequired": "Required.",
   "validationNoItemSelected": "Please select one of the available items."

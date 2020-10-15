@@ -24,6 +24,8 @@ export interface MedicationOrder {
   quantityDispensed?: number;
   prescriptionRefills?: number;
   indication?: string;
+  isFreeTextDosage: boolean;
+  freeTextDosage?: string;
 }
 
 export const daysDurationUnit = {
