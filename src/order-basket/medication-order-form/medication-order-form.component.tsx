@@ -176,10 +176,11 @@ export default function MedicationOrderForm({
               min={0}
               value={order.duration}
               helperText={t('noDurationHint', '0 indicates an indefinite duration.')}
-              onChange={e =>
+              onChange={e => {
                 // @ts-ignore
-                setOrder({ ...order, duration: e.imaginaryTarget.value === 0 ? undefined : e.imaginaryTarget.value })
-              }
+                const newValue = Number(e.imaginaryTarget.value);
+                setOrder({ ...order, duration: newValue === 0 ? undefined : newValue });
+              }}
             />
           </Column>
           <Column md={2}>
