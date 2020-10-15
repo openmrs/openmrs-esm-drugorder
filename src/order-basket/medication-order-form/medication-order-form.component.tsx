@@ -170,7 +170,17 @@ export default function MedicationOrderForm({
             </DatePicker>
           </Column>
           <Column md={2}>
-            <NumberInput id="durationInput" value={order.duration} label={t('duration', 'Duration')} />
+            <NumberInput
+              id="durationInput"
+              label={t('duration', 'Duration')}
+              min={0}
+              value={order.duration}
+              helperText={t('noDurationHint', '0 indicates an indefinite duration.')}
+              onChange={e =>
+                // @ts-ignore
+                setOrder({ ...order, duration: e.imaginaryTarget.value === 0 ? undefined : e.imaginaryTarget.value })
+              }
+            />
           </Column>
           <Column md={2}>
             <FormGroup legendText={t('durationUnit', 'Duration Unit')}>

@@ -44,7 +44,7 @@ export default function OrderBasket() {
       prnTakeAsNeeded: false,
       prnReason: '',
       startDate: new Date(),
-      duration: 1,
+      duration: 0,
       durationUnit: daysDurationUnit,
       quantityDispensed: 0,
       prescriptionRefills: 0,
@@ -121,8 +121,7 @@ export default function OrderBasket() {
                           </>
                         ) : (
                           <>
-                            <strong>{order.drug.concept.display}</strong> & mdash;{' '}
-                            <strong>{order.dosage.dosage}</strong>
+                            <strong>{order.drug.concept.display}</strong> &mdash; <strong>{order.dosage.dosage}</strong>
                             &mdash; {order.dosageUnit.name} &mdash; {order.route.name} &mdash; {order.frequency.name}
                           </>
                         )}
