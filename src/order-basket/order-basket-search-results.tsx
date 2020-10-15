@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styles from './order-basket-search.scss';
-import { Button, ClickableTile, Link } from 'carbon-components-react';
+import { Button, ClickableTile, Link, Pagination } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { searchMedications } from './drug-search';
 import { MedicationOrder } from './types';
+import { paginate } from '../utils/pagination';
 
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
@@ -20,6 +21,9 @@ export default function OrderBasketSearchResults({
 }: OrderBasketSearchResultsProps) {
   const { t } = useTranslation();
   const [searchResults, setSearchResults] = useState<Array<MedicationOrder>>([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [currentSearchResultPage] = paginate(searchResults, page, pageSize);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -47,7 +51,7 @@ export default function OrderBasketSearchResults({
             <Link onClick={() => setSearchTerm('')}>{t('clearSearchResults', 'Clear Results')}</Link>
           </div>
 
-          {searchResults.map((result, index) => (
+          {currentSearchResultPage.map((result, index) => (
             <ClickableTile
               key={index}
               style={{ marginTop: '5px' }}
@@ -76,6 +80,18 @@ export default function OrderBasketSearchResults({
               </div>
             </ClickableTile>
           ))}
+          {searchResults.length > 0 && (
+            <Pagination
+              page={page}
+              pageSize={pageSize}
+              pageSizes={[10, 20, 30, 40, 50]}
+              totalItems={searchResults.length}
+              onChange={({ page, pageSize }) => {
+                setPage(page);
+                setPageSize(pageSize);
+              }}
+            />
+          )}
         </>
       )}
     </>

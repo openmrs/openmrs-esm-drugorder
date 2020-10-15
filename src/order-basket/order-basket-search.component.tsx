@@ -18,6 +18,7 @@ export default function OrderBasketSearch({ onSearchResultClicked }: OrderBasket
     <>
       <div className={styles.searchPopupContainer}>
         <Search
+          value={searchTerm}
           placeHolderText={t('searchFieldPlaceholder', 'Search for an order (e.g. "Aspirin")')}
           labelText={t('searchFieldPlaceholder', 'Search for an order (e.g. "Aspirin")')}
           onChange={e => setSearchTerm(e.currentTarget?.value ?? '')}
