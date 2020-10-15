@@ -225,6 +225,7 @@ export default function MedicationOrderForm({
             <FormGroup legendText={t('prescriptionRefills', 'Prescription Refills')}>
               <NumberInput
                 id="prescriptionRefills"
+                min={0}
                 value={order.prescriptionRefills}
                 onChange={e =>
                   setOrder({
