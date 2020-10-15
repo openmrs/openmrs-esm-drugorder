@@ -6,6 +6,7 @@ import {
   Button,
   // @ts-ignore
   ButtonSet,
+  ClickableTile,
   Form,
   Loading,
   Table,
@@ -30,11 +31,14 @@ import { useCurrentPatient } from '@openmrs/esm-api';
 export default function OrderBasket() {
   const { t } = useTranslation();
   const [, , patientUuid] = useCurrentPatient();
-  const [itemToEdit, setItemToEdit] = useState<MedicationOrder | null>(null);
-  const [isMedicationOrderFormVisible, setIsMedicationOrderFormVisible] = useState(false);
   const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<Array<MedicationOrder>>([]);
+  const [medicationOrderFormItem, setMedicationOrderFormItem] = useState<MedicationOrder | null>(null);
+  const [isMedicationOrderFormVisible, setIsMedicationOrderFormVisible] = useState(false);
+  const [onMedicationOrderFormSigned, setOnMedicationOrderFormSign] = useState<
+    (finalizedOrder: MedicationOrder) => void | null
+  >(null);
 
   const handleSearchResultClicked = (searchResult: MedicationOrder, directlyAddToBasket: boolean) => {
     const filledOrder = {
@@ -55,14 +59,8 @@ export default function OrderBasket() {
     if (directlyAddToBasket) {
       setOrders([...orders, filledOrder]);
     } else {
-      setItemToEdit(filledOrder);
-      setIsMedicationOrderFormVisible(true);
+      openMedicationOrderFormForAddingNewOrder(filledOrder);
     }
-  };
-
-  const handleMedicationOrderFormSubmit = (finalizedOrder: MedicationOrder) => {
-    closeMedicationOrderForm();
-    setOrders([...orders, finalizedOrder]);
   };
 
   const handleSaveClicked = () => {
@@ -71,9 +69,29 @@ export default function OrderBasket() {
     return () => abortController.abort();
   };
 
-  const closeMedicationOrderForm = () => {
-    setIsMedicationOrderFormVisible(false);
-    setItemToEdit(null);
+  const openMedicationOrderFormForAddingNewOrder = (newOrder: MedicationOrder) => {
+    openMedicationOrderForm(newOrder, finalizedOrder => setOrders([...orders, finalizedOrder]));
+  };
+
+  const openMedicationOrderFormForUpdatingExistingOrder = (existingOrderIndex: number) => {
+    const order = orders[existingOrderIndex];
+    openMedicationOrderForm(order, finalizedOrder =>
+      setOrders(() => {
+        const newOrders = [...orders];
+        newOrders[existingOrderIndex] = finalizedOrder;
+        return newOrders;
+      }),
+    );
+  };
+
+  const openMedicationOrderForm = (item: MedicationOrder, onSigned: (finalizedOrder: MedicationOrder) => void) => {
+    setMedicationOrderFormItem(item);
+    setOnMedicationOrderFormSign(_ => finalizedOrder => {
+      setIsMedicationOrderFormVisible(false);
+      setMedicationOrderFormItem(null);
+      onSigned(finalizedOrder);
+    });
+    setIsMedicationOrderFormVisible(true);
   };
 
   useEffect(() => {
@@ -91,15 +109,15 @@ export default function OrderBasket() {
         <div style={{ margin: '0 1rem' }}>
           <MedicationOrderForm
             durationUnits={durationUnits}
-            initialOrder={itemToEdit}
-            onSign={handleMedicationOrderFormSubmit}
-            onCancel={closeMedicationOrderForm}
+            initialOrder={medicationOrderFormItem}
+            onSign={onMedicationOrderFormSigned}
+            onCancel={() => setIsMedicationOrderFormVisible(false)}
           />
         </div>
       ) : (
         <>
           <OrderBasketSearch onSearchResultClicked={handleSearchResultClicked} />
-          <div style={{ margin: '0 1rem' }}>
+          <div style={{ margin: '3rem 1rem' }}>
             <h3 className={styles.productiveHeading02} style={{ marginTop: '0.5rem' }}>
               {t('orderBasket', 'Order Basket')}
             </h3>
@@ -110,7 +128,10 @@ export default function OrderBasket() {
                   {t('newOrders', '{count} new order(s)', { count: orders.length })}
                 </h4>
                 {orders.map((order, index) => (
-                  <Tile key={index} style={{ marginTop: '5px' }}>
+                  <ClickableTile
+                    key={index}
+                    style={{ marginTop: '5px' }}
+                    handleClick={() => openMedicationOrderFormForUpdatingExistingOrder(index)}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <p>
                         <span className={styles.actionLabelNew}>{_.capitalize(order.action.toLowerCase())}</span>
@@ -140,26 +161,25 @@ export default function OrderBasket() {
                         renderIcon={() => <TrashCan16 />}
                         iconDescription={t('removeFromBasket', 'Remove from basket')}
                         onClick={() => {
-                          const index = orders.indexOf(order);
                           const newOrders = [...orders];
                           newOrders.splice(index, 1);
                           setOrders(newOrders);
                         }}
                       />
                     </div>
-                  </Tile>
+                  </ClickableTile>
                 ))}
               </>
             )}
-          </div>
 
-          <ButtonSet style={{ marginTop: '2rem' }}>
-            {/*TODO: Add cancel functionality*/}
-            <Button kind="secondary">{t('cancel', 'Cancel')}</Button>
-            <Button kind="primary" onClick={handleSaveClicked}>
-              {t('save', 'Save')}
-            </Button>
-          </ButtonSet>
+            <ButtonSet style={{ marginTop: '2rem' }}>
+              {/*TODO: Add cancel functionality*/}
+              <Button kind="secondary">{t('cancel', 'Cancel')}</Button>
+              <Button kind="primary" onClick={handleSaveClicked}>
+                {t('save', 'Save')}
+              </Button>
+            </ButtonSet>
+          </div>
         </>
       )}
     </>

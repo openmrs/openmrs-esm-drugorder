@@ -8,15 +8,13 @@ defineConfigSchema('@openmrs/esm-drugorder-app', {});
 
 function Root() {
   return (
-    <div className="omrs-main-content">
-      <BrowserRouter basename={window['getOpenmrsSpaBase']()}>
-        <Switch>
-          <Route exact path="/patient/:patientUuid/drugorder/basket">
-            <OrderBasketShell />
-          </Route>
-        </Switch>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter basename={window['getOpenmrsSpaBase']()}>
+      <Switch>
+        <Route exact path="/patient/:patientUuid/drugorder/basket">
+          <OrderBasketShell />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
