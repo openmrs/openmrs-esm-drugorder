@@ -98,7 +98,7 @@ export default function MedicationOrderForm({
                   <ComboBox
                     id="doseSelection"
                     items={commonMedication.commonDosages.map(x => ({ id: x.dosage, text: x.dosage }))}
-                    initialSelectedItem={{ id: order.dosage.dosage, text: order.dosage.dosage }}
+                    selectedItem={{ id: order.dosage.dosage, text: order.dosage.dosage }}
                     placeholder={t('editDoseComboBoxPlaceholder', 'Dose')}
                     titleText={t('editDoseComboBoxTitle', 'Enter Dose')}
                     itemToString={item => item?.text}
@@ -107,9 +107,9 @@ export default function MedicationOrderForm({
                     onChange={({ selectedItem }) => {
                       setOrder({
                         ...order,
-                        dosage: commonMedication.commonDosages.find(
-                          x => x.dosage === (selectedItem?.id ?? order.dosage.dosage),
-                        ),
+                        dosage: !!selectedItem?.id
+                          ? commonMedication.commonDosages.find(x => x.dosage === selectedItem.id)
+                          : initialOrder.dosage,
                       });
                     }}
                   />
@@ -118,7 +118,7 @@ export default function MedicationOrderForm({
                   <ComboBox
                     id="editFrequency"
                     items={commonMedication.commonFrequencies.map(x => ({ id: x.conceptUuid, text: x.name }))}
-                    initialSelectedItem={{ id: order.frequency.conceptUuid, text: order.frequency.name }}
+                    selectedItem={{ id: order.frequency.conceptUuid, text: order.frequency.name }}
                     placeholder={t('editFrequencyComboBoxPlaceholder', 'Frequency')}
                     titleText={t('editFrequencyComboBoxTitle', 'Enter Frequency')}
                     itemToString={item => item?.text}
@@ -127,9 +127,9 @@ export default function MedicationOrderForm({
                     onChange={({ selectedItem }) => {
                       setOrder({
                         ...order,
-                        frequency: commonMedication.commonFrequencies.find(
-                          x => x.conceptUuid === (selectedItem?.id ?? order.frequency.conceptUuid),
-                        ),
+                        frequency: !!selectedItem?.id
+                          ? commonMedication.commonFrequencies.find(x => x.conceptUuid === selectedItem.id)
+                          : initialOrder.frequency,
                       });
                     }}
                   />
@@ -140,7 +140,7 @@ export default function MedicationOrderForm({
                   <ComboBox
                     id="editRoute"
                     items={commonMedication.route.map(x => ({ id: x.conceptUuid, text: x.name }))}
-                    initialSelectedItem={{ id: order.route.conceptUuid, text: order.route.name }}
+                    selectedItem={{ id: order.route.conceptUuid, text: order.route.name }}
                     placeholder={t('editRouteComboBoxPlaceholder', 'Route')}
                     titleText={t('editRouteComboBoxTitle', 'Enter Route')}
                     itemToString={item => item?.text}
@@ -149,9 +149,9 @@ export default function MedicationOrderForm({
                     onChange={({ selectedItem }) => {
                       setOrder({
                         ...order,
-                        route: commonMedication.route.find(
-                          x => x.conceptUuid === (selectedItem?.id ?? order.route.conceptUuid),
-                        ),
+                        route: !!selectedItem?.id
+                          ? commonMedication.route.find(x => x.conceptUuid === selectedItem.id)
+                          : initialOrder.route,
                       });
                     }}
                   />
