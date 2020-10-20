@@ -88,7 +88,7 @@
   "durationUnit": "Duration Unit",
   "durationUnitPlaceholder": "Duration Unit",
   "quantityDispensed": "Quantity Dispensed",
-  "quantityDispensedPills": "pills",
+  "pillsDispensed": "Pills dispensed",
   "prescriptionRefills": "Prescription Refills",
   "indication": "Indication",
   "indicationPlaceholder": "e.g. \"Hypertension\"",

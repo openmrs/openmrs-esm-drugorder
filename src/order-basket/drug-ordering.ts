@@ -31,13 +31,13 @@ function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: st
         orderer: orderer, // TODO: Is this right?
         encounterUuid: '', // TODO: Is this right?
         drugUuid: order.drug.uuid,
-        dose: order.quantityDispensed, // TODO: Is this right?
+        dose: order.pillsDispensed, // TODO: Is this right?
         doseUnitsConcept: order.dosageUnit.name,
         route: order.route.conceptUuid,
         frequencyUuid: order.frequency.conceptUuid,
         asNeeded: order.prnTakeAsNeeded,
         numRefills: order.prescriptionRefills,
-        quantity: order.quantityDispensed, // TODO: Is this right?
+        quantity: order.pillsDispensed, // TODO: Is this right?
         quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', // TODO: Is this right?
         type: 'drugorder',
         drugName: order.drug.name,

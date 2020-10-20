@@ -42,7 +42,7 @@ export default function OrderBasketItem({ order, onClick, onRemoveClick }: Order
           <br />
           <span className={styles.label01}>{t('refills', 'Refills').toUpperCase()}</span> {order.prescriptionRefills}{' '}
           &mdash; <span className={styles.label01}>{t('quantity', 'Quantity').toUpperCase()}</span>{' '}
-          {order.quantityDispensed} &mdash;{' '}
+          {order.pillsDispensed} &mdash;{' '}
           <span className={styles.label01}>{t('indication', 'Indication').toUpperCase()}</span>{' '}
           {!!order.indication ? order.indication : <i>{t('none', 'None')}</i>}
         </p>

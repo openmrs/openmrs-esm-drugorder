@@ -222,18 +222,19 @@ export default function MedicationOrderForm({
           <Row style={{ marginTop: '1rem' }}>
             <Column md={2}>
               <FormGroup legendText={t('quantityDispensed', 'Quantity Dispensed')}>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <span>
-                    {/*TODO: Make this function*/}
-                    <strong>{order.quantityDispensed}</strong> {t('quantityDispensedPills', 'pills')}
-                  </span>
-                  <Button
-                    kind="ghost"
-                    hasIconOnly={true}
-                    renderIcon={() => <Edit16 />}
-                    iconDescription={t('edit', 'Edit')}
-                  />
-                </div>
+                <NumberInput
+                  id="quantityDispensed"
+                  helperText={t('pillsDispensed', 'Pills dispensed')}
+                  value={order.pillsDispensed}
+                  min={0}
+                  onChange={e => {
+                    setOrder({
+                      ...order,
+                      // @ts-ignore
+                      pillsDispensed: Number(e.imaginaryTarget.value),
+                    });
+                  }}
+                />
               </FormGroup>
             </Column>
             <Column md={2}>

@@ -21,7 +21,7 @@ export interface MedicationOrder {
   startDate?: Date;
   durationUnit?: OpenmrsResource;
   duration?: number;
-  quantityDispensed?: number;
+  pillsDispensed?: number;
   prescriptionRefills?: number;
   indication?: string;
   isFreeTextDosage: boolean;
