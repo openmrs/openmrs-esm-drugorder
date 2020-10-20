@@ -22,10 +22,7 @@ import {
 import styles from './medication-order-form.scss';
 import { useTranslation } from 'react-i18next';
 import { daysDurationUnit, MedicationOrder } from '../types';
-import CommonMedicationsTable from './common-medications-table.component';
-import CommonMedicationsEditModal from './common-medications-edit-modal.component';
 import { getCommonMedicationByUuid } from '../../api/common-medication';
-import { Edit16 } from '@carbon/icons-react';
 import { OpenmrsResource } from '../../types/openmrs-resource';
 
 export interface MedicationOrderFormProps {
@@ -43,9 +40,6 @@ export default function MedicationOrderForm({
 }: MedicationOrderFormProps) {
   const { t } = useTranslation();
   const [order, setOrder] = useState(initialOrder);
-  const [isDoseModalOpen, setIsDoseModalOpen] = useState(false);
-  const [isFrequencyModalOpen, setIsFrequencyModalOpen] = useState(false);
-  const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const commonMedication = getCommonMedicationByUuid(order.drug.uuid);
 
   return (
@@ -87,7 +81,7 @@ export default function MedicationOrderForm({
           </Row>
 
           {order.isFreeTextDosage ? (
-            <Row>
+            <Row style={{ marginTop: '0.5rem' }}>
               <Column md={8}>
                 <TextArea
                   labelText={t('freeTextDosage', 'Free Text Dosage')}
@@ -100,32 +94,66 @@ export default function MedicationOrderForm({
           ) : (
             <>
               <Row style={{ marginTop: '1rem' }}>
-                <Column md={8}>
-                  <CommonMedicationsTable
-                    items={[
-                      { header: 'Name', value: order.commonMedicationName, wrapValueInStrong: true, canEdit: false },
-                      {
-                        header: 'Dose',
-                        value: order.dosage.dosage,
-                        wrapValueInStrong: true,
-                        canEdit: true,
-                        onEditClick: () => setIsDoseModalOpen(true),
-                      },
-                      {
-                        header: 'Frequency',
-                        value: order.frequency.name,
-                        wrapValueInStrong: false,
-                        canEdit: true,
-                        onEditClick: () => setIsFrequencyModalOpen(true),
-                      },
-                      {
-                        header: 'Route',
-                        value: order.route.name,
-                        wrapValueInStrong: false,
-                        canEdit: true,
-                        onEditClick: () => setIsRouteModalOpen(true),
-                      },
-                    ]}
+                <Column md={4}>
+                  <ComboBox
+                    id="doseSelection"
+                    items={commonMedication.commonDosages.map(x => ({ id: x.dosage, text: x.dosage }))}
+                    initialSelectedItem={{ id: order.dosage.dosage, text: order.dosage.dosage }}
+                    placeholder={t('editDoseComboBoxPlaceholder', 'Dose')}
+                    titleText={t('editDoseComboBoxTitle', 'Enter Dose')}
+                    itemToString={item => item?.text}
+                    invalid={!order.dosage && !order.isFreeTextDosage}
+                    invalidText={t('validationNoItemSelected', 'Please select one of the available items.')}
+                    onChange={({ selectedItem }) => {
+                      setOrder({
+                        ...order,
+                        dosage: commonMedication.commonDosages.find(
+                          x => x.dosage === (selectedItem?.id ?? order.dosage.dosage),
+                        ),
+                      });
+                    }}
+                  />
+                </Column>
+                <Column md={4}>
+                  <ComboBox
+                    id="editFrequency"
+                    items={commonMedication.commonFrequencies.map(x => ({ id: x.conceptUuid, text: x.name }))}
+                    initialSelectedItem={{ id: order.frequency.conceptUuid, text: order.frequency.name }}
+                    placeholder={t('editFrequencyComboBoxPlaceholder', 'Frequency')}
+                    titleText={t('editFrequencyComboBoxTitle', 'Enter Frequency')}
+                    itemToString={item => item?.text}
+                    invalid={!order.frequency && !order.isFreeTextDosage}
+                    invalidText={t('validationNoItemSelected', 'Please select one of the available items.')}
+                    onChange={({ selectedItem }) => {
+                      setOrder({
+                        ...order,
+                        frequency: commonMedication.commonFrequencies.find(
+                          x => x.conceptUuid === (selectedItem?.id ?? order.frequency.conceptUuid),
+                        ),
+                      });
+                    }}
+                  />
+                </Column>
+              </Row>
+              <Row style={{ marginTop: '1rem' }}>
+                <Column md={4}>
+                  <ComboBox
+                    id="editRoute"
+                    items={commonMedication.route.map(x => ({ id: x.conceptUuid, text: x.name }))}
+                    initialSelectedItem={{ id: order.route.conceptUuid, text: order.route.name }}
+                    placeholder={t('editRouteComboBoxPlaceholder', 'Route')}
+                    titleText={t('editRouteComboBoxTitle', 'Enter Route')}
+                    itemToString={item => item?.text}
+                    invalid={!order.route && !order.isFreeTextDosage}
+                    invalidText={t('validationNoItemSelected', 'Please select one of the available items.')}
+                    onChange={({ selectedItem }) => {
+                      setOrder({
+                        ...order,
+                        route: commonMedication.route.find(
+                          x => x.conceptUuid === (selectedItem?.id ?? order.route.conceptUuid),
+                        ),
+                      });
+                    }}
                   />
                 </Column>
               </Row>
@@ -275,57 +303,6 @@ export default function MedicationOrderForm({
             {t('save', 'Save')}
           </Button>
         </ButtonSet>
-
-        <CommonMedicationsEditModal
-          open={isDoseModalOpen}
-          items={commonMedication.commonDosages.map(x => ({ id: x.dosage, text: x.dosage }))}
-          initialSelectedItem={{ id: order.dosage.dosage, text: order.dosage.dosage }}
-          modalHeading={t('editDosageModalHeading', 'Edit Dose')}
-          comboBoxPlaceholder={t('editDoseComboBoxPlaceholder', 'Dose')}
-          comboBoxTitle={t('editDoseComboBoxTitle', 'Enter Dose')}
-          onSave={selectedItem => {
-            setIsDoseModalOpen(false);
-            setOrder({
-              ...order,
-              dosage: commonMedication.commonDosages.find(x => x.dosage == selectedItem.id),
-            });
-          }}
-          onCancel={() => setIsDoseModalOpen(false)}
-        />
-
-        <CommonMedicationsEditModal
-          open={isFrequencyModalOpen}
-          items={commonMedication.commonFrequencies.map(x => ({ id: x.conceptUuid, text: x.name }))}
-          initialSelectedItem={{ id: order.frequency.conceptUuid, text: order.frequency.name }}
-          modalHeading={t('editFrequencyModalHeading', 'Edit Frequency')}
-          comboBoxPlaceholder={t('editFrequencyComboBoxPlaceholder', 'Frequency')}
-          comboBoxTitle={t('editFrequencyComboBoxTitle', 'Enter Frequency')}
-          onSave={selectedItem => {
-            setIsFrequencyModalOpen(false);
-            setOrder({
-              ...order,
-              frequency: commonMedication.commonFrequencies.find(x => x.conceptUuid == selectedItem.id),
-            });
-          }}
-          onCancel={() => setIsFrequencyModalOpen(false)}
-        />
-
-        <CommonMedicationsEditModal
-          open={isRouteModalOpen}
-          items={commonMedication.route.map(x => ({ id: x.conceptUuid, text: x.name }))}
-          initialSelectedItem={{ id: order.route.conceptUuid, text: order.route.name }}
-          modalHeading={t('editRouteModalHeading', 'Edit Route')}
-          comboBoxPlaceholder={t('editRouteComboBoxPlaceholder', 'Route')}
-          comboBoxTitle={t('editRouteComboBoxTitle', 'Enter Route')}
-          onSave={selectedItem => {
-            setIsDoseModalOpen(false);
-            setOrder({
-              ...order,
-              route: commonMedication.route.find(x => x.conceptUuid == selectedItem.id),
-            });
-          }}
-          onCancel={() => setIsRouteModalOpen(false)}
-        />
       </Form>
     </>
   );
