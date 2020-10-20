@@ -12,17 +12,10 @@ export interface OrderBasketItemListProps {
 
 export default function OrderBasketItemList({ orders, onItemClicked, onItemRemoveClicked }: OrderBasketItemListProps) {
   const { t } = useTranslation();
-  let newOrders = orders.filter(x => x.action === 'NEW');
-  let renewedOrders = orders.filter(x => x.action === 'RENEWED');
-  let revisedOrders = orders.filter(x => x.action === 'REVISED');
-  let discontinuedOrders = orders.filter(x => x.action === 'DISCONTINUE');
-
-  if (orders.length > 0) {
-    newOrders = [{ ...orders[0], action: 'NEW' }];
-    renewedOrders = [{ ...orders[0], action: 'RENEWED' }];
-    revisedOrders = [{ ...orders[0], action: 'REVISED' }];
-    discontinuedOrders = [{ ...orders[0], action: 'DISCONTINUE' }];
-  }
+  const newOrders = orders.filter(x => x.action === 'NEW');
+  const renewedOrders = orders.filter(x => x.action === 'RENEWED');
+  const revisedOrders = orders.filter(x => x.action === 'REVISED');
+  const discontinuedOrders = orders.filter(x => x.action === 'DISCONTINUE');
 
   return (
     <>
