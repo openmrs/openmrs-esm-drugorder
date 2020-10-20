@@ -13,8 +13,6 @@ import {
   TableToolbar,
   TableToolbarContent,
 } from 'carbon-components-react';
-import { openWorkspaceTab } from '@openmrs/esm-patient-chart-widgets';
-import MedicationOrderBasket from '../widgets/medications/medication-order-basket.component';
 import { getDosage } from '../widgets/medications/medication-orders-utils';
 import dayjs from 'dayjs';
 import { PatientMedications } from '../utils/medications.resource';
@@ -111,13 +109,9 @@ export default function MedicationsDetailsTable({
           {showAddNewButton && (
             <TableToolbar>
               <TableToolbarContent>
-                <Button
-                  renderIcon={() => <Add16 />}
-                  onClick={() =>
-                    openWorkspaceTab(MedicationOrderBasket, t('medicationOrder', 'Medication Order'), {
-                      action: 'NEW',
-                    })
-                  }>
+                <Button renderIcon={() => <Add16 />} onClick={() => alert('TODO')}>
+                  {' '}
+                  {/*TODO: Implement functionality*/}
                   {t('add', 'Add')}
                 </Button>
               </TableToolbarContent>
