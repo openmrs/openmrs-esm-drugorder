@@ -101,11 +101,11 @@ export default function MedicationOrder(props: MedicationOrderProps) {
 
       getPatientEncounterID(patientUuid, abortcontroller).then(
         ({ data }) => setEncounterUuid(data.results[0].uuid),
-        createErrorHandler(),
+        createErrorHandler,
       );
       getDurationUnits(abortcontroller).then(({ data }) => {
         setDurationUnitArray(data.answers);
-      }, createErrorHandler());
+      }, createErrorHandler);
     }
     return () => abortcontroller.abort();
   }, [props.drugName, patientUuid]);

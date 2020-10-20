@@ -15,6 +15,7 @@ export interface MedicationOrder {
   dosageUnit: CommonMedicationDosageUnit;
   frequency: CommonMedicationFrequency;
   route: CommonMedicationRoute;
+  encounterUuid?: string;
   patientInstructions?: string;
   prnTakeAsNeeded?: boolean;
   prnReason?: string;

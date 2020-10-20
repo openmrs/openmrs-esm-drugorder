@@ -10,7 +10,7 @@ import {
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
 import { daysDurationUnit, MedicationOrder } from './types';
-import { getDurationUnits } from '../utils/medications.resource';
+import { getDurationUnits, getPatientEncounterID } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
 import { orderDrugs } from './drug-ordering';
@@ -22,6 +22,7 @@ export default function OrderBasket() {
   const { t } = useTranslation();
   const [, , patientUuid] = useCurrentPatient();
   const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
+  const [encounterUuid, setEncounterUuid] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [orders, setOrders] = useState<Array<MedicationOrder>>([]);
   const [medicationOrderFormItem, setMedicationOrderFormItem] = useState<MedicationOrder | null>(null);
@@ -34,6 +35,7 @@ export default function OrderBasket() {
     const filledOrder = {
       // A search result is incomplete. The form requires filled values.
       action: 'NEW',
+      encounterUuid: encounterUuid,
       patientInstructions: '',
       prnTakeAsNeeded: false,
       prnReason: '',
@@ -86,11 +88,20 @@ export default function OrderBasket() {
 
   useEffect(() => {
     const abortController = new AbortController();
-    getDurationUnits(abortController)
-      .then(res => setDurationUnits(res.data.answers), createErrorHandler)
-      .finally(() => setIsLoading(false));
+
+    const durationUnitsRequest = getDurationUnits(abortController).then(
+      res => setDurationUnits(res.data.answers),
+      createErrorHandler,
+    );
+
+    const patientEncounterRequest = getPatientEncounterID(patientUuid, abortController).then(
+      ({ data }) => setEncounterUuid(data.results[0].uuid),
+      createErrorHandler,
+    );
+
+    Promise.all([durationUnitsRequest, patientEncounterRequest]).finally(() => setIsLoading(false));
     return () => abortController.abort();
-  }, []);
+  }, [patientUuid]);
 
   return (
     <>
