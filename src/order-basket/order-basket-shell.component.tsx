@@ -12,11 +12,7 @@ export default function OrderBasketShell() {
 
   return (
     <>
-      <Header aria-label={t('orderBasket', 'Order Basket')} style={{ position: 'relative' }}>
-        {/* TODO: The position: 'initial' above is not exactly clean and should ideally be removed at some point.
-            It currently exists because carbon uses fixed positioning for the header. This conflicts with the app
-            shell's navigation bar though. In order to (temporarily) fix this, that fixed positioning is changed.
-            Ideally this can be done cleaner at some point (e.g. by allowing to remove the app shell's titlebar somehow.) */}
+      <Header aria-label={t('orderBasket', 'Order Basket')} style={{ position: 'sticky' }}>
         <HeaderName prefix="">{t('orderBasket', 'Order Basket')}</HeaderName>
         <HeaderGlobalBar>
           <Link to={`/patient/${patientUuid}/chart/orders/medication-orders`}>

@@ -1,5 +1,12 @@
 @import '../../root.scss';
 
+.medicationDetailsHeader {
+  position: sticky;
+  background-color: $interactive-01;
+  border: 0;
+  top: 3rem;
+}
+
 .pullColumnContentRight > div {
   float: right;
 }

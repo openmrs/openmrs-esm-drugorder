@@ -98,14 +98,12 @@ export default function OrderBasket() {
     <>
       <Loading active={isLoading} withOverlay={true} />
       {isMedicationOrderFormVisible ? (
-        <div style={{ margin: '0 1rem' }}>
-          <MedicationOrderForm
-            durationUnits={durationUnits}
-            initialOrder={medicationOrderFormItem}
-            onSign={onMedicationOrderFormSigned}
-            onCancel={() => setIsMedicationOrderFormVisible(false)}
-          />
-        </div>
+        <MedicationOrderForm
+          durationUnits={durationUnits}
+          initialOrder={medicationOrderFormItem}
+          onSign={onMedicationOrderFormSigned}
+          onCancel={() => setIsMedicationOrderFormVisible(false)}
+        />
       ) : (
         <>
           <OrderBasketSearch onSearchResultClicked={handleSearchResultClicked} />
