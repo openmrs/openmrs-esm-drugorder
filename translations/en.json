@@ -63,6 +63,10 @@
   "refills": "Refills",
   "indication": "Indication",
   "none": "None",
+  "orderActionNew": "New",
+  "orderActionRenewed": "Renew",
+  "orderActionRevised": "Modify",
+  "orderActionDiscontinue": "Discontinue",
 
   "orderForm": "Order Form",
   "dosageInstructions": "1. Dosage Instructions",

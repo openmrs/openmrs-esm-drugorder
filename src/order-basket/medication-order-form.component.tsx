@@ -57,16 +57,12 @@ export default function MedicationOrderForm({
           )}
         </HeaderName>
       </Header>
-      <Form onSubmit={() => onSign(order)} style={{ margin: '0 1rem' }}>
-        <h2 className={styles.productiveHeading03} style={{ marginTop: '1.5rem' }}>
-          {t('orderForm', 'Order Form')}
-        </h2>
+      <Form className={styles.orderForm} onSubmit={() => onSign(order)}>
+        <h2 className={styles.productiveHeading03}>{t('orderForm', 'Order Form')}</h2>
         <Grid style={{ padding: 0 }}>
           <Row>
             <Column>
-              <h3 className={styles.productiveHeading02} style={{ marginTop: '0.5rem' }}>
-                {t('dosageInstructions', '1. Dosage Instructions')}
-              </h3>
+              <h3 className={styles.productiveHeading02}>{t('dosageInstructions', '1. Dosage Instructions')}</h3>
             </Column>
             <Column className={styles.pullColumnContentRight}>
               <ToggleSmall

@@ -8,7 +8,7 @@ import {
 import { OpenmrsResource } from '../types/openmrs-resource';
 
 export interface MedicationOrder {
-  action: 'NEW' | undefined;
+  action: 'NEW' | 'REVISED' | 'DISCONTINUE' | 'RENEWED' | undefined;
   drug: Drug;
   commonMedicationName: string;
   dosage: CommonMedicationDosage;

@@ -42,9 +42,7 @@ export default function MedicationsSummary() {
 
   return (
     <>
-      <h1 className={styles.productiveHeading06} style={{ marginBottom: '2rem' }}>
-        {t('medications', 'Medications')}
-      </h1>
+      <h1 className={styles.productiveHeading06}>{t('medications', 'Medications')}</h1>
 
       <div>
         {activeMedications ? (

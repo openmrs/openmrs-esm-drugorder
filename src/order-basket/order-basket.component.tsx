@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styles from './order-basket.scss';
 import OrderBasketSearch from './order-basket-search.component';
 import {
   Button,
@@ -9,16 +8,15 @@ import {
   ClickableTile,
   Loading,
 } from 'carbon-components-react';
-import { TrashCan16 } from '@carbon/icons-react';
 import MedicationOrderForm from './medication-order-form.component';
 import { daysDurationUnit, MedicationOrder } from './types';
 import { getDurationUnits } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
-import _ from 'lodash-es';
 import { orderDrugs } from './drug-ordering';
 import { useCurrentPatient } from '@openmrs/esm-api';
-import OrderBasketItem from './order-basket-item.component';
+import OrderBasketItemList from './order-basket-item-list.component';
+import styles from './order-basket.scss';
 
 export default function OrderBasket() {
   const { t } = useTranslation();
@@ -107,31 +105,17 @@ export default function OrderBasket() {
       ) : (
         <>
           <OrderBasketSearch onSearchResultClicked={handleSearchResultClicked} />
-          <div style={{ margin: '3rem 1rem' }}>
-            <h3 className={styles.productiveHeading02} style={{ marginTop: '0.5rem' }}>
-              {t('orderBasket', 'Order Basket')}
-            </h3>
-            {orders.length === 0 && <p>{t('emptyMedicationOrderBasket', 'Your basket is currently empty.')}</p>}
-            {orders.length > 0 && (
-              <>
-                <h4 className={styles.productiveHeading01}>
-                  {t('newOrders', '{count} new order(s)', { count: orders.length })}
-                </h4>
-                {orders.map((order, index) => (
-                  <OrderBasketItem
-                    key={index}
-                    order={order}
-                    onClick={() => openMedicationOrderFormForUpdatingExistingOrder(index)}
-                    onRemoveClick={() => {
-                      const newOrders = [...orders];
-                      newOrders.splice(index, 1);
-                      setOrders(newOrders);
-                    }}
-                  />
-                ))}
-              </>
-            )}
 
+          <div className={styles.orderBasketContainer}>
+            <OrderBasketItemList
+              orders={orders}
+              onItemClicked={order => openMedicationOrderFormForUpdatingExistingOrder(orders.indexOf(order))}
+              onItemRemoveClicked={order => {
+                const newOrders = [...orders];
+                newOrders.splice(orders.indexOf(order), 1);
+                setOrders(newOrders);
+              }}
+            />
             <ButtonSet style={{ marginTop: '2rem' }}>
               {/*TODO: Add cancel functionality*/}
               <Button kind="secondary">{t('cancel', 'Cancel')}</Button>

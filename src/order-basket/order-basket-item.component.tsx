@@ -1,5 +1,4 @@
-import styles from './order-basket.scss';
-import _ from 'lodash-es';
+import styles from './order-basket-item.scss';
 import { Button, ClickableTile } from 'carbon-components-react';
 import React, { useRef } from 'react';
 import { MedicationOrder } from './types';
@@ -24,10 +23,10 @@ export default function OrderBasketItem({ order, onClick, onRemoveClick }: Order
   const shouldOnClickBeCalled = useRef(true);
 
   return (
-    <ClickableTile style={{ marginTop: '5px' }} handleClick={() => shouldOnClickBeCalled.current && onClick()}>
+    <ClickableTile handleClick={() => shouldOnClickBeCalled.current && onClick()}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p>
-          <span className={styles.actionLabelNew}>{_.capitalize(order.action.toLowerCase())}</span>
+          <OrderActionLabel order={order} />
           <br />
           {order.isFreeTextDosage ? (
             <>
@@ -60,4 +59,21 @@ export default function OrderBasketItem({ order, onClick, onRemoveClick }: Order
       </div>
     </ClickableTile>
   );
+}
+
+function OrderActionLabel({ order }: { order: MedicationOrder }) {
+  const { t } = useTranslation();
+
+  switch (order.action) {
+    case 'NEW':
+      return <span className={styles.orderActionNewLabel}>{t('orderActionNew', 'New')}</span>;
+    case 'RENEWED':
+      return <span className={styles.orderActionRenewLabel}>{t('orderActionRenewed', 'Renew')}</span>;
+    case 'REVISED':
+      return <span className={styles.orderActionRevisedLabel}>{t('orderActionRevised', 'Modify')}</span>;
+    case 'DISCONTINUE':
+      return <span className={styles.orderActionDiscontinueLabel}>{t('orderActionDiscontinue', 'Discontinue')}</span>;
+    default:
+      return <></>;
+  }
 }
