@@ -21,9 +21,9 @@ import {
 } from 'carbon-components-react';
 import styles from './medication-order-form.scss';
 import { useTranslation } from 'react-i18next';
-import { daysDurationUnit, MedicationOrder } from '../types';
-import { getCommonMedicationByUuid } from '../../api/common-medication';
-import { OpenmrsResource } from '../../types/openmrs-resource';
+import { daysDurationUnit, MedicationOrder } from './types';
+import { getCommonMedicationByUuid } from '../api/common-medication';
+import { OpenmrsResource } from '../types/openmrs-resource';
 
 export interface MedicationOrderFormProps {
   initialOrder: MedicationOrder;

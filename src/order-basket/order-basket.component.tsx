@@ -10,7 +10,7 @@ import {
   Loading,
 } from 'carbon-components-react';
 import { TrashCan16 } from '@carbon/icons-react';
-import MedicationOrderForm from './medication-order-form/medication-order-form.component';
+import MedicationOrderForm from './medication-order-form.component';
 import { daysDurationUnit, MedicationOrder } from './types';
 import { getDurationUnits } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
