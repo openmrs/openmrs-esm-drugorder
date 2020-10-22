@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 import styles from './floating-order-basket-button.scss';
 import { Link } from 'react-router-dom';
 import { useCurrentPatient } from '@openmrs/esm-api';
+import { connect } from 'unistore/react';
 
-export default function FloatingOrderBasketButton() {
+const FloatingOrderBasketButton = connect('items')(({ items }) => {
   const { t } = useTranslation();
   const [, , patientUuid] = useCurrentPatient();
 
@@ -23,9 +24,11 @@ export default function FloatingOrderBasketButton() {
         <div className={styles.elementContainer}>
           <span>{t('orderBasket', 'Order Basket')}</span>
           <ShoppingBag16 />
-          <Tag className={styles.countTag}>2</Tag>
+          {items.length > 0 && <Tag className={styles.countTag}>{items.length}</Tag>}
         </div>
       </Button>
     </Link>
   );
-}
+});
+
+export default FloatingOrderBasketButton;

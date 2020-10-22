@@ -135,7 +135,9 @@ const OrderBasket = connect(
               <MedicationsDetailsTable
                 title={t('activeMedications', 'Active Medications')}
                 medications={activePatientOrders}
-                showDiscontinueAndModifyButtons={true}
+                showDiscontinueButton={true}
+                showModifyButton={true}
+                showReorderButton={false}
                 showAddNewButton={false}
               />
             ) : (

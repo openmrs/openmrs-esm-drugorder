@@ -18,7 +18,9 @@ export default function MedicationsSummary() {
         <MedicationsDetailsTable
           title={t('activeMedications', 'Active Medications')}
           medications={activePatientOrders}
-          showDiscontinueAndModifyButtons={true}
+          showDiscontinueButton={true}
+          showModifyButton={true}
+          showReorderButton={false}
           showAddNewButton={false}
         />
       ) : (
@@ -29,7 +31,9 @@ export default function MedicationsSummary() {
           <MedicationsDetailsTable
             title={t('pastMedications', 'Past Medications')}
             medications={pastPatientOrders}
-            showDiscontinueAndModifyButtons={false}
+            showDiscontinueButton={false}
+            showModifyButton={false}
+            showReorderButton={true}
             showAddNewButton={false}
           />
         ) : (

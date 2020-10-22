@@ -31,7 +31,9 @@ export interface ActiveMedicationsProps {
   title: string;
   medications?: Array<Order> | null;
   showAddNewButton: boolean;
-  showDiscontinueAndModifyButtons: boolean;
+  showDiscontinueButton: boolean;
+  showModifyButton: boolean;
+  showReorderButton: boolean;
 }
 
 const MedicationsDetailsTable = connect<
@@ -46,7 +48,9 @@ const MedicationsDetailsTable = connect<
   ({
     title,
     medications,
-    showDiscontinueAndModifyButtons,
+    showDiscontinueButton,
+    showModifyButton,
+    showReorderButton,
     showAddNewButton,
     items,
     setItems,
@@ -89,9 +93,9 @@ const MedicationsDetailsTable = connect<
       }
     };
 
-    const handleModifyClick = () => {};
+    const handleModifyClick = (medication: Order) => {};
 
-    const handleReorderClick = () => {};
+    const handleReorderClick = (medication: Order) => {};
 
     const tableHeaders = [
       { key: 'startDate', header: t('startDate', 'Start date'), isSortable: true, isVisible: true },
@@ -169,14 +173,24 @@ const MedicationsDetailsTable = connect<
                     ))}
                     <TableCell className="bx--table-column-menu">
                       <OverflowMenu flipped>
-                        {showDiscontinueAndModifyButtons && (
+                        {showDiscontinueButton && (
                           <OverflowMenuItem
                             itemText={t('discontinue', 'Discontinue')}
                             onClick={() => handleDiscontinueClick(medications[rowIndex])}
                           />
                         )}
-                        {showDiscontinueAndModifyButtons && <OverflowMenuItem itemText={t('modify', 'Modify')} />}
-                        <OverflowMenuItem itemText={t('reorder', 'Reorder')} />
+                        {showModifyButton && (
+                          <OverflowMenuItem
+                            itemText={t('modify', 'Modify')}
+                            onClick={() => handleModifyClick(medications[rowIndex])}
+                          />
+                        )}
+                        {showReorderButton && (
+                          <OverflowMenuItem
+                            itemText={t('reorder', 'Reorder')}
+                            onClick={() => handleReorderClick(medications[rowIndex])}
+                          />
+                        )}
                       </OverflowMenu>
                     </TableCell>
                   </TableRow>
