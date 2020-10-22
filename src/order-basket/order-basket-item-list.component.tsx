@@ -1,7 +1,7 @@
 import OrderBasketItem from './order-basket-item.component';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { MedicationOrder } from './types';
+import { MedicationOrder } from '../types/order-basket';
 import styles from './order-basket-item-list.scss';
 
 export interface OrderBasketItemListProps {

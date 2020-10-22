@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { searchMedications } from './drug-search';
-import { MedicationOrder } from './types';
+import { MedicationOrder } from '../types/order-basket';
 import { paginate } from '../utils/pagination';
 
 export interface OrderBasketSearchResultsProps {

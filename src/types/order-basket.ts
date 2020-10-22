@@ -5,7 +5,7 @@ import {
   CommonMedicationFrequency,
   CommonMedicationRoute,
 } from '../api/common-medication';
-import { OpenmrsResource } from '../types/openmrs-resource';
+import { OpenmrsResource } from './openmrs-resource';
 
 export interface MedicationOrder {
   action: 'NEW' | 'REVISED' | 'DISCONTINUE' | 'RENEWED' | undefined;
@@ -18,7 +18,7 @@ export interface MedicationOrder {
   encounterUuid: string;
   patientInstructions: string;
   asNeeded: boolean;
-  prnReason: string;
+  asNeededCondition: string;
   startDate: Date;
   durationUnit: OpenmrsResource;
   duration: number;
@@ -27,6 +27,7 @@ export interface MedicationOrder {
   indication: string;
   isFreeTextDosage: boolean;
   freeTextDosage: string;
+  previousOrder?: string;
 }
 
 export const daysDurationUnit = {

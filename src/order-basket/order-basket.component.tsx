@@ -8,7 +8,7 @@ import {
   Loading,
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
-import { MedicationOrder } from './types';
+import { MedicationOrder } from '../types/order-basket';
 import { getDurationUnits, getPatientEncounterID } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
@@ -17,14 +17,18 @@ import { useCurrentPatient } from '@openmrs/esm-api';
 import OrderBasketItemList from './order-basket-item-list.component';
 import styles from './order-basket.scss';
 import ActiveMedicationsDetailsTable from '../components/active-medications-details-table.component';
+import { connect } from 'unistore/react';
+import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
 
-export default function OrderBasket() {
+const OrderBasket = connect(
+  'orders',
+  orderBasketStoreActions,
+)(({ orders, setOrders }: OrderBasketStore & OrderBasketStoreActions) => {
   const { t } = useTranslation();
   const [, , patientUuid] = useCurrentPatient();
   const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
   const [encounterUuid, setEncounterUuid] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [orders, setOrders] = useState<Array<MedicationOrder>>([]);
   const [medicationOrderFormItem, setMedicationOrderFormItem] = useState<MedicationOrder | null>(null);
   const [isMedicationOrderFormVisible, setIsMedicationOrderFormVisible] = useState(false);
   const [onMedicationOrderFormSigned, setOnMedicationOrderFormSign] = useState<
@@ -126,4 +130,6 @@ export default function OrderBasket() {
       )}
     </>
   );
-}
+});
+
+export default OrderBasket;

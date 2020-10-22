@@ -21,7 +21,7 @@ import {
 } from 'carbon-components-react';
 import styles from './medication-order-form.scss';
 import { useTranslation } from 'react-i18next';
-import { daysDurationUnit, MedicationOrder } from './types';
+import { daysDurationUnit, MedicationOrder } from '../types/order-basket';
 import { getCommonMedicationByUuid } from '../api/common-medication';
 import { OpenmrsResource } from '../types/openmrs-resource';
 
@@ -181,8 +181,8 @@ export default function MedicationOrderForm({
                       labelText={t('prnReason', 'P.R.N. Reason')}
                       placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
                       rows={3}
-                      value={order.prnReason}
-                      onChange={e => setOrder({ ...order, prnReason: e.target.value })}
+                      value={order.asNeededCondition}
+                      onChange={e => setOrder({ ...order, asNeededCondition: e.target.value })}
                     />
                   </div>
                 </Column>

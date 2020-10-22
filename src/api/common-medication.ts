@@ -37,3 +37,7 @@ export interface CommonMedicationDosage {
 export function getCommonMedicationByUuid(uuid: string): CommonMedication | undefined {
   return commonMedications.filter(x => x.uuid === uuid)[0];
 }
+
+export function getCommonMedicationByName(name: string): CommonMedication | undefined {
+  return commonMedications.filter(x => x.name.toLowerCase() === name.toLowerCase())[0];
+}

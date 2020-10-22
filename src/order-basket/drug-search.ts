@@ -1,6 +1,6 @@
 import { Drug, getDrugByName } from '../utils/medications.resource';
 import { getCommonMedicationByUuid } from '../api/common-medication';
-import { daysDurationUnit, MedicationOrder } from './types';
+import { daysDurationUnit, MedicationOrder } from '../types/order-basket';
 import _ from 'lodash-es';
 
 // Note:
@@ -65,7 +65,7 @@ function* explodeDrugResultWithCommonMedicationData(drug: Drug, encounterUuid: s
             isFreeTextDosage: false,
             patientInstructions: '',
             asNeeded: false,
-            prnReason: '',
+            asNeededCondition: '',
             startDate: new Date(),
             duration: 0,
             durationUnit: daysDurationUnit,

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './order-basket-search.scss';
 import { useQueryParameter } from '../utils/use-query-parameter.hook';
 import OrderBasketSearchResults from './order-basket-search-results';
-import { MedicationOrder } from './types';
+import { MedicationOrder } from '../types/order-basket';
 
 export interface OrderBasketSearchProps {
   encounterUuid: string;

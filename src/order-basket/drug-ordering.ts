@@ -1,10 +1,10 @@
-import { MedicationOrder } from './types';
+import { MedicationOrder } from '../types/order-basket';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import dayjs from 'dayjs';
 import { OrderPost, postOrder } from '../api/order';
 import { toOmrsDateString } from '../utils/omrs-dates';
 
-const careSettings = '6f0c9a92-6f24-11e3-af88-005056821db0';
+const careSetting = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const orderer = 'e89cae4a-3cb3-40a2-b964-8b20dda2c985';
 
 export async function orderDrugs(
@@ -25,7 +25,7 @@ function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: st
         action: 'NEW',
         patient: patientUuid,
         type: 'drugorder',
-        careSetting: careSettings,
+        careSetting: careSetting,
         orderer: orderer,
         encounter: order.encounterUuid,
         drug: order.drug.uuid,
@@ -34,6 +34,7 @@ function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: st
         route: order.route.conceptUuid,
         frequency: order.frequency.conceptUuid,
         asNeeded: order.asNeeded,
+        asNeededCondition: order.asNeededCondition,
         numRefills: order.numRefills,
         quantity: order.pillsDispensed,
         quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
@@ -42,6 +43,19 @@ function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: st
         dosingInstructions: order.freeTextDosage,
         concept: order.drug.concept.uuid,
         dateActivated: toOmrsDateString(order.startDate),
+      };
+    } else if (order.action === 'DISCONTINUE') {
+      return {
+        action: 'DISCONTINUE',
+        type: 'drugorder',
+        previousOrder: order.previousOrder,
+        patient: patientUuid,
+        careSetting: careSetting,
+        encounter: order.encounterUuid,
+        orderer: orderer,
+        concept: order.drug.concept.uuid,
+        drug: order.drug.uuid,
+        orderReasonNonCoded: null,
       };
     } else {
       throw new Error(`Unknown order type ${order.action}. This is a development error.`);

@@ -1,7 +1,7 @@
 import styles from './order-basket-item.scss';
 import { Button, ClickableTile } from 'carbon-components-react';
 import React, { useRef } from 'react';
-import { MedicationOrder } from './types';
+import { MedicationOrder } from '../types/order-basket';
 import { TrashCan16 } from '@carbon/icons-react';
 import { useTranslation } from 'react-i18next';
 

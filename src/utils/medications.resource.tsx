@@ -13,9 +13,9 @@ const DISCONTINUE_MEDICATION_ACTION = 'DISCONTINUE';
 const DRUG_ORDER_TYPE = 'Drug Order';
 
 export type PatientMedications = {
-  uuid: number;
+  uuid: string;
   action: string;
-  asNeed: boolean;
+  asNeeded: boolean;
   asNeededCondition?: string;
   autoExpireDate: Date;
   brandName?: string;
