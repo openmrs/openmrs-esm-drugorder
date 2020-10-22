@@ -29,7 +29,7 @@ import { Order } from '../types/order';
 
 export interface ActiveMedicationsProps {
   title: string;
-  medications: Array<Order>;
+  medications?: Array<Order> | null;
   showAddNewButton: boolean;
   showDiscontinueAndModifyButtons: boolean;
 }

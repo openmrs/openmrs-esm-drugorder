@@ -5,6 +5,7 @@ import {
   Button,
   // @ts-ignore
   ButtonSet,
+  DataTableSkeleton,
   Loading,
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
@@ -16,10 +17,11 @@ import { orderDrugs } from './drug-ordering';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import OrderBasketItemList from './order-basket-item-list.component';
 import styles from './order-basket.scss';
-import ActiveMedicationsDetailsTable from '../components/active-medications-details-table.component';
 import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
 import { useHistory } from 'react-router-dom';
+import { useCurrentPatientOrders } from '../utils/use-current-patient-orders';
+import MedicationsDetailsTable from '../components/medications-details-table.component';
 
 const OrderBasket = connect(
   'items',
@@ -36,6 +38,7 @@ const OrderBasket = connect(
     (finalizedOrderBasketItem: OrderBasketItem) => void | null
   >(null);
   const history = useHistory();
+  const [activePatientOrders, fetchActivePatientOrders] = useCurrentPatientOrders('ACTIVE');
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -73,10 +76,11 @@ const OrderBasket = connect(
   const handleSaveClicked = () => {
     const abortController = new AbortController();
     orderDrugs(items, patientUuid, abortController).then(erroredItems => {
+      setItems(erroredItems);
+      fetchActivePatientOrders();
+
       if (erroredItems.length == 0) {
         history.push(`/patient/${patientUuid}/chart/orders/medication-orders`);
-      } else {
-        setItems(erroredItems);
       }
     });
     return () => abortController.abort();
@@ -127,7 +131,16 @@ const OrderBasket = connect(
               }}
             />
 
-            <ActiveMedicationsDetailsTable showAddNewButton={false} />
+            {activePatientOrders ? (
+              <MedicationsDetailsTable
+                title={t('activeMedications', 'Active Medications')}
+                medications={activePatientOrders}
+                showDiscontinueAndModifyButtons={true}
+                showAddNewButton={false}
+              />
+            ) : (
+              <DataTableSkeleton />
+            )}
 
             <ButtonSet style={{ marginTop: '2rem' }}>
               <Button kind="secondary" onClick={handleCancelClicked}>
