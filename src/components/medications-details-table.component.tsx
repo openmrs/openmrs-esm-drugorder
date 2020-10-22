@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import {
   Button,
   DataTable,
+  OverflowMenu,
+  OverflowMenuItem,
   Pagination,
   Table,
   TableBody,
@@ -26,14 +28,14 @@ import { paginate } from '../utils/pagination';
 export interface ActiveMedicationsProps {
   title: string;
   medications: Array<PatientMedications>;
-  showEndMedicationColumn: boolean;
   showAddNewButton: boolean;
+  showDiscontinueAndModifyButtons: boolean;
 }
 
 export default function MedicationsDetailsTable({
   title,
   medications,
-  showEndMedicationColumn,
+  showDiscontinueAndModifyButtons,
   showAddNewButton,
 }: ActiveMedicationsProps) {
   const { t } = useTranslation();
@@ -41,23 +43,13 @@ export default function MedicationsDetailsTable({
   const [pageSize, setPageSize] = useState(10);
   const [currentMedicationPage] = paginate(medications, page, pageSize);
 
-  const initialTableHeaderDefinitions = [
-    { key: 'end', header: t('end', 'End'), isSortable: true, isVisible: showEndMedicationColumn },
+  const tableHeaders = [
     { key: 'startDate', header: t('startDate', 'Start date'), isSortable: true, isVisible: true },
     { key: 'details', header: t('details', 'Details'), isSortable: true, isVisible: true },
-    { key: 'reorder', header: t('reorder', 'Reorder'), isSortable: false, isVisible: true },
   ];
 
-  const initialTableRowDefinitions = currentMedicationPage.map((medication, id) => ({
+  const tableRows = currentMedicationPage.map((medication, id) => ({
     id: `${id}`,
-    end: (
-      <Button
-        kind="ghost"
-        hasIconOnly={true}
-        iconDescription={t('endButtonTooltip', 'End')}
-        renderIcon={() => <Error16 />}
-      />
-    ),
     details: {
       sortKey: medication.drug?.name,
       content: (
@@ -81,20 +73,7 @@ export default function MedicationsDetailsTable({
       sortKey: dayjs(medication.dateActivated).toDate(),
       content: dayjs(medication.dateActivated).format('DD-MMM-YYYY'),
     },
-    reorder: (
-      <Button
-        kind="ghost"
-        hasIconOnly={true}
-        iconDescription={t('reorderButtonTooltip', 'Reorder')}
-        renderIcon={() => <Renew16 />}
-      />
-    ),
   }));
-
-  const tableHeadersToDisplay = initialTableHeaderDefinitions.filter(header => header.isVisible);
-  const tableRowsToDisplay = initialTableRowDefinitions.filter(row =>
-    tableHeadersToDisplay.some(header => header.key in row),
-  );
 
   const sortRow = (cellA, cellB, { sortDirection, sortStates }) => {
     return sortDirection === sortStates.DESC
@@ -103,7 +82,7 @@ export default function MedicationsDetailsTable({
   };
 
   return (
-    <DataTable headers={tableHeadersToDisplay} rows={tableRowsToDisplay} isSortable={true} sortRow={sortRow}>
+    <DataTable headers={tableHeaders} rows={tableRows} isSortable={true} sortRow={sortRow}>
       {({ rows, headers, getTableProps, getHeaderProps, getRowProps }) => (
         <TableContainer title={title}>
           {showAddNewButton && (
@@ -129,6 +108,7 @@ export default function MedicationsDetailsTable({
                     {header.header}
                   </TableHeader>
                 ))}
+                <TableHeader />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -137,6 +117,17 @@ export default function MedicationsDetailsTable({
                   {row.cells.map(cell => (
                     <TableCell key={cell.id}>{cell.value?.content ?? cell.value}</TableCell>
                   ))}
+                  <TableCell className="bx--table-column-menu">
+                    <OverflowMenu flipped>
+                      {showDiscontinueAndModifyButtons && (
+                        <>
+                          <OverflowMenuItem itemText={t('discontinue', 'Discontinue')} />
+                          <OverflowMenuItem itemText={t('modify', 'Modify')} />
+                        </>
+                      )}
+                      <OverflowMenuItem itemText={t('reorder', 'Reorder')} />
+                    </OverflowMenu>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

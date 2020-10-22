@@ -36,6 +36,8 @@
   "status": "Status",
   "revise": "Revise",
   "discontinue": "Discontinue",
+  "modify": "Modify",
+  "discontinue": "Reorder",
   "noCurrentMedicationsDocumented": "No current medications are documented.",
   "noPastMedicationsDocumented": "No past medications are documented.",
 

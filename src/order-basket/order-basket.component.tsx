@@ -5,7 +5,6 @@ import {
   Button,
   // @ts-ignore
   ButtonSet,
-  ClickableTile,
   Loading,
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
@@ -17,6 +16,7 @@ import { orderDrugs } from './drug-ordering';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import OrderBasketItemList from './order-basket-item-list.component';
 import styles from './order-basket.scss';
+import ActiveMedicationsDetailsTable from '../components/active-medications-details-table.component';
 
 export default function OrderBasket() {
   const { t } = useTranslation();
@@ -111,6 +111,9 @@ export default function OrderBasket() {
                 setOrders(newOrders);
               }}
             />
+
+            <ActiveMedicationsDetailsTable />
+
             <ButtonSet style={{ marginTop: '2rem' }}>
               {/*TODO: Add cancel functionality*/}
               <Button kind="secondary">{t('cancel', 'Cancel')}</Button>
