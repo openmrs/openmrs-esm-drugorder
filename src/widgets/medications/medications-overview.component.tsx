@@ -1,5 +1,4 @@
 import React from 'react';
-import { fetchPatientMedications } from '../../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import { getDosage } from './medication-orders-utils';
@@ -14,6 +13,7 @@ import {
   TableRow,
 } from 'carbon-components-react';
 import { useTranslation } from 'react-i18next';
+import { fetchPatientOrders } from '../../api/order';
 
 export default function MedicationsOverview() {
   const [patientMedications, setPatientMedications] = React.useState(null);
@@ -21,12 +21,13 @@ export default function MedicationsOverview() {
   const { t } = useTranslation();
 
   React.useEffect(() => {
-    if (patientUuid) {
-      const subscription = fetchPatientMedications(patientUuid).subscribe(medications => {
-        setPatientMedications(medications);
-      }, createErrorHandler());
-      return () => subscription.unsubscribe();
-    }
+    // if (patientUuid) {
+    //   const abortController
+    //   const subscription = fetchPatientOrders(patientUuid).subscribe(medications => {
+    //     setPatientMedications(medications);
+    //   }, createErrorHandler());
+    //   return () => subscription.unsubscribe();
+    // }
   }, [patientUuid]);
 
   return (

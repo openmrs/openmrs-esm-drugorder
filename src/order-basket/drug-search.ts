@@ -1,6 +1,7 @@
 import { Drug, getDrugByName } from '../utils/medications.resource';
 import { getCommonMedicationByUuid } from '../api/common-medication';
-import { daysDurationUnit, MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
+import { daysDurationUnit } from '../constants';
 import _ from 'lodash-es';
 
 // Note:
@@ -39,7 +40,7 @@ async function searchDrugsInBackend(allSearchTerms: Array<string>, abortControll
   return _.uniqBy(results, 'uuid');
 }
 
-function* explodeDrugResultWithCommonMedicationData(drug: Drug, encounterUuid: string): Generator<MedicationOrder> {
+function* explodeDrugResultWithCommonMedicationData(drug: Drug, encounterUuid: string): Generator<OrderBasketItem> {
   const commonMedication = getCommonMedicationByUuid(drug.uuid);
 
   // If no common medication entry exists for the current drug, there is no point in displaying it in the search results,
@@ -80,7 +81,7 @@ function* explodeDrugResultWithCommonMedicationData(drug: Drug, encounterUuid: s
   }
 }
 
-function filterExplodedResultsBySearchTerm(allSearchTerms: Array<string>, results: Array<MedicationOrder>) {
+function filterExplodedResultsBySearchTerm(allSearchTerms: Array<string>, results: Array<OrderBasketItem>) {
   return results.filter(result =>
     allSearchTerms.every(
       searchTerm =>

@@ -7,7 +7,7 @@ import {
 } from '../api/common-medication';
 import { OpenmrsResource } from './openmrs-resource';
 
-export interface MedicationOrder {
+export interface OrderBasketItem {
   action: 'NEW' | 'REVISED' | 'DISCONTINUE' | 'RENEWED' | undefined;
   drug: Drug;
   commonMedicationName: string;
@@ -29,8 +29,3 @@ export interface MedicationOrder {
   freeTextDosage: string;
   previousOrder?: string;
 }
-
-export const daysDurationUnit = {
-  uuid: '1072AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
-  display: 'Days',
-};

@@ -21,43 +21,45 @@ import {
 } from 'carbon-components-react';
 import styles from './medication-order-form.scss';
 import { useTranslation } from 'react-i18next';
-import { daysDurationUnit, MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
+import { daysDurationUnit } from '../constants';
 import { getCommonMedicationByUuid } from '../api/common-medication';
 import { OpenmrsResource } from '../types/openmrs-resource';
 
 export interface MedicationOrderFormProps {
-  initialOrder: MedicationOrder;
+  initialOrderBasketItem: OrderBasketItem;
   durationUnits: Array<OpenmrsResource>;
-  onSign: (finalizedOrder: MedicationOrder) => void;
+  onSign: (finalizedOrder: OrderBasketItem) => void;
   onCancel: () => void;
 }
 
 export default function MedicationOrderForm({
-  initialOrder,
+  initialOrderBasketItem,
   durationUnits,
   onSign,
   onCancel,
 }: MedicationOrderFormProps) {
   const { t } = useTranslation();
-  const [order, setOrder] = useState(initialOrder);
-  const commonMedication = getCommonMedicationByUuid(order.drug.uuid);
+  const [orderBasketItem, setOrderBasketItem] = useState(initialOrderBasketItem);
+  const commonMedication = getCommonMedicationByUuid(orderBasketItem.drug.uuid);
 
   return (
     <>
       <Header aria-label={''} className={styles.medicationDetailsHeader}>
         <HeaderName prefix="">
-          {order.isFreeTextDosage ? (
-            <strong>{order.commonMedicationName}</strong>
+          {orderBasketItem.isFreeTextDosage ? (
+            <strong>{orderBasketItem.commonMedicationName}</strong>
           ) : (
             <>
-              <strong>{order.commonMedicationName}</strong> &mdash; {order.route.name} &mdash; {order.dosageUnit.name}
+              <strong>{orderBasketItem.commonMedicationName}</strong> &mdash; {orderBasketItem.route.name} &mdash;{' '}
+              {orderBasketItem.dosageUnit.name}
               &mdash; <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;{' '}
-              <strong>{order.dosage.dosage}</strong>
+              <strong>{orderBasketItem.dosage.dosage}</strong>
             </>
           )}
         </HeaderName>
       </Header>
-      <Form className={styles.orderForm} onSubmit={() => onSign(order)}>
+      <Form className={styles.orderForm} onSubmit={() => onSign(orderBasketItem)}>
         <h2 className={styles.productiveHeading03}>{t('orderForm', 'Order Form')}</h2>
         <Grid style={{ padding: 0 }}>
           <Row>
@@ -69,21 +71,21 @@ export default function MedicationOrderForm({
                 id="freeTextDosageToggle"
                 aria-label={t('freeTextDosage', 'Free Text Dosage')}
                 labelText={t('freeTextDosage', 'Free Text Dosage')}
-                toggled={order.isFreeTextDosage}
+                toggled={orderBasketItem.isFreeTextDosage}
                 onChange={() => {} /* Required by the typings, but we don't need it. */}
-                onToggle={value => setOrder({ ...order, isFreeTextDosage: value })}
+                onToggle={value => setOrderBasketItem({ ...orderBasketItem, isFreeTextDosage: value })}
               />
             </Column>
           </Row>
 
-          {order.isFreeTextDosage ? (
+          {orderBasketItem.isFreeTextDosage ? (
             <Row style={{ marginTop: '0.5rem' }}>
               <Column md={8}>
                 <TextArea
                   labelText={t('freeTextDosage', 'Free Text Dosage')}
                   placeholder={t('freeTextDosage', 'Free Text Dosage')}
-                  value={order.freeTextDosage}
-                  onChange={e => setOrder({ ...order, freeTextDosage: e.target.value })}
+                  value={orderBasketItem.freeTextDosage}
+                  onChange={e => setOrderBasketItem({ ...orderBasketItem, freeTextDosage: e.target.value })}
                 />
               </Column>
             </Row>
@@ -94,18 +96,18 @@ export default function MedicationOrderForm({
                   <ComboBox
                     id="doseSelection"
                     items={commonMedication.commonDosages.map(x => ({ id: x.dosage, text: x.dosage }))}
-                    selectedItem={{ id: order.dosage.dosage, text: order.dosage.dosage }}
+                    selectedItem={{ id: orderBasketItem.dosage.dosage, text: orderBasketItem.dosage.dosage }}
                     placeholder={t('editDoseComboBoxPlaceholder', 'Dose')}
                     titleText={t('editDoseComboBoxTitle', 'Enter Dose')}
                     itemToString={item => item?.text}
-                    invalid={!order.dosage && !order.isFreeTextDosage}
+                    invalid={!orderBasketItem.dosage && !orderBasketItem.isFreeTextDosage}
                     invalidText={t('validationNoItemSelected', 'Please select one of the available items.')}
                     onChange={({ selectedItem }) => {
-                      setOrder({
-                        ...order,
+                      setOrderBasketItem({
+                        ...orderBasketItem,
                         dosage: !!selectedItem?.id
                           ? commonMedication.commonDosages.find(x => x.dosage === selectedItem.id)
-                          : initialOrder.dosage,
+                          : initialOrderBasketItem.dosage,
                       });
                     }}
                   />
@@ -114,18 +116,18 @@ export default function MedicationOrderForm({
                   <ComboBox
                     id="editFrequency"
                     items={commonMedication.commonFrequencies.map(x => ({ id: x.conceptUuid, text: x.name }))}
-                    selectedItem={{ id: order.frequency.conceptUuid, text: order.frequency.name }}
+                    selectedItem={{ id: orderBasketItem.frequency.conceptUuid, text: orderBasketItem.frequency.name }}
                     placeholder={t('editFrequencyComboBoxPlaceholder', 'Frequency')}
                     titleText={t('editFrequencyComboBoxTitle', 'Enter Frequency')}
                     itemToString={item => item?.text}
-                    invalid={!order.frequency && !order.isFreeTextDosage}
+                    invalid={!orderBasketItem.frequency && !orderBasketItem.isFreeTextDosage}
                     invalidText={t('validationNoItemSelected', 'Please select one of the available items.')}
                     onChange={({ selectedItem }) => {
-                      setOrder({
-                        ...order,
+                      setOrderBasketItem({
+                        ...orderBasketItem,
                         frequency: !!selectedItem?.id
                           ? commonMedication.commonFrequencies.find(x => x.conceptUuid === selectedItem.id)
-                          : initialOrder.frequency,
+                          : initialOrderBasketItem.frequency,
                       });
                     }}
                   />
@@ -136,18 +138,18 @@ export default function MedicationOrderForm({
                   <ComboBox
                     id="editRoute"
                     items={commonMedication.route.map(x => ({ id: x.conceptUuid, text: x.name }))}
-                    selectedItem={{ id: order.route.conceptUuid, text: order.route.name }}
+                    selectedItem={{ id: orderBasketItem.route.conceptUuid, text: orderBasketItem.route.name }}
                     placeholder={t('editRouteComboBoxPlaceholder', 'Route')}
                     titleText={t('editRouteComboBoxTitle', 'Enter Route')}
                     itemToString={item => item?.text}
-                    invalid={!order.route && !order.isFreeTextDosage}
+                    invalid={!orderBasketItem.route && !orderBasketItem.isFreeTextDosage}
                     invalidText={t('validationNoItemSelected', 'Please select one of the available items.')}
                     onChange={({ selectedItem }) => {
-                      setOrder({
-                        ...order,
+                      setOrderBasketItem({
+                        ...orderBasketItem,
                         route: !!selectedItem?.id
                           ? commonMedication.route.find(x => x.conceptUuid === selectedItem.id)
-                          : initialOrder.route,
+                          : initialOrderBasketItem.route,
                       });
                     }}
                   />
@@ -161,8 +163,8 @@ export default function MedicationOrderForm({
                       'patientInstructionsPlaceholder',
                       'Additional dosing instructions (e.g. "Take after eating")',
                     )}
-                    value={order.patientInstructions}
-                    onChange={e => setOrder({ ...order, patientInstructions: e.target.value })}
+                    value={orderBasketItem.patientInstructions}
+                    onChange={e => setOrderBasketItem({ ...orderBasketItem, patientInstructions: e.target.value })}
                   />
                 </Column>
                 <Column>
@@ -170,19 +172,19 @@ export default function MedicationOrderForm({
                     <Checkbox
                       id="prn"
                       labelText={t('takeAsNeeded', 'Take As Needed')}
-                      checked={order.asNeeded}
-                      onChange={newValue => setOrder({ ...order, asNeeded: newValue })}
+                      checked={orderBasketItem.asNeeded}
+                      onChange={newValue => setOrderBasketItem({ ...orderBasketItem, asNeeded: newValue })}
                     />
                   </FormGroup>
                   <div
                     className={styles.fullHeightTextAreaContainer}
-                    style={order.asNeeded ? {} : { visibility: 'hidden' }}>
+                    style={orderBasketItem.asNeeded ? {} : { visibility: 'hidden' }}>
                     <TextArea
                       labelText={t('prnReason', 'P.R.N. Reason')}
                       placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
                       rows={3}
-                      value={order.asNeededCondition}
-                      onChange={e => setOrder({ ...order, asNeededCondition: e.target.value })}
+                      value={orderBasketItem.asNeededCondition}
+                      onChange={e => setOrderBasketItem({ ...orderBasketItem, asNeededCondition: e.target.value })}
                     />
                   </div>
                 </Column>
@@ -198,8 +200,8 @@ export default function MedicationOrderForm({
             <Column md={4} className={styles.fullWidthDatePickerContainer}>
               <DatePicker
                 datePickerType="single"
-                value={[order.startDate]}
-                onChange={([newStartDate]) => setOrder({ ...order, startDate: newStartDate })}>
+                value={[orderBasketItem.startDate]}
+                onChange={([newStartDate]) => setOrderBasketItem({ ...orderBasketItem, startDate: newStartDate })}>
                 <DatePickerInput
                   id="startDatePicker"
                   placeholder="mm/dd/yyyy"
@@ -212,12 +214,12 @@ export default function MedicationOrderForm({
                 id="durationInput"
                 label={t('duration', 'Duration')}
                 min={0}
-                value={order.duration}
+                value={orderBasketItem.duration}
                 helperText={t('noDurationHint', '0 indicates an indefinite duration.')}
                 onChange={e => {
                   // @ts-ignore
                   const newValue = Number(e.imaginaryTarget.value);
-                  setOrder({ ...order, duration: newValue === 0 ? undefined : newValue });
+                  setOrderBasketItem({ ...orderBasketItem, duration: newValue === 0 ? undefined : newValue });
                 }}
               />
             </Column>
@@ -225,14 +227,17 @@ export default function MedicationOrderForm({
               <FormGroup legendText={t('durationUnit', 'Duration Unit')}>
                 <ComboBox
                   id="durationUnitPlaceholder"
-                  selectedItem={{ id: order.durationUnit.uuid, text: order.durationUnit.display }}
+                  selectedItem={{ id: orderBasketItem.durationUnit.uuid, text: orderBasketItem.durationUnit.display }}
                   items={durationUnits.map(unit => ({ id: unit.uuid, text: unit.display }))}
                   itemToString={item => item?.text}
                   placeholder={t('durationUnitPlaceholder', 'Duration Unit')}
                   onChange={({ selectedItem }) =>
                     !!selectedItem
-                      ? setOrder({ ...order, durationUnit: { uuid: selectedItem.id, display: selectedItem.text } })
-                      : setOrder({ ...order, durationUnit: daysDurationUnit })
+                      ? setOrderBasketItem({
+                          ...orderBasketItem,
+                          durationUnit: { uuid: selectedItem.id, display: selectedItem.text },
+                        })
+                      : setOrderBasketItem({ ...orderBasketItem, durationUnit: daysDurationUnit })
                   }
                 />
               </FormGroup>
@@ -249,11 +254,11 @@ export default function MedicationOrderForm({
                 <NumberInput
                   id="quantityDispensed"
                   helperText={t('pillsDispensed', 'Pills dispensed')}
-                  value={order.pillsDispensed}
+                  value={orderBasketItem.pillsDispensed}
                   min={0}
                   onChange={e => {
-                    setOrder({
-                      ...order,
+                    setOrderBasketItem({
+                      ...orderBasketItem,
                       // @ts-ignore
                       pillsDispensed: Number(e.imaginaryTarget.value),
                     });
@@ -266,10 +271,10 @@ export default function MedicationOrderForm({
                 <NumberInput
                   id="prescriptionRefills"
                   min={0}
-                  value={order.numRefills}
+                  value={orderBasketItem.numRefills}
                   onChange={e =>
-                    setOrder({
-                      ...order,
+                    setOrderBasketItem({
+                      ...orderBasketItem,
                       // @ts-ignore
                       numRefills: Number(e.imaginaryTarget.value),
                     })
@@ -284,8 +289,8 @@ export default function MedicationOrderForm({
                 id="indication"
                 labelText={t('indication', 'Indication')}
                 placeholder={t('indicationPlaceholder', 'e.g. "Hypertension"')}
-                value={order.indication}
-                onChange={e => setOrder({ ...order, indication: e.target.value })}
+                value={orderBasketItem.indication}
+                onChange={e => setOrderBasketItem({ ...orderBasketItem, indication: e.target.value })}
               />
             </Column>
           </Row>

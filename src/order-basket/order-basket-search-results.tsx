@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next';
 import { Medication16, ShoppingBag16 } from '@carbon/icons-react';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { searchMedications } from './drug-search';
-import { MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
 import { paginate } from '../utils/pagination';
 
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
   encounterUuid: string;
   setSearchTerm: (value: string) => void;
-  onSearchResultClicked: (searchResult: MedicationOrder, directlyAddToBasket: boolean) => void;
+  onSearchResultClicked: (searchResult: OrderBasketItem, directlyAddToBasket: boolean) => void;
 }
 
 export default function OrderBasketSearchResults({
@@ -22,7 +22,7 @@ export default function OrderBasketSearchResults({
   onSearchResultClicked,
 }: OrderBasketSearchResultsProps) {
   const { t } = useTranslation();
-  const [searchResults, setSearchResults] = useState<Array<MedicationOrder>>([]);
+  const [searchResults, setSearchResults] = useState<Array<OrderBasketItem>>([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [currentSearchResultPage] = paginate(searchResults, page, pageSize);
@@ -33,7 +33,7 @@ export default function OrderBasketSearchResults({
     return () => abortController.abort();
   }, [searchTerm]);
 
-  const handleSearchResultClicked = (searchResult: MedicationOrder, directlyAddToBasket: boolean) => {
+  const handleSearchResultClicked = (searchResult: OrderBasketItem, directlyAddToBasket: boolean) => {
     setSearchTerm('');
     setSearchResults([]);
     onSearchResultClicked(searchResult, directlyAddToBasket);

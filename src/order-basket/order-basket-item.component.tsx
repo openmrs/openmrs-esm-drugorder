@@ -1,17 +1,17 @@
 import styles from './order-basket-item.scss';
 import { Button, ClickableTile } from 'carbon-components-react';
 import React, { useRef } from 'react';
-import { MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
 import { TrashCan16 } from '@carbon/icons-react';
 import { useTranslation } from 'react-i18next';
 
-export interface OrderBasketItemProps {
-  order: MedicationOrder;
+export interface OrderBasketItemTileProps {
+  orderBasketItem: OrderBasketItem;
   onClick: () => void;
   onRemoveClick: () => void;
 }
 
-export default function OrderBasketItem({ order, onClick, onRemoveClick }: OrderBasketItemProps) {
+export default function OrderBasketItemTile({ orderBasketItem, onClick, onRemoveClick }: OrderBasketItemTileProps) {
   const { t } = useTranslation();
 
   // This here is really dirty, but required.
@@ -26,23 +26,26 @@ export default function OrderBasketItem({ order, onClick, onRemoveClick }: Order
     <ClickableTile handleClick={() => shouldOnClickBeCalled.current && onClick()}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <p>
-          <OrderActionLabel order={order} />
+          <OrderActionLabel orderBasketItem={orderBasketItem} />
           <br />
-          {order.isFreeTextDosage ? (
+          {orderBasketItem.isFreeTextDosage ? (
             <>
-              <strong>{order.drug.concept.display}</strong> &mdash; {order.freeTextDosage}
+              <strong>{orderBasketItem.drug.concept.display}</strong> &mdash; {orderBasketItem.freeTextDosage}
             </>
           ) : (
             <>
-              <strong>{order.drug.concept.display}</strong> &mdash; <strong>{order.dosage.dosage}</strong>
-              &mdash; {order.dosageUnit.name} &mdash; {order.route.name} &mdash; {order.frequency.name}
+              <strong>{orderBasketItem.drug.concept.display}</strong> &mdash;{' '}
+              <strong>{orderBasketItem.dosage.dosage}</strong>
+              &mdash; {orderBasketItem.dosageUnit.name} &mdash; {orderBasketItem.route.name} &mdash;{' '}
+              {orderBasketItem.frequency.name}
             </>
           )}
           <br />
-          <span className={styles.label01}>{t('refills', 'Refills').toUpperCase()}</span> {order.numRefills} &mdash;{' '}
-          <span className={styles.label01}>{t('quantity', 'Quantity').toUpperCase()}</span> {order.pillsDispensed}{' '}
-          &mdash; <span className={styles.label01}>{t('indication', 'Indication').toUpperCase()}</span>{' '}
-          {!!order.indication ? order.indication : <i>{t('none', 'None')}</i>}
+          <span className={styles.label01}>{t('refills', 'Refills').toUpperCase()}</span> {orderBasketItem.numRefills}{' '}
+          &mdash; <span className={styles.label01}>{t('quantity', 'Quantity').toUpperCase()}</span>{' '}
+          {orderBasketItem.pillsDispensed} &mdash;{' '}
+          <span className={styles.label01}>{t('indication', 'Indication').toUpperCase()}</span>{' '}
+          {!!orderBasketItem.indication ? orderBasketItem.indication : <i>{t('none', 'None')}</i>}
         </p>
         <Button
           style={{ flex: '0 0 auto' }}
@@ -60,10 +63,10 @@ export default function OrderBasketItem({ order, onClick, onRemoveClick }: Order
   );
 }
 
-function OrderActionLabel({ order }: { order: MedicationOrder }) {
+function OrderActionLabel({ orderBasketItem }: { orderBasketItem: OrderBasketItem }) {
   const { t } = useTranslation();
 
-  switch (order.action) {
+  switch (orderBasketItem.action) {
     case 'NEW':
       return <span className={styles.orderActionNewLabel}>{t('orderActionNew', 'New')}</span>;
     case 'RENEWED':

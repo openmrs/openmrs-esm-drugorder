@@ -1,11 +1,12 @@
 import React from 'react';
-import { fetchPatientPastMedications, PatientMedications } from '../utils/medications.resource';
+import { PatientMedications } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import MedicationsDetailsTable from './medications-details-table.component';
 import { DataTableSkeleton } from 'carbon-components-react';
 import { toOmrsDateString } from '../utils/omrs-dates';
+import { fetchPatientOrders } from '../api/order';
 
 export default function PastMedicationsTable() {
   const [pastMedications, setPastMedications] = React.useState<Array<PatientMedications> | null>(null);
@@ -14,15 +15,15 @@ export default function PastMedicationsTable() {
 
   React.useEffect(() => {
     if (patientUuid) {
-      const pastMedicationsSub = fetchPatientPastMedications(patientUuid, 'any').subscribe(pastMedications => {
+      const abortController = new AbortController();
+      fetchPatientOrders(patientUuid, 'any').then(pastMedications => {
         setPastMedications(
           pastMedications.filter(
             med => toOmrsDateString(new Date()) >= toOmrsDateString(med.autoExpireDate) || !!med.dateStopped,
           ),
         );
       }, createErrorHandler());
-
-      return () => pastMedicationsSub.unsubscribe();
+      return () => abortController.abort();
     }
   }, [patientUuid]);
 

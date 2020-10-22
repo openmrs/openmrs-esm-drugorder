@@ -1,10 +1,11 @@
 import React from 'react';
-import { fetchPatientMedications, PatientMedications } from '../utils/medications.resource';
+import { PatientMedications } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import MedicationsDetailsTable from './medications-details-table.component';
 import { DataTableSkeleton } from 'carbon-components-react';
+import { fetchPatientOrders } from '../api/order';
 
 export default function ActiveMedicationsDetailsTable() {
   const [activeMedications, setCurrentMedications] = React.useState<Array<PatientMedications> | null>(null);
@@ -13,11 +14,12 @@ export default function ActiveMedicationsDetailsTable() {
 
   React.useEffect(() => {
     if (patientUuid) {
-      const activeMedicationsSub = fetchPatientMedications(patientUuid).subscribe(activeMedications => {
+      const abortController = new AbortController();
+      fetchPatientOrders(patientUuid, 'ACTIVE', abortController).then(activeMedications => {
         setCurrentMedications(activeMedications);
       }, createErrorHandler());
 
-      return () => activeMedicationsSub.unsubscribe();
+      return () => abortController.abort();
     }
   }, [patientUuid]);
 

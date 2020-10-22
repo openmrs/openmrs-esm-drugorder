@@ -8,7 +8,7 @@ import {
   Loading,
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
-import { MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
 import { getDurationUnits, getPatientEncounterID } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
@@ -21,23 +21,23 @@ import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
 
 const OrderBasket = connect(
-  'orders',
+  'items',
   orderBasketStoreActions,
-)(({ orders, setOrders }: OrderBasketStore & OrderBasketStoreActions) => {
+)(({ items, setItems }: OrderBasketStore & OrderBasketStoreActions) => {
   const { t } = useTranslation();
   const [, , patientUuid] = useCurrentPatient();
   const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
   const [encounterUuid, setEncounterUuid] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [medicationOrderFormItem, setMedicationOrderFormItem] = useState<MedicationOrder | null>(null);
+  const [medicationOrderFormItem, setMedicationOrderFormItem] = useState<OrderBasketItem | null>(null);
   const [isMedicationOrderFormVisible, setIsMedicationOrderFormVisible] = useState(false);
   const [onMedicationOrderFormSigned, setOnMedicationOrderFormSign] = useState<
-    (finalizedOrder: MedicationOrder) => void | null
+    (finalizedOrderBasketItem: OrderBasketItem) => void | null
   >(null);
 
-  const handleSearchResultClicked = (searchResult: MedicationOrder, directlyAddToBasket: boolean) => {
+  const handleSearchResultClicked = (searchResult: OrderBasketItem, directlyAddToBasket: boolean) => {
     if (directlyAddToBasket) {
-      setOrders([...orders, searchResult]);
+      setItems([...items, searchResult]);
     } else {
       openMedicationOrderFormForAddingNewOrder(searchResult);
     }
@@ -45,26 +45,26 @@ const OrderBasket = connect(
 
   const handleSaveClicked = () => {
     const abortController = new AbortController();
-    orderDrugs(orders, patientUuid, abortController).then(() => {});
+    orderDrugs(items, patientUuid, abortController).then(() => {});
     return () => abortController.abort();
   };
 
-  const openMedicationOrderFormForAddingNewOrder = (newOrder: MedicationOrder) => {
-    openMedicationOrderForm(newOrder, finalizedOrder => setOrders([...orders, finalizedOrder]));
+  const openMedicationOrderFormForAddingNewOrder = (newOrderBasketItem: OrderBasketItem) => {
+    openMedicationOrderForm(newOrderBasketItem, finalizedOrder => setItems([...items, finalizedOrder]));
   };
 
   const openMedicationOrderFormForUpdatingExistingOrder = (existingOrderIndex: number) => {
-    const order = orders[existingOrderIndex];
+    const order = items[existingOrderIndex];
     openMedicationOrderForm(order, finalizedOrder =>
-      setOrders(() => {
-        const newOrders = [...orders];
+      setItems(() => {
+        const newOrders = [...items];
         newOrders[existingOrderIndex] = finalizedOrder;
         return newOrders;
       }),
     );
   };
 
-  const openMedicationOrderForm = (item: MedicationOrder, onSigned: (finalizedOrder: MedicationOrder) => void) => {
+  const openMedicationOrderForm = (item: OrderBasketItem, onSigned: (finalizedOrder: OrderBasketItem) => void) => {
     setMedicationOrderFormItem(item);
     setOnMedicationOrderFormSign(_ => finalizedOrder => {
       setIsMedicationOrderFormVisible(false);
@@ -97,7 +97,7 @@ const OrderBasket = connect(
       {isMedicationOrderFormVisible ? (
         <MedicationOrderForm
           durationUnits={durationUnits}
-          initialOrder={medicationOrderFormItem}
+          initialOrderBasketItem={medicationOrderFormItem}
           onSign={onMedicationOrderFormSigned}
           onCancel={() => setIsMedicationOrderFormVisible(false)}
         />
@@ -107,12 +107,12 @@ const OrderBasket = connect(
 
           <div className={styles.orderBasketContainer}>
             <OrderBasketItemList
-              orders={orders}
-              onItemClicked={order => openMedicationOrderFormForUpdatingExistingOrder(orders.indexOf(order))}
+              orderBasketItems={items}
+              onItemClicked={order => openMedicationOrderFormForUpdatingExistingOrder(items.indexOf(order))}
               onItemRemoveClicked={order => {
-                const newOrders = [...orders];
-                newOrders.splice(orders.indexOf(order), 1);
-                setOrders(newOrders);
+                const newOrders = [...items];
+                newOrders.splice(items.indexOf(order), 1);
+                setItems(newOrders);
               }}
             />
 

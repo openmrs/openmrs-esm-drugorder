@@ -1,4 +1,4 @@
-import { openmrsObservableFetch, openmrsFetch, fhirBaseUrl } from '@openmrs/esm-api';
+import { fhirBaseUrl, openmrsFetch, openmrsObservableFetch } from '@openmrs/esm-api';
 import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { OrderMedication } from '../widgets/medications/medication-orders-utils';
@@ -74,40 +74,6 @@ export function performPatientMedicationsSearch(patientID: string): Observable<P
     map(({ data }) => data['entry']),
     map((entries: any) => entries.map(entry => entry.resource)),
     take(3),
-  );
-}
-
-export function fetchPatientMedications(
-  patientID: string,
-  status: string = 'ACTIVE',
-): Observable<Array<PatientMedications>> {
-  return openmrsObservableFetch<PatientMedicationFetchResponse>(
-    `/ws/rest/v1/order?patient=${patientID}&careSetting=${CARE_SETTING}&status=${status}&v=custom:(uuid,orderNumber,accessionNumber,patient:ref,action,careSetting:ref,previousOrder:ref,dateActivated,scheduledDate,dateStopped,autoExpireDate,orderType:ref,encounter:ref,orderer:ref,orderReason,orderType,urgency,instructions,commentToFulfiller,drug:(name,strength,concept),dose,doseUnits:ref,frequency:ref,asNeeded,asNeededCondition,quantity,quantityUnits:ref,numRefills,dosingInstructions,duration,durationUnits:ref,route:ref,brandName,dispenseAsWritten)`,
-  ).pipe(
-    map(({ data }) => {
-      const meds: Array<PatientMedications> = [];
-      data.results.map(result => {
-        if (result.orderType.display === DRUG_ORDER_TYPE) {
-          meds.push(result);
-        }
-      });
-      return meds;
-    }),
-  );
-}
-export function fetchPatientPastMedications(patientID: string, status: string): Observable<PatientMedications[]> {
-  return openmrsObservableFetch<PatientMedicationFetchResponse>(
-    `/ws/rest/v1/order?patient=${patientID}&careSetting=${CARE_SETTING}&status=${status}&v=custom:(uuid,orderNumber,accessionNumber,patient:ref,action,careSetting:ref,previousOrder:ref,dateActivated,scheduledDate,dateStopped,autoExpireDate,orderType:ref,encounter:ref,orderer:ref,orderReason,orderType,urgency,instructions,commentToFulfiller,drug:(name,strength,concept),dose,doseUnits:ref,frequency:ref,asNeeded,asNeededCondition,quantity,quantityUnits:ref,numRefills,dosingInstructions,duration,durationUnits:ref,route:ref,brandName,dispenseAsWritten)`,
-  ).pipe(
-    map(({ data }) => {
-      const meds: Array<PatientMedications> = [];
-      data.results.map(result => {
-        if (result.orderType.display === DRUG_ORDER_TYPE) {
-          meds.push(result);
-        }
-      });
-      return meds;
-    }),
   );
 }
 

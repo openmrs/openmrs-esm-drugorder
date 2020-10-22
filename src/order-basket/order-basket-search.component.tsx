@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import styles from './order-basket-search.scss';
 import { useQueryParameter } from '../utils/use-query-parameter.hook';
 import OrderBasketSearchResults from './order-basket-search-results';
-import { MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
 
 export interface OrderBasketSearchProps {
   encounterUuid: string;
-  onSearchResultClicked: (searchResult: MedicationOrder, directlyAddToBasket: boolean) => void;
+  onSearchResultClicked: (searchResult: OrderBasketItem, directlyAddToBasket: boolean) => void;
 }
 
 export default function OrderBasketSearch({ encounterUuid, onSearchResultClicked }: OrderBasketSearchProps) {

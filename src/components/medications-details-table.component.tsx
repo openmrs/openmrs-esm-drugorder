@@ -40,7 +40,7 @@ const MedicationsDetailsTable = connect<
   OrderBasketStoreActions,
   ActiveMedicationsProps
 >(
-  'orders',
+  'items',
   orderBasketStoreActions,
 )(
   ({
@@ -48,8 +48,8 @@ const MedicationsDetailsTable = connect<
     medications,
     showDiscontinueAndModifyButtons,
     showAddNewButton,
-    orders,
-    setOrders,
+    items,
+    setItems,
   }: ActiveMedicationsProps & OrderBasketStore & OrderBasketStoreActions) => {
     const { t } = useTranslation();
     const [page, setPage] = useState(1);
@@ -57,9 +57,9 @@ const MedicationsDetailsTable = connect<
     const [currentMedicationPage] = paginate(medications, page, pageSize);
 
     const handleDiscontinueClick = (medication: PatientMedications) => {
-      if (!orders.some(order => order.previousOrder === medication.uuid)) {
-        setOrders([
-          ...orders,
+      if (!items.some(order => order.previousOrder === medication.uuid)) {
+        setItems([
+          ...items,
           {
             previousOrder:
               medication.action === 'REVISE'
@@ -175,14 +175,12 @@ const MedicationsDetailsTable = connect<
                     <TableCell className="bx--table-column-menu">
                       <OverflowMenu flipped>
                         {showDiscontinueAndModifyButtons && (
-                          <>
-                            <OverflowMenuItem
-                              itemText={t('discontinue', 'Discontinue')}
-                              onClick={() => handleDiscontinueClick(medications[rowIndex])}
-                            />
-                            <OverflowMenuItem itemText={t('modify', 'Modify')} />
-                          </>
+                          <OverflowMenuItem
+                            itemText={t('discontinue', 'Discontinue')}
+                            onClick={() => handleDiscontinueClick(medications[rowIndex])}
+                          />
                         )}
+                        {showDiscontinueAndModifyButtons && <OverflowMenuItem itemText={t('modify', 'Modify')} />}
                         <OverflowMenuItem itemText={t('reorder', 'Reorder')} />
                       </OverflowMenu>
                     </TableCell>

@@ -1,20 +1,20 @@
-import { MedicationOrder } from './types/order-basket';
+import { OrderBasketItem } from './types/order-basket-item';
 import createStore, { Store } from 'unistore';
 
 export interface OrderBasketStore {
-  orders: Array<MedicationOrder>;
+  items: Array<OrderBasketItem>;
 }
 
 export interface OrderBasketStoreActions {
-  setOrders: (value: Array<MedicationOrder> | (() => Array<MedicationOrder>)) => void;
+  setItems: (value: Array<OrderBasketItem> | (() => Array<OrderBasketItem>)) => void;
 }
 
 export const orderBasketStore: Store<OrderBasketStore> = createStore({
-  orders: [],
+  items: [],
 });
 
 export const orderBasketStoreActions = {
-  setOrders(_: OrderBasketStore, value: Array<MedicationOrder> | (() => Array<MedicationOrder>)) {
-    return { orders: typeof value === 'function' ? value() : value };
+  setItems(_: OrderBasketStore, value: Array<OrderBasketItem> | (() => Array<OrderBasketItem>)) {
+    return { items: typeof value === 'function' ? value() : value };
   },
 };

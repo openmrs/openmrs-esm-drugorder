@@ -1,4 +1,4 @@
-import { MedicationOrder } from '../types/order-basket';
+import { OrderBasketItem } from '../types/order-basket-item';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import dayjs from 'dayjs';
 import { OrderPost, postOrder } from '../api/order';
@@ -8,18 +8,18 @@ const careSetting = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const orderer = 'e89cae4a-3cb3-40a2-b964-8b20dda2c985';
 
 export async function orderDrugs(
-  orders: Array<MedicationOrder>,
+  orderBasketItems: Array<OrderBasketItem>,
   patientUuid: string,
   abortController: AbortController,
 ) {
-  const dtos = medicationOrderToApiDto(orders, patientUuid);
+  const dtos = medicationOrderToApiDto(orderBasketItems, patientUuid);
   for (const dto of dtos) {
     await postOrder(dto, abortController).catch(createErrorHandler);
   }
 }
 
-function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: string): Array<OrderPost> {
-  return orders.map(order => {
+function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patientUuid: string): Array<OrderPost> {
+  return orderBasketItems.map(order => {
     if (order.action === 'NEW') {
       return {
         action: 'NEW',
@@ -63,15 +63,15 @@ function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: st
   });
 }
 
-function calculateEndDate(order: MedicationOrder) {
-  const dayJsDuration = order.durationUnit.display
-    .substring(0, order.durationUnit.display.lastIndexOf('s'))
+function calculateEndDate(orderBasketItem: OrderBasketItem) {
+  const dayJsDuration = orderBasketItem.durationUnit.display
+    .substring(0, orderBasketItem.durationUnit.display.lastIndexOf('s'))
     .toLowerCase();
 
   return (
-    dayjs(order.startDate)
+    dayjs(orderBasketItem.startDate)
       // @ts-ignore
-      .add(order.duration, dayJsDuration)
+      .add(orderBasketItem.duration, dayJsDuration)
       .toDate()
   );
 }
