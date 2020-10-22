@@ -14,9 +14,20 @@ export async function orderDrugs(
   abortController: AbortController,
 ) {
   const dtos = medicationOrderToApiDto(orderBasketItems, patientUuid);
-  for (const dto of dtos) {
-    await postOrder(dto, abortController).catch(createErrorHandler);
+  const erroredItems = [];
+
+  for (let i = 0; i < dtos.length; i++) {
+    const dto = dtos[i];
+    const orderBasketItem = orderBasketItems[i];
+    await postOrder(dto, abortController).catch(error => {
+      erroredItems.push({
+        ...orderBasketItem,
+        error: error,
+      });
+    });
   }
+
+  return erroredItems;
 }
 
 function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patientUuid: string): Array<OrderPost> {

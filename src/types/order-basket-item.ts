@@ -28,4 +28,13 @@ export interface OrderBasketItem {
   isFreeTextDosage: boolean;
   freeTextDosage: string;
   previousOrder?: string;
+  orderError?: Error & {
+    responseBody?: {
+      error?: {
+        code?: string;
+        detail?: string;
+        message?: string;
+      };
+    };
+  };
 }

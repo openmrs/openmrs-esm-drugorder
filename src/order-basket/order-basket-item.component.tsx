@@ -1,8 +1,8 @@
 import styles from './order-basket-item.scss';
-import { Button, ClickableTile } from 'carbon-components-react';
+import { Button, ClickableTile, Tile } from 'carbon-components-react';
 import React, { useRef } from 'react';
 import { OrderBasketItem } from '../types/order-basket-item';
-import { TrashCan16 } from '@carbon/icons-react';
+import { TrashCan16, Error16 } from '@carbon/icons-react';
 import { useTranslation } from 'react-i18next';
 
 export interface OrderBasketItemTileProps {
@@ -22,44 +22,53 @@ export default function OrderBasketItemTile({ orderBasketItem, onClick, onRemove
   // Hence, we manually prevent the handleClick callback from being invoked as soon as the button is pressed once.
   const shouldOnClickBeCalled = useRef(true);
 
-  return (
-    <ClickableTile handleClick={() => shouldOnClickBeCalled.current && onClick()}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p>
-          <OrderActionLabel orderBasketItem={orderBasketItem} />
-          <br />
-          {orderBasketItem.isFreeTextDosage ? (
-            <>
-              <strong>{orderBasketItem.drug.concept.display}</strong> &mdash; {orderBasketItem.freeTextDosage}
-            </>
-          ) : (
-            <>
-              <strong>{orderBasketItem.drug.concept.display}</strong> &mdash;{' '}
-              <strong>{orderBasketItem.dosage.dosage}</strong>
-              &mdash; {orderBasketItem.dosageUnit.name} &mdash; {orderBasketItem.route.name} &mdash;{' '}
-              {orderBasketItem.frequency.name}
-            </>
-          )}
-          <br />
-          <span className={styles.label01}>{t('refills', 'Refills').toUpperCase()}</span> {orderBasketItem.numRefills}{' '}
-          &mdash; <span className={styles.label01}>{t('quantity', 'Quantity').toUpperCase()}</span>{' '}
-          {orderBasketItem.pillsDispensed} &mdash;{' '}
-          <span className={styles.label01}>{t('indication', 'Indication').toUpperCase()}</span>{' '}
-          {!!orderBasketItem.indication ? orderBasketItem.indication : <i>{t('none', 'None')}</i>}
-        </p>
-        <Button
-          style={{ flex: '0 0 auto' }}
-          kind="ghost"
-          hasIconOnly={true}
-          renderIcon={() => <TrashCan16 />}
-          iconDescription={t('removeFromBasket', 'Remove from basket')}
-          onClick={() => {
-            shouldOnClickBeCalled.current = false;
-            onRemoveClick();
-          }}
-        />
-      </div>
-    </ClickableTile>
+  const tileContent = (
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <p>
+        <OrderActionLabel orderBasketItem={orderBasketItem} />
+        <br />
+        {orderBasketItem.isFreeTextDosage ? (
+          <>
+            <strong>{orderBasketItem.drug.concept.display}</strong> &mdash; {orderBasketItem.freeTextDosage}
+          </>
+        ) : (
+          <>
+            <strong>{orderBasketItem.drug.concept.display}</strong> &mdash;{' '}
+            <strong>{orderBasketItem.dosage.dosage}</strong>
+            &mdash; {orderBasketItem.dosageUnit.name} &mdash; {orderBasketItem.route.name} &mdash;{' '}
+            {orderBasketItem.frequency.name}
+          </>
+        )}
+        <br />
+        <span className={styles.label01}>{t('refills', 'Refills').toUpperCase()}</span> {orderBasketItem.numRefills}{' '}
+        &mdash; <span className={styles.label01}>{t('quantity', 'Quantity').toUpperCase()}</span>{' '}
+        {orderBasketItem.pillsDispensed} &mdash;{' '}
+        <span className={styles.label01}>{t('indication', 'Indication').toUpperCase()}</span>{' '}
+        {!!orderBasketItem.indication ? orderBasketItem.indication : <i>{t('none', 'None')}</i>}
+        {!!orderBasketItem.orderError && (
+          <>
+            <Error16 /> {orderBasketItem.orderError.responseBody?.error?.message ?? orderBasketItem.orderError.message}
+          </>
+        )}
+      </p>
+      <Button
+        style={{ flex: '0 0 auto' }}
+        kind="ghost"
+        hasIconOnly={true}
+        renderIcon={() => <TrashCan16 />}
+        iconDescription={t('removeFromBasket', 'Remove from basket')}
+        onClick={() => {
+          shouldOnClickBeCalled.current = false;
+          onRemoveClick();
+        }}
+      />
+    </div>
+  );
+
+  return orderBasketItem.action === 'DISCONTINUE' ? (
+    <Tile>{tileContent}</Tile>
+  ) : (
+    <ClickableTile handleClick={() => shouldOnClickBeCalled.current && onClick()}>{tileContent}</ClickableTile>
   );
 }
 

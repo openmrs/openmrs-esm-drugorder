@@ -16,22 +16,22 @@ export default function OrderBasketItemList({
   onItemRemoveClicked,
 }: OrderBasketItemListProps) {
   const { t } = useTranslation();
-  const newOrders = orderBasketItems.filter(x => x.action === 'NEW');
-  const renewedOrders = orderBasketItems.filter(x => x.action === 'RENEWED');
-  const revisedOrders = orderBasketItems.filter(x => x.action === 'REVISED');
-  const discontinuedOrders = orderBasketItems.filter(x => x.action === 'DISCONTINUE');
+  const newOrderBasketItems = orderBasketItems.filter(x => x.action === 'NEW');
+  const renewedOrderBasketItems = orderBasketItems.filter(x => x.action === 'RENEWED');
+  const revisedOrderBasketItems = orderBasketItems.filter(x => x.action === 'REVISED');
+  const discontinuedOrderBasketItems = orderBasketItems.filter(x => x.action === 'DISCONTINUE');
 
   return (
     <>
       <h3 className={styles.productiveHeading02}>{t('orderBasket', 'Order Basket')}</h3>
       {orderBasketItems.length === 0 && <p>{t('emptyMedicationOrderBasket', 'Your basket is currently empty.')}</p>}
 
-      {newOrders.length > 0 && (
+      {newOrderBasketItems.length > 0 && (
         <>
           <h4 className={styles.orderCategoryHeading}>
-            {t('newOrders', '{count} new order(s)', { count: newOrders.length })}
+            {t('newOrders', '{count} new order(s)', { count: newOrderBasketItems.length })}
           </h4>
-          {newOrders.map((order, index) => (
+          {newOrderBasketItems.map((order, index) => (
             <OrderBasketItemTile
               key={index}
               orderBasketItem={order}
@@ -42,49 +42,51 @@ export default function OrderBasketItemList({
         </>
       )}
 
-      {renewedOrders.length > 0 && (
+      {renewedOrderBasketItems.length > 0 && (
         <>
           <h4 className={styles.orderCategoryHeading}>
-            {t('renewedOrders', '{count} order(s) being renewed (continued)', { count: renewedOrders.length })}
+            {t('renewedOrders', '{count} order(s) being renewed (continued)', {
+              count: renewedOrderBasketItems.length,
+            })}
           </h4>
-          {renewedOrders.map((order, index) => (
+          {renewedOrderBasketItems.map((item, index) => (
             <OrderBasketItemTile
               key={index}
-              orderBasketItem={order}
-              onClick={() => onItemClicked(order)}
-              onRemoveClick={() => onItemRemoveClicked(order)}
+              orderBasketItem={item}
+              onClick={() => onItemClicked(item)}
+              onRemoveClick={() => onItemRemoveClicked(item)}
             />
           ))}
         </>
       )}
 
-      {revisedOrders.length > 0 && (
+      {revisedOrderBasketItems.length > 0 && (
         <>
           <h4 className={styles.orderCategoryHeading}>
-            {t('revisedOrders', '{count} order(s) being modified (revised)', { count: revisedOrders.length })}
+            {t('revisedOrders', '{count} order(s) being modified (revised)', { count: revisedOrderBasketItems.length })}
           </h4>
-          {revisedOrders.map((order, index) => (
+          {revisedOrderBasketItems.map((item, index) => (
             <OrderBasketItemTile
               key={index}
-              orderBasketItem={order}
-              onClick={() => onItemClicked(order)}
-              onRemoveClick={() => onItemRemoveClicked(order)}
+              orderBasketItem={item}
+              onClick={() => onItemClicked(item)}
+              onRemoveClick={() => onItemRemoveClicked(item)}
             />
           ))}
         </>
       )}
 
-      {discontinuedOrders.length > 0 && (
+      {discontinuedOrderBasketItems.length > 0 && (
         <>
           <h4 className={styles.orderCategoryHeading}>
-            {t('discontinuedOrders', '{count} discontinued order(s)', { count: discontinuedOrders.length })}
+            {t('discontinuedOrders', '{count} discontinued order(s)', { count: discontinuedOrderBasketItems.length })}
           </h4>
-          {discontinuedOrders.map((order, index) => (
+          {discontinuedOrderBasketItems.map((item, index) => (
             <OrderBasketItemTile
               key={index}
-              orderBasketItem={order}
-              onClick={() => onItemClicked(order)}
-              onRemoveClick={() => onItemRemoveClicked(order)}
+              orderBasketItem={item}
+              onClick={() => onItemClicked(item)}
+              onRemoveClick={() => onItemRemoveClicked(item)}
             />
           ))}
         </>

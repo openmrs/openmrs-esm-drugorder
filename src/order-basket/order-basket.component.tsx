@@ -45,7 +45,7 @@ const OrderBasket = connect(
 
   const handleSaveClicked = () => {
     const abortController = new AbortController();
-    orderDrugs(items, patientUuid, abortController).then(() => {});
+    orderDrugs(items, patientUuid, abortController).then(erroredItems => setItems(erroredItems));
     return () => abortController.abort();
   };
 
