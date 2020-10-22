@@ -61,12 +61,7 @@ const MedicationsDetailsTable = connect<
         setItems([
           ...items,
           {
-            previousOrder:
-              medication.action === 'REVISE'
-                ? null
-                : !!medication.previousOrder
-                ? medication.previousOrder.uuid
-                : medication.uuid,
+            previousOrder: null,
             action: 'DISCONTINUE',
             drug: medication.drug,
             dosage: {

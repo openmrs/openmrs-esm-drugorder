@@ -116,7 +116,7 @@ const OrderBasket = connect(
               }}
             />
 
-            <ActiveMedicationsDetailsTable />
+            <ActiveMedicationsDetailsTable showAddNewButton={false} />
 
             <ButtonSet style={{ marginTop: '2rem' }}>
               {/*TODO: Add cancel functionality*/}

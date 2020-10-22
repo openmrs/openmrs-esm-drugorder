@@ -11,7 +11,7 @@ export default function MedicationsSummary() {
   return (
     <>
       <h1 className={styles.productiveHeading06}>{t('medications', 'Medications')}</h1>
-      <ActiveMedicationsDetailsTable />
+      <ActiveMedicationsDetailsTable showAddNewButton={true} />
       <div style={{ marginTop: '3rem' }}>
         <PastMedicationsTable />
       </div>

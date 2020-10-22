@@ -7,7 +7,11 @@ import MedicationsDetailsTable from './medications-details-table.component';
 import { DataTableSkeleton } from 'carbon-components-react';
 import { fetchPatientOrders } from '../api/order';
 
-export default function ActiveMedicationsDetailsTable() {
+export interface ActiveMedicationsDetailsTableProps {
+  showAddNewButton: boolean;
+}
+
+export default function ActiveMedicationsDetailsTable({ showAddNewButton }: ActiveMedicationsDetailsTableProps) {
   const [activeMedications, setCurrentMedications] = React.useState<Array<PatientMedications> | null>(null);
   const [, , patientUuid] = useCurrentPatient();
   const { t } = useTranslation();
@@ -28,7 +32,7 @@ export default function ActiveMedicationsDetailsTable() {
       title={t('activeMedications', 'Active Medications')}
       medications={activeMedications}
       showDiscontinueAndModifyButtons={true}
-      showAddNewButton={true}
+      showAddNewButton={showAddNewButton}
     />
   ) : (
     <DataTableSkeleton />
