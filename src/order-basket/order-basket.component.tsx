@@ -37,12 +37,37 @@ const OrderBasket = connect(
   >(null);
   const history = useHistory();
 
+  useEffect(() => {
+    const abortController = new AbortController();
+    const durationUnitsRequest = getDurationUnits(abortController).then(
+      res => setDurationUnits(res.data.answers),
+      createErrorHandler,
+    );
+    const patientEncounterRequest = getPatientEncounterID(patientUuid, abortController).then(
+      ({ data }) => setEncounterUuid(data.results[0].uuid),
+      createErrorHandler,
+    );
+
+    Promise.all([durationUnitsRequest, patientEncounterRequest]).finally(() => setIsLoading(false));
+    return () => abortController.abort();
+  }, [patientUuid]);
+
   const handleSearchResultClicked = (searchResult: OrderBasketItem, directlyAddToBasket: boolean) => {
     if (directlyAddToBasket) {
       setItems([...items, searchResult]);
     } else {
       openMedicationOrderFormForAddingNewOrder(searchResult);
     }
+  };
+
+  const openMedicationOrderForm = (item: OrderBasketItem, onSigned: (finalizedOrder: OrderBasketItem) => void) => {
+    setMedicationOrderFormItem(item);
+    setOnMedicationOrderFormSign(_ => finalizedOrder => {
+      setIsMedicationOrderFormVisible(false);
+      setMedicationOrderFormItem(null);
+      onSigned(finalizedOrder);
+    });
+    setIsMedicationOrderFormVisible(true);
   };
 
   const handleSaveClicked = () => {
@@ -55,6 +80,11 @@ const OrderBasket = connect(
       }
     });
     return () => abortController.abort();
+  };
+
+  const handleCancelClicked = () => {
+    setItems([]);
+    history.push(`/patient/${patientUuid}/chart/orders/medication-orders`);
   };
 
   const openMedicationOrderFormForAddingNewOrder = (newOrderBasketItem: OrderBasketItem) => {
@@ -71,33 +101,6 @@ const OrderBasket = connect(
       }),
     );
   };
-
-  const openMedicationOrderForm = (item: OrderBasketItem, onSigned: (finalizedOrder: OrderBasketItem) => void) => {
-    setMedicationOrderFormItem(item);
-    setOnMedicationOrderFormSign(_ => finalizedOrder => {
-      setIsMedicationOrderFormVisible(false);
-      setMedicationOrderFormItem(null);
-      onSigned(finalizedOrder);
-    });
-    setIsMedicationOrderFormVisible(true);
-  };
-
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    const durationUnitsRequest = getDurationUnits(abortController).then(
-      res => setDurationUnits(res.data.answers),
-      createErrorHandler,
-    );
-
-    const patientEncounterRequest = getPatientEncounterID(patientUuid, abortController).then(
-      ({ data }) => setEncounterUuid(data.results[0].uuid),
-      createErrorHandler,
-    );
-
-    Promise.all([durationUnitsRequest, patientEncounterRequest]).finally(() => setIsLoading(false));
-    return () => abortController.abort();
-  }, [patientUuid]);
 
   return (
     <>
@@ -127,8 +130,9 @@ const OrderBasket = connect(
             <ActiveMedicationsDetailsTable showAddNewButton={false} />
 
             <ButtonSet style={{ marginTop: '2rem' }}>
-              {/*TODO: Add cancel functionality*/}
-              <Button kind="secondary">{t('cancel', 'Cancel')}</Button>
+              <Button kind="secondary" onClick={handleCancelClicked}>
+                {t('cancel', 'Cancel')}
+              </Button>
               <Button kind="primary" onClick={handleSaveClicked}>
                 {t('save', 'Save')}
               </Button>
