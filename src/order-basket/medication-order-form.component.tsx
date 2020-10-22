@@ -170,13 +170,13 @@ export default function MedicationOrderForm({
                     <Checkbox
                       id="prn"
                       labelText={t('takeAsNeeded', 'Take As Needed')}
-                      checked={order.prnTakeAsNeeded}
-                      onChange={newValue => setOrder({ ...order, prnTakeAsNeeded: newValue })}
+                      checked={order.asNeeded}
+                      onChange={newValue => setOrder({ ...order, asNeeded: newValue })}
                     />
                   </FormGroup>
                   <div
                     className={styles.fullHeightTextAreaContainer}
-                    style={order.prnTakeAsNeeded ? {} : { visibility: 'hidden' }}>
+                    style={order.asNeeded ? {} : { visibility: 'hidden' }}>
                     <TextArea
                       labelText={t('prnReason', 'P.R.N. Reason')}
                       placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
@@ -266,12 +266,12 @@ export default function MedicationOrderForm({
                 <NumberInput
                   id="prescriptionRefills"
                   min={0}
-                  value={order.prescriptionRefills}
+                  value={order.numRefills}
                   onChange={e =>
                     setOrder({
                       ...order,
                       // @ts-ignore
-                      prescriptionRefills: Number(e.imaginaryTarget.value),
+                      numRefills: Number(e.imaginaryTarget.value),
                     })
                   }
                 />

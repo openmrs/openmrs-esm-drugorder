@@ -15,18 +15,18 @@ export interface MedicationOrder {
   dosageUnit: CommonMedicationDosageUnit;
   frequency: CommonMedicationFrequency;
   route: CommonMedicationRoute;
-  encounterUuid?: string;
-  patientInstructions?: string;
-  prnTakeAsNeeded?: boolean;
-  prnReason?: string;
-  startDate?: Date;
-  durationUnit?: OpenmrsResource;
-  duration?: number;
-  pillsDispensed?: number;
-  prescriptionRefills?: number;
-  indication?: string;
+  encounterUuid: string;
+  patientInstructions: string;
+  asNeeded: boolean;
+  prnReason: string;
+  startDate: Date;
+  durationUnit: OpenmrsResource;
+  duration: number;
+  pillsDispensed: number;
+  numRefills: number;
+  indication: string;
   isFreeTextDosage: boolean;
-  freeTextDosage?: string;
+  freeTextDosage: string;
 }
 
 export const daysDurationUnit = {

@@ -1,6 +1,6 @@
 import { Drug, getDrugByName } from '../utils/medications.resource';
 import { getCommonMedicationByUuid } from '../api/common-medication';
-import { MedicationOrder } from './types';
+import { daysDurationUnit, MedicationOrder } from './types';
 import _ from 'lodash-es';
 
 // Note:
@@ -19,10 +19,12 @@ import _ from 'lodash-es';
 // This method certainly isn't perfect, but again, since the common medication data is only available to us, it's kind of
 // the best thing we can do here.
 
-export async function searchMedications(searchTerm: string, abortController: AbortController) {
+export async function searchMedications(searchTerm: string, encounterUuid: string, abortController: AbortController) {
   const allSearchTerms = searchTerm.match(/\S+/g);
   const drugs = await searchDrugsInBackend(allSearchTerms, abortController);
-  const explodedSearchResults = drugs.flatMap(drug => [...explodeDrugResultWithCommonMedicationData(drug)]);
+  const explodedSearchResults = drugs.flatMap(drug => [
+    ...explodeDrugResultWithCommonMedicationData(drug, encounterUuid),
+  ]);
   return filterExplodedResultsBySearchTerm(allSearchTerms, explodedSearchResults);
 }
 
@@ -37,7 +39,7 @@ async function searchDrugsInBackend(allSearchTerms: Array<string>, abortControll
   return _.uniqBy(results, 'uuid');
 }
 
-function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<MedicationOrder> {
+function* explodeDrugResultWithCommonMedicationData(drug: Drug, encounterUuid: string): Generator<MedicationOrder> {
   const commonMedication = getCommonMedicationByUuid(drug.uuid);
 
   // If no common medication entry exists for the current drug, there is no point in displaying it in the search results,
@@ -58,8 +60,19 @@ function* explodeDrugResultWithCommonMedicationData(drug: Drug): Generator<Medic
             dosageUnit,
             frequency,
             route,
+            encounterUuid,
             commonMedicationName: commonMedication.name,
             isFreeTextDosage: false,
+            patientInstructions: '',
+            asNeeded: false,
+            prnReason: '',
+            startDate: new Date(),
+            duration: 0,
+            durationUnit: daysDurationUnit,
+            pillsDispensed: 0,
+            numRefills: 0,
+            freeTextDosage: '',
+            indication: '',
           };
         }
       }

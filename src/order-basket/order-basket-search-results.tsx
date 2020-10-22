@@ -10,12 +10,14 @@ import { paginate } from '../utils/pagination';
 
 export interface OrderBasketSearchResultsProps {
   searchTerm: string;
+  encounterUuid: string;
   setSearchTerm: (value: string) => void;
   onSearchResultClicked: (searchResult: MedicationOrder, directlyAddToBasket: boolean) => void;
 }
 
 export default function OrderBasketSearchResults({
   searchTerm,
+  encounterUuid,
   setSearchTerm,
   onSearchResultClicked,
 }: OrderBasketSearchResultsProps) {
@@ -27,7 +29,7 @@ export default function OrderBasketSearchResults({
 
   useEffect(() => {
     const abortController = new AbortController();
-    searchMedications(searchTerm, abortController).then(setSearchResults, createErrorHandler);
+    searchMedications(searchTerm, encounterUuid, abortController).then(setSearchResults, createErrorHandler);
     return () => abortController.abort();
   }, [searchTerm]);
 

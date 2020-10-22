@@ -33,14 +33,14 @@ function medicationOrderToApiDto(orders: Array<MedicationOrder>, patientUuid: st
         doseUnits: order.dosageUnit.uuid,
         route: order.route.conceptUuid,
         frequency: order.frequency.conceptUuid,
-        asNeeded: order.prnTakeAsNeeded,
-        numRefills: order.prescriptionRefills ?? 0,
-        quantity: order.pillsDispensed ?? 0, // TODO: Is this right?
-        quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', // TODO: Is this right?
+        asNeeded: order.asNeeded,
+        numRefills: order.numRefills,
+        quantity: order.pillsDispensed,
+        quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
         duration: order.duration,
         durationUnits: order.durationUnit.uuid,
-        dosingInstructions: order.freeTextDosage, // TODO
-        concept: order.drug.concept.uuid, // TODO
+        dosingInstructions: order.freeTextDosage,
+        concept: order.drug.concept.uuid,
         dateActivated: toOmrsDateString(order.startDate),
       };
     } else {

@@ -7,10 +7,11 @@ import OrderBasketSearchResults from './order-basket-search-results';
 import { MedicationOrder } from './types';
 
 export interface OrderBasketSearchProps {
+  encounterUuid: string;
   onSearchResultClicked: (searchResult: MedicationOrder, directlyAddToBasket: boolean) => void;
 }
 
-export default function OrderBasketSearch({ onSearchResultClicked }: OrderBasketSearchProps) {
+export default function OrderBasketSearch({ encounterUuid, onSearchResultClicked }: OrderBasketSearchProps) {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useQueryParameter('q', '');
 
@@ -25,6 +26,7 @@ export default function OrderBasketSearch({ onSearchResultClicked }: OrderBasket
         />
         <div style={{ margin: '1rem' }}>
           <OrderBasketSearchResults
+            encounterUuid={encounterUuid}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             onSearchResultClicked={onSearchResultClicked}

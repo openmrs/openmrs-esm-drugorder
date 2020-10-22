@@ -9,7 +9,7 @@ import {
   Loading,
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
-import { daysDurationUnit, MedicationOrder } from './types';
+import { MedicationOrder } from './types';
 import { getDurationUnits, getPatientEncounterID } from '../utils/medications.resource';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
@@ -32,26 +32,10 @@ export default function OrderBasket() {
   >(null);
 
   const handleSearchResultClicked = (searchResult: MedicationOrder, directlyAddToBasket: boolean) => {
-    const filledOrder = {
-      // A search result is incomplete. The form requires filled values.
-      action: 'NEW',
-      encounterUuid: encounterUuid,
-      patientInstructions: '',
-      prnTakeAsNeeded: false,
-      prnReason: '',
-      startDate: new Date(),
-      duration: 0,
-      durationUnit: daysDurationUnit,
-      quantityDispensed: 0,
-      prescriptionRefills: 0,
-      indication: '',
-      ...searchResult,
-    };
-
     if (directlyAddToBasket) {
-      setOrders([...orders, filledOrder]);
+      setOrders([...orders, searchResult]);
     } else {
-      openMedicationOrderFormForAddingNewOrder(filledOrder);
+      openMedicationOrderFormForAddingNewOrder(searchResult);
     }
   };
 
@@ -115,7 +99,7 @@ export default function OrderBasket() {
         />
       ) : (
         <>
-          <OrderBasketSearch onSearchResultClicked={handleSearchResultClicked} />
+          <OrderBasketSearch encounterUuid={encounterUuid} onSearchResultClicked={handleSearchResultClicked} />
 
           <div className={styles.orderBasketContainer}>
             <OrderBasketItemList
