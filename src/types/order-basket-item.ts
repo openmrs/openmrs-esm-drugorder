@@ -1,4 +1,3 @@
-import { Drug } from '../utils/medications.resource';
 import {
   CommonMedicationDosage,
   CommonMedicationDosageUnit,
@@ -6,6 +5,7 @@ import {
   CommonMedicationRoute,
 } from '../api/common-medication';
 import { OpenmrsResource } from './openmrs-resource';
+import { Drug } from './order';
 
 export interface OrderBasketItem {
   action: 'NEW' | 'REVISED' | 'DISCONTINUE' | 'RENEWED' | undefined;

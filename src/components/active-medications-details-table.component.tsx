@@ -1,18 +1,18 @@
 import React from 'react';
-import { PatientMedications } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
 import MedicationsDetailsTable from './medications-details-table.component';
 import { DataTableSkeleton } from 'carbon-components-react';
 import { fetchPatientOrders } from '../api/order';
+import { Order } from '../types/order';
 
 export interface ActiveMedicationsDetailsTableProps {
   showAddNewButton: boolean;
 }
 
 export default function ActiveMedicationsDetailsTable({ showAddNewButton }: ActiveMedicationsDetailsTableProps) {
-  const [activeMedications, setCurrentMedications] = React.useState<Array<PatientMedications> | null>(null);
+  const [activeMedications, setCurrentMedications] = React.useState<Array<Order> | null>(null);
   const [, , patientUuid] = useCurrentPatient();
   const { t } = useTranslation();
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { PatientMedications } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { useCurrentPatient } from '@openmrs/esm-api';
@@ -7,9 +6,10 @@ import MedicationsDetailsTable from './medications-details-table.component';
 import { DataTableSkeleton } from 'carbon-components-react';
 import { toOmrsDateString } from '../utils/omrs-dates';
 import { fetchPatientOrders } from '../api/order';
+import { Order } from '../types/order';
 
 export default function PastMedicationsTable() {
-  const [pastMedications, setPastMedications] = React.useState<Array<PatientMedications> | null>(null);
+  const [pastMedications, setPastMedications] = React.useState<Array<Order> | null>(null);
   const [, , patientUuid] = useCurrentPatient();
   const { t } = useTranslation();
 

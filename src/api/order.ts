@@ -1,34 +1,9 @@
-import { openmrsFetch, openmrsObservableFetch } from '@openmrs/esm-api';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { PatientMedications } from '../utils/medications.resource';
+import { openmrsFetch } from '@openmrs/esm-api';
 import { careSetting } from '../constants';
-
-export interface OrderPost {
-  action?: 'NEW' | 'DISCONTINUE';
-  patient?: string;
-  careSetting?: string;
-  orderer?: string;
-  encounter?: string;
-  drug?: string;
-  dose?: number;
-  doseUnits?: string;
-  route?: string;
-  frequency?: string;
-  asNeeded?: boolean;
-  numRefills?: number;
-  quantity?: number;
-  quantityUnits?: string;
-  type?: string;
-  duration?: number;
-  durationUnits?: string;
-  dosingInstructions?: string;
-  concept?: string;
-  dateActivated?: string;
-}
+import { OrderPost, Order } from '../types/order';
 
 export interface PatientMedicationFetchResponse {
-  results: Array<PatientMedications>;
+  results: Array<Order>;
 }
 
 export function postOrder(body: OrderPost, abortController?: AbortController) {

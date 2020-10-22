@@ -17,7 +17,6 @@ import {
 } from 'carbon-components-react';
 import { getDosage } from '../widgets/medications/medication-orders-utils';
 import dayjs from 'dayjs';
-import { PatientMedications } from '../utils/medications.resource';
 import { useTranslation } from 'react-i18next';
 import { Add16 } from '@carbon/icons-react';
 import { capitalize } from 'lodash-es';
@@ -26,10 +25,11 @@ import { compare } from '../utils/compare';
 import { paginate } from '../utils/pagination';
 import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
+import { Order } from '../types/order';
 
 export interface ActiveMedicationsProps {
   title: string;
-  medications: Array<PatientMedications>;
+  medications: Array<Order>;
   showAddNewButton: boolean;
   showDiscontinueAndModifyButtons: boolean;
 }
@@ -56,7 +56,7 @@ const MedicationsDetailsTable = connect<
     const [pageSize, setPageSize] = useState(10);
     const [currentMedicationPage] = paginate(medications, page, pageSize);
 
-    const handleDiscontinueClick = (medication: PatientMedications) => {
+    const handleDiscontinueClick = (medication: Order) => {
       if (!items.some(order => order.previousOrder === medication.uuid)) {
         setItems([
           ...items,

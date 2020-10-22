@@ -1,8 +1,9 @@
-import { Drug, getDrugByName } from '../utils/medications.resource';
+import { getDrugByName } from '../utils/medications.resource';
 import { getCommonMedicationByUuid } from '../api/common-medication';
 import { OrderBasketItem } from '../types/order-basket-item';
 import { daysDurationUnit } from '../constants';
 import _ from 'lodash-es';
+import { Drug } from '../types/order';
 
 // Note:
 // There's currently no backend API available for the data in `common-medication.json`.

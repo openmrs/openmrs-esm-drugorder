@@ -3,73 +3,14 @@ import { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { OrderMedication } from '../widgets/medications/medication-orders-utils';
 import { toOmrsDateString } from './omrs-dates';
-import { OpenmrsResource } from '../types/openmrs-resource';
+import { Order } from '../types/order';
 
-const CARE_SETTING = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const DURATION_UNITS_CONCEPT = '1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 const NEW_MEDICATION_ACTION = 'NEW';
 const REVISE_MEDICATION_ACTION = 'REVISE';
 const DISCONTINUE_MEDICATION_ACTION = 'DISCONTINUE';
-const DRUG_ORDER_TYPE = 'Drug Order';
 
-export type PatientMedications = {
-  uuid: string;
-  action: string;
-  asNeeded: boolean;
-  asNeededCondition?: string;
-  autoExpireDate: Date;
-  brandName?: string;
-  careSetting: OpenmrsResource;
-  commentToFulfiller: string;
-  dateActivated: Date;
-  dateStopped?: Date | null;
-  dispenseAsWritten: boolean;
-  dose: number;
-  doseUnits: OpenmrsResource;
-  dosingInstructions: string | null;
-  drug: Drug;
-  duration: number;
-  durationUnits: OpenmrsResource;
-  encounter: OpenmrsResource;
-  frequency: OpenmrsResource;
-  instructions?: string | null;
-  numRefills: number;
-  orderNumber: string;
-  orderReason: string | null;
-  orderType: {
-    conceptClasses: Array<any>;
-    description: string;
-    display: string;
-    name: string;
-    parent: string | null;
-    retired: boolean;
-    uuid: string;
-  };
-  orderer: OpenmrsResource;
-  patient: OpenmrsResource;
-  previousOrder: { uuid: string; type: string; display: string } | null;
-  quantity: number;
-  quantityUnits: OpenmrsResource;
-  route: OpenmrsResource;
-  scheduleDate: null;
-  urgency: string;
-};
-
-export interface Drug {
-  uuid: string;
-  name: string;
-  strength: string;
-  concept: DrugConcept;
-  dosageForm: OpenmrsResource;
-}
-
-export interface DrugConcept extends OpenmrsResource {}
-
-type PatientMedicationFetchResponse = {
-  results: Array<PatientMedications>;
-};
-
-export function performPatientMedicationsSearch(patientID: string): Observable<PatientMedications[]> {
+export function performPatientMedicationsSearch(patientID: string): Observable<Order[]> {
   return openmrsObservableFetch(`${fhirBaseUrl}/MedicationRequest?patient=${patientID}`).pipe(
     map(({ data }) => data['entry']),
     map((entries: any) => entries.map(entry => entry.resource)),

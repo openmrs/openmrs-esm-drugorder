@@ -1,8 +1,9 @@
 import { OrderBasketItem } from '../types/order-basket-item';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import dayjs from 'dayjs';
-import { OrderPost, postOrder } from '../api/order';
+import { postOrder } from '../api/order';
 import { toOmrsDateString } from '../utils/omrs-dates';
+import { OrderPost } from '../types/order';
 
 const careSetting = '6f0c9a92-6f24-11e3-af88-005056821db0';
 const orderer = 'e89cae4a-3cb3-40a2-b964-8b20dda2c985';
