@@ -32,7 +32,7 @@ export async function orderDrugs(
 
 function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patientUuid: string): Array<OrderPost> {
   return orderBasketItems.map(order => {
-    if (order.action === 'NEW') {
+    if (order.action === 'NEW' || order.action === 'RENEWED') {
       return {
         action: 'NEW',
         patient: patientUuid,

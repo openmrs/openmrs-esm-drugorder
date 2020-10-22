@@ -26,6 +26,9 @@ import { paginate } from '../utils/pagination';
 import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
 import { Order } from '../types/order';
+import { getDrugByName } from '../utils/medications.resource';
+import { createErrorHandler } from '@openmrs/esm-error-handling';
+import { getCommonMedicationByUuid } from '../api/common-medication';
 
 export interface ActiveMedicationsProps {
   title: string;
@@ -61,15 +64,16 @@ const MedicationsDetailsTable = connect<
     const [currentMedicationPage] = paginate(medications, page, pageSize);
 
     const handleDiscontinueClick = (medication: Order) => {
-      if (!items.some(order => order.previousOrder === medication.uuid)) {
+      getDrugByName(medication.drug.concept.display).then(res => {
+        const drug = res.data.results[0];
         setItems([
           ...items,
           {
             previousOrder: null,
             action: 'DISCONTINUE',
-            drug: medication.drug,
+            drug: drug,
             dosage: {
-              dosage: 'FILL ME',
+              dosage: getDosage(medication.drug.strength, medication.dose),
               numberOfPills: medication.dose,
             },
             dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
@@ -90,12 +94,44 @@ const MedicationsDetailsTable = connect<
             indication: '',
           },
         ]);
-      }
+      }, createErrorHandler);
     };
 
     const handleModifyClick = (medication: Order) => {};
 
-    const handleReorderClick = (medication: Order) => {};
+    const handleReorderClick = (medication: Order) => {
+      getDrugByName(medication.drug.concept.display).then(res => {
+        const drug = res.data.results[0];
+        setItems([
+          ...items,
+          {
+            previousOrder: null,
+            startDate: new Date(),
+            action: 'RENEWED',
+            drug: drug,
+            dosage: {
+              dosage: getDosage(medication.drug.strength, medication.dose),
+              numberOfPills: medication.dose,
+            },
+            dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
+            frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
+            route: { conceptUuid: medication.route.uuid, name: medication.route.display },
+            encounterUuid: medication.encounter.uuid,
+            commonMedicationName: medication.drug.name,
+            isFreeTextDosage: !!medication.instructions,
+            patientInstructions: '',
+            asNeeded: medication.asNeeded,
+            asNeededCondition: medication.asNeededCondition,
+            duration: medication.duration,
+            durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
+            pillsDispensed: medication.quantity,
+            numRefills: medication.numRefills,
+            freeTextDosage: '',
+            indication: '',
+          },
+        ]);
+      }, createErrorHandler);
+    };
 
     const tableHeaders = [
       { key: 'startDate', header: t('startDate', 'Start date'), isSortable: true, isVisible: true },

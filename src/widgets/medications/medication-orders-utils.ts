@@ -1,4 +1,8 @@
 export function getDosage(strength, doseNumber) {
+  if (!strength || !doseNumber) {
+    return '';
+  }
+
   const i = strength.search(/\D/);
   const strengthQuantity = strength.substring(0, i);
 
