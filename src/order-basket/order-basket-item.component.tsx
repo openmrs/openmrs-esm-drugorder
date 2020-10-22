@@ -2,7 +2,7 @@ import styles from './order-basket-item.scss';
 import { Button, ClickableTile, Tile } from 'carbon-components-react';
 import React, { useRef } from 'react';
 import { OrderBasketItem } from '../types/order-basket-item';
-import { TrashCan16, Error16 } from '@carbon/icons-react';
+import { TrashCan16, Warning16 } from '@carbon/icons-react';
 import { useTranslation } from 'react-i18next';
 
 export interface OrderBasketItemTileProps {
@@ -47,7 +47,11 @@ export default function OrderBasketItemTile({ orderBasketItem, onClick, onRemove
         {!!orderBasketItem.indication ? orderBasketItem.indication : <i>{t('none', 'None')}</i>}
         {!!orderBasketItem.orderError && (
           <>
-            <Error16 /> {orderBasketItem.orderError.responseBody?.error?.message ?? orderBasketItem.orderError.message}
+            <br />
+            <span className={styles.orderErrorText}>
+              <Warning16 /> &nbsp; <span className={styles.label01}>{t('error', 'Error').toUpperCase()}</span> &nbsp;
+              {orderBasketItem.orderError.responseBody?.error?.message ?? orderBasketItem.orderError.message}
+            </span>
           </>
         )}
       </p>

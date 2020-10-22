@@ -19,3 +19,9 @@
   @extend .label01;
   color: $text-02;
 }
+
+.orderErrorText {
+  color: $danger;
+  display: flex;
+  align-items: center;
+}

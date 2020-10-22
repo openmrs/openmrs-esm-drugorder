@@ -22,7 +22,7 @@ export async function orderDrugs(
     await postOrder(dto, abortController).catch(error => {
       erroredItems.push({
         ...orderBasketItem,
-        error: error,
+        orderError: error,
       });
     });
   }

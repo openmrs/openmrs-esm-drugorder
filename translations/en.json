@@ -48,6 +48,7 @@
   "medicationDurationAndUnit": "for {duration} {durationUnit}",
   "endButtonTooltip": "End",
   "reorderButtonTooltip": "Reorder",
+  "error": "Error",
   "noActiveMedicationsAvailable": "No active medications are available. You can document new medications via the Order Basket.",
 
   "close": "Close",
