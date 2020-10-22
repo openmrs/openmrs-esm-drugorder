@@ -97,7 +97,39 @@ const MedicationsDetailsTable = connect<
       }, createErrorHandler);
     };
 
-    const handleModifyClick = (medication: Order) => {};
+    const handleModifyClick = (medication: Order) => {
+      getDrugByName(medication.drug.concept.display).then(res => {
+        const drug = res.data.results[0];
+        setItems([
+          ...items,
+          {
+            previousOrder: !!medication.previousOrder ? medication.previousOrder.uuid : medication.uuid,
+            startDate: new Date(),
+            action: 'REVISE',
+            drug: drug,
+            dosage: {
+              dosage: getDosage(medication.drug.strength, medication.dose),
+              numberOfPills: medication.dose,
+            },
+            dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
+            frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
+            route: { conceptUuid: medication.route.uuid, name: medication.route.display },
+            encounterUuid: medication.encounter.uuid,
+            commonMedicationName: medication.drug.name,
+            isFreeTextDosage: !!medication.instructions,
+            patientInstructions: '',
+            asNeeded: medication.asNeeded,
+            asNeededCondition: medication.asNeededCondition,
+            duration: medication.duration,
+            durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
+            pillsDispensed: medication.quantity,
+            numRefills: medication.numRefills,
+            freeTextDosage: '',
+            indication: '',
+          },
+        ]);
+      }, createErrorHandler);
+    };
 
     const handleReorderClick = (medication: Order) => {
       getDrugByName(medication.drug.concept.display).then(res => {

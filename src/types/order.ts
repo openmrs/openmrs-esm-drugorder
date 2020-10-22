@@ -52,7 +52,7 @@ export interface Drug {
 }
 
 export interface OrderPost {
-  action?: 'NEW' | 'DISCONTINUE';
+  action?: 'NEW' | 'REVISE' | 'DISCONTINUE';
   patient?: string;
   careSetting?: string;
   orderer?: string;

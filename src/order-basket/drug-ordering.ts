@@ -56,6 +56,30 @@ function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patie
         concept: order.drug.concept.uuid,
         dateActivated: toOmrsDateString(order.startDate),
       };
+    } else if (order.action === 'REVISE') {
+      return {
+        action: 'REVISE',
+        patient: patientUuid,
+        type: 'drugorder',
+        careSetting: careSetting,
+        orderer: orderer,
+        encounter: order.encounterUuid,
+        drug: order.drug.uuid,
+        dose: order.dosage.numberOfPills,
+        doseUnits: order.dosageUnit.uuid,
+        route: order.route.conceptUuid,
+        frequency: order.frequency.conceptUuid,
+        asNeeded: order.asNeeded,
+        asNeededCondition: order.asNeededCondition,
+        numRefills: order.numRefills,
+        quantity: order.pillsDispensed,
+        quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
+        duration: order.duration,
+        durationUnits: order.durationUnit.uuid,
+        dosingInstructions: order.freeTextDosage,
+        concept: order.drug.concept.uuid,
+        dateActivated: toOmrsDateString(order.startDate),
+      };
     } else if (order.action === 'DISCONTINUE') {
       return {
         action: 'DISCONTINUE',

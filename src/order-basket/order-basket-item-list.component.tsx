@@ -18,7 +18,7 @@ export default function OrderBasketItemList({
   const { t } = useTranslation();
   const newOrderBasketItems = orderBasketItems.filter(x => x.action === 'NEW');
   const renewedOrderBasketItems = orderBasketItems.filter(x => x.action === 'RENEWED');
-  const revisedOrderBasketItems = orderBasketItems.filter(x => x.action === 'REVISED');
+  const revisedOrderBasketItems = orderBasketItems.filter(x => x.action === 'REVISE');
   const discontinuedOrderBasketItems = orderBasketItems.filter(x => x.action === 'DISCONTINUE');
 
   return (
