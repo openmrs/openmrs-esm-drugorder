@@ -19,6 +19,7 @@ import styles from './order-basket.scss';
 import ActiveMedicationsDetailsTable from '../components/active-medications-details-table.component';
 import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
+import { useHistory } from 'react-router-dom';
 
 const OrderBasket = connect(
   'items',
@@ -34,6 +35,7 @@ const OrderBasket = connect(
   const [onMedicationOrderFormSigned, setOnMedicationOrderFormSign] = useState<
     (finalizedOrderBasketItem: OrderBasketItem) => void | null
   >(null);
+  const history = useHistory();
 
   const handleSearchResultClicked = (searchResult: OrderBasketItem, directlyAddToBasket: boolean) => {
     if (directlyAddToBasket) {
@@ -45,7 +47,13 @@ const OrderBasket = connect(
 
   const handleSaveClicked = () => {
     const abortController = new AbortController();
-    orderDrugs(items, patientUuid, abortController).then(erroredItems => setItems(erroredItems));
+    orderDrugs(items, patientUuid, abortController).then(erroredItems => {
+      if (erroredItems.length == 0) {
+        history.push(`/patient/${patientUuid}/chart/orders/medication-orders`);
+      } else {
+        setItems(erroredItems);
+      }
+    });
     return () => abortController.abort();
   };
 
