@@ -15,7 +15,7 @@ import {
   TableToolbar,
   TableToolbarContent,
 } from 'carbon-components-react';
-import { getDosage } from '../utils/medication-orders-utils';
+import { getDosage } from '../utils/get-dosage';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { Add16 } from '@carbon/icons-react';
@@ -26,9 +26,8 @@ import { paginate } from '../utils/pagination';
 import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
 import { Order } from '../types/order';
-import { getDrugByName } from '../utils/medications.resource';
+import { getDrugByName } from '../api/api';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
-import { getCommonMedicationByUuid } from '../api/common-medication';
 
 export interface ActiveMedicationsProps {
   title: string;

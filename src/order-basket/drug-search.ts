@@ -1,4 +1,4 @@
-import { getDrugByName } from '../utils/medications.resource';
+import { getDrugByName } from '../api/api';
 import { getCommonMedicationByUuid } from '../api/common-medication';
 import { OrderBasketItem } from '../types/order-basket-item';
 import { daysDurationUnit } from '../constants';

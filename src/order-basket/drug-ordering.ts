@@ -1,7 +1,7 @@
 import { OrderBasketItem } from '../types/order-basket-item';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import dayjs from 'dayjs';
-import { postOrder } from '../api/order';
+import { postOrder } from '../api/api';
 import { toOmrsDateString } from '../utils/omrs-dates';
 import { OrderPost } from '../types/order';
 

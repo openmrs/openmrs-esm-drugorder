@@ -10,7 +10,7 @@ import {
 } from 'carbon-components-react';
 import MedicationOrderForm from './medication-order-form.component';
 import { OrderBasketItem } from '../types/order-basket-item';
-import { getDurationUnits, getPatientEncounterID } from '../utils/medications.resource';
+import { getDurationUnits, getPatientEncounterId } from '../api/api';
 import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OpenmrsResource } from '../types/openmrs-resource';
 import { orderDrugs } from './drug-ordering';
@@ -46,7 +46,7 @@ const OrderBasket = connect(
       res => setDurationUnits(res.data.answers),
       createErrorHandler,
     );
-    const patientEncounterRequest = getPatientEncounterID(patientUuid, abortController).then(
+    const patientEncounterRequest = getPatientEncounterId(patientUuid, abortController).then(
       ({ data }) => setEncounterUuid(data.results[0].uuid),
       createErrorHandler,
     );
