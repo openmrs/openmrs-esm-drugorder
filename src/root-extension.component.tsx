@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { defineConfigSchema } from '@openmrs/esm-config';
 import openmrsRootDecorator from '@openmrs/react-root-decorator';
 import MedicationsSummary from './medications-summary/medications-summary.component';
-import MedicationRecord from './widgets/medications/medication-record.component';
 import styles from './root.scss';
 import { Provider } from 'unistore/react';
 import { orderBasketStore } from './order-basket-store';
@@ -19,9 +18,6 @@ function ExtensionRoot() {
             <Provider store={orderBasketStore}>
               <MedicationsSummary />
             </Provider>
-          </Route>
-          <Route exact path="/patient/:patientUuid/chart/orders/medication-orders/:medicationUuid">
-            <MedicationRecord />
           </Route>
         </Switch>
       </BrowserRouter>

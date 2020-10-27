@@ -15,7 +15,7 @@ import {
   TableToolbar,
   TableToolbarContent,
 } from 'carbon-components-react';
-import { getDosage } from '../widgets/medications/medication-orders-utils';
+import { getDosage } from '../utils/medication-orders-utils';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { Add16 } from '@carbon/icons-react';
