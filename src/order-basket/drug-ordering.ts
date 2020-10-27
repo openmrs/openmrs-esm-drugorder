@@ -52,7 +52,10 @@ function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patie
         quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
         duration: order.duration,
         durationUnits: order.durationUnit.uuid,
-        dosingInstructions: order.freeTextDosage,
+        dosingType: order.isFreeTextDosage
+          ? 'org.openmrs.FreeTextDosingInstructions'
+          : 'org.openmrs.SimpleDosingInstructions',
+        dosingInstructions: order.isFreeTextDosage ? order.freeTextDosage : order.patientInstructions,
         concept: order.drug.concept.uuid,
         dateActivated: toOmrsDateString(order.startDate),
       };
@@ -76,7 +79,10 @@ function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patie
         quantityUnits: '162396AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
         duration: order.duration,
         durationUnits: order.durationUnit.uuid,
-        dosingInstructions: order.freeTextDosage,
+        dosingType: order.isFreeTextDosage
+          ? 'org.openmrs.FreeTextDosingInstructions'
+          : 'org.openmrs.SimpleDosingInstructions',
+        dosingInstructions: order.isFreeTextDosage ? order.freeTextDosage : order.patientInstructions,
         concept: order.drug.concept.uuid,
         dateActivated: toOmrsDateString(order.startDate),
       };

@@ -69,6 +69,7 @@ export interface OrderPost {
   type?: string;
   duration?: number;
   durationUnits?: string;
+  dosingType?: 'org.openmrs.FreeTextDosingInstructions' | 'org.openmrs.SimpleDosingInstructions';
   dosingInstructions?: string;
   concept?: string;
   dateActivated?: string;
