@@ -1,5 +1,5 @@
 import { OrderBasketItem } from './types/order-basket-item';
-import createStore, { Store } from 'unistore';
+import { createGlobalStore } from '@openmrs/esm-api';
 
 export interface OrderBasketStore {
   items: Array<OrderBasketItem>;
@@ -9,7 +9,7 @@ export interface OrderBasketStoreActions {
   setItems: (value: Array<OrderBasketItem> | (() => Array<OrderBasketItem>)) => void;
 }
 
-export const orderBasketStore: Store<OrderBasketStore> = createStore({
+export const orderBasketStore = createGlobalStore<OrderBasketStore>('drug-order-basket', {
   items: [],
 });
 
