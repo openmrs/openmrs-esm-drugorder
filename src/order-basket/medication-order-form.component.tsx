@@ -88,6 +88,7 @@ export default function MedicationOrderForm({
                   labelText={t('freeTextDosage', 'Free Text Dosage')}
                   placeholder={t('freeTextDosage', 'Free Text Dosage')}
                   value={orderBasketItem.freeTextDosage}
+                  maxLength={65535}
                   onChange={e => setOrderBasketItem({ ...orderBasketItem, freeTextDosage: e.target.value })}
                 />
               </Column>
