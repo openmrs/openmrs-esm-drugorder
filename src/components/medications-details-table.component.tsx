@@ -183,6 +183,7 @@ function OrderBasketItemActions({
   setItems: (items: Array<OrderBasketItem>) => void;
 }) {
   const { t } = useTranslation();
+  const alreadyInBasket = items.some(x => x.uuid === medication.uuid);
 
   const handleDiscontinueClick = useCallback(() => {
     getDrugByName(medication.drug.concept.display).then(res => {
@@ -190,6 +191,7 @@ function OrderBasketItemActions({
       setItems([
         ...items,
         {
+          uuid: medication.uuid,
           previousOrder: null,
           action: 'DISCONTINUE',
           drug: drug,
@@ -226,6 +228,7 @@ function OrderBasketItemActions({
       setItems([
         ...items,
         {
+          uuid: medication.uuid,
           previousOrder: medication.uuid,
           startDate: new Date(),
           action: 'REVISE',
@@ -262,6 +265,7 @@ function OrderBasketItemActions({
       setItems([
         ...items,
         {
+          uuid: medication.uuid,
           previousOrder: null,
           startDate: new Date(),
           action: 'RENEWED',
@@ -295,10 +299,18 @@ function OrderBasketItemActions({
   return (
     <OverflowMenu flipped>
       {showDiscontinueButton && (
-        <OverflowMenuItem itemText={t('discontinue', 'Discontinue')} onClick={handleDiscontinueClick} />
+        <OverflowMenuItem
+          itemText={t('discontinue', 'Discontinue')}
+          onClick={handleDiscontinueClick}
+          disabled={alreadyInBasket}
+        />
       )}
-      {showModifyButton && <OverflowMenuItem itemText={t('modify', 'Modify')} onClick={handleModifyClick} />}
-      {showReorderButton && <OverflowMenuItem itemText={t('reorder', 'Reorder')} onClick={handleReorderClick} />}
+      {showModifyButton && (
+        <OverflowMenuItem itemText={t('modify', 'Modify')} onClick={handleModifyClick} disabled={alreadyInBasket} />
+      )}
+      {showReorderButton && (
+        <OverflowMenuItem itemText={t('reorder', 'Reorder')} onClick={handleReorderClick} disabled={alreadyInBasket} />
+      )}
     </OverflowMenu>
   );
 }
