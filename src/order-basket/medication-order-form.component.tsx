@@ -166,6 +166,7 @@ export default function MedicationOrderForm({
                       'patientInstructionsPlaceholder',
                       'Additional dosing instructions (e.g. "Take after eating")',
                     )}
+                    maxLength={65535}
                     value={orderBasketItem.patientInstructions}
                     onChange={e => setOrderBasketItem({ ...orderBasketItem, patientInstructions: e.target.value })}
                   />
@@ -186,6 +187,7 @@ export default function MedicationOrderForm({
                       labelText={t('prnReason', 'P.R.N. Reason')}
                       placeholder={t('prnReasonPlaceholder', 'Reason to take medicine')}
                       rows={3}
+                      maxLength={255}
                       value={orderBasketItem.asNeededCondition}
                       onChange={e => setOrderBasketItem({ ...orderBasketItem, asNeededCondition: e.target.value })}
                     />
@@ -203,6 +205,7 @@ export default function MedicationOrderForm({
             <Column md={4} className={styles.fullWidthDatePickerContainer}>
               <DatePicker
                 datePickerType="single"
+                maxDate={new Date()}
                 value={[orderBasketItem.startDate]}
                 onChange={([newStartDate]) => setOrderBasketItem({ ...orderBasketItem, startDate: newStartDate })}>
                 <DatePickerInput
@@ -294,6 +297,7 @@ export default function MedicationOrderForm({
                 placeholder={t('indicationPlaceholder', 'e.g. "Hypertension"')}
                 value={orderBasketItem.indication}
                 onChange={e => setOrderBasketItem({ ...orderBasketItem, indication: e.target.value })}
+                maxLength={150}
               />
             </Column>
           </Row>
