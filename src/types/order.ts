@@ -1,6 +1,6 @@
 import { OpenmrsResource } from './openmrs-resource';
 
-export type Order = {
+export interface Order {
   uuid: string;
   action: string;
   asNeeded: boolean;
@@ -41,7 +41,7 @@ export type Order = {
   route: OpenmrsResource;
   scheduleDate: null;
   urgency: string;
-};
+}
 
 export interface Drug {
   uuid: string;

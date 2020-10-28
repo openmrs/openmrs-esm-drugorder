@@ -45,7 +45,7 @@ export default function MedicationOrderForm({
 
   return (
     <>
-      <Header aria-label={''} className={styles.medicationDetailsHeader}>
+      <Header aria-label="" className={styles.medicationDetailsHeader}>
         <HeaderName prefix="">
           {orderBasketItem.isFreeTextDosage ? (
             <strong>{orderBasketItem.commonMedicationName}</strong>
@@ -218,7 +218,7 @@ export default function MedicationOrderForm({
                 helperText={t('noDurationHint', '0 indicates an indefinite duration.')}
                 onChange={e => {
                   // @ts-ignore
-                  const newValue = Number(e.imaginaryTarget.value);
+                  const newValue = +e.imaginaryTarget.value;
                   setOrderBasketItem({ ...orderBasketItem, duration: newValue === 0 ? undefined : newValue });
                 }}
               />
@@ -260,7 +260,7 @@ export default function MedicationOrderForm({
                     setOrderBasketItem({
                       ...orderBasketItem,
                       // @ts-ignore
-                      pillsDispensed: Number(e.imaginaryTarget.value),
+                      pillsDispensed: +e.imaginaryTarget.value,
                     });
                   }}
                 />
@@ -276,7 +276,7 @@ export default function MedicationOrderForm({
                     setOrderBasketItem({
                       ...orderBasketItem,
                       // @ts-ignore
-                      numRefills: Number(e.imaginaryTarget.value),
+                      numRefills: +e.imaginaryTarget.value,
                     })
                   }
                 />

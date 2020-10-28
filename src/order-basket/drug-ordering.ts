@@ -14,7 +14,7 @@ export async function orderDrugs(
   abortController: AbortController,
 ) {
   const dtos = medicationOrderToApiDto(orderBasketItems, patientUuid);
-  const erroredItems = [];
+  const erroredItems: Array<OrderBasketItem> = [];
 
   for (let i = 0; i < dtos.length; i++) {
     const dto = dtos[i];

@@ -19,7 +19,7 @@ import { getDosage } from '../utils/get-dosage';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { Add16 } from '@carbon/icons-react';
-import { capitalize } from 'lodash-es';
+import { capitalize } from 'lodash-es/capitalize';
 import styles from './medications-details-table.scss';
 import { compare } from '../utils/compare';
 import { paginate } from '../utils/pagination';

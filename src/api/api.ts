@@ -2,7 +2,7 @@ import { openmrsFetch } from '@openmrs/esm-api';
 import { careSetting } from '../constants';
 import { Order, OrderPost } from '../types/order';
 
-const DURATION_UNITS_CONCEPT = '1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+const durationUnitsConcept = '1732AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
 
 export interface PatientMedicationFetchResponse {
   results: Array<Order>;
@@ -24,10 +24,7 @@ export function getDrugByName(drugName: string, abortController?: AbortControlle
 }
 
 export function getDurationUnits(abortController: AbortController) {
-  return openmrsFetch(
-    `/ws/rest/v1/concept/${DURATION_UNITS_CONCEPT}?v=custom:(answers:(uuid,display))`,
-    abortController,
-  );
+  return openmrsFetch(`/ws/rest/v1/concept/${durationUnitsConcept}?v=custom:(answers:(uuid,display))`, abortController);
 }
 
 export function getMedicationByUuid(abortController: AbortController, orderUuid: string) {

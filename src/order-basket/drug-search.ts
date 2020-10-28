@@ -2,7 +2,7 @@ import { getDrugByName } from '../api/api';
 import { getCommonMedicationByUuid } from '../api/common-medication';
 import { OrderBasketItem } from '../types/order-basket-item';
 import { daysDurationUnit } from '../constants';
-import _ from 'lodash-es';
+import { uniqBy } from 'lodash-es/uniqBy';
 import { Drug } from '../types/order';
 
 // Note:
@@ -38,7 +38,7 @@ async function searchDrugsInBackend(allSearchTerms: Array<string>, abortControll
     }),
   );
   const results = resultsPerSearchTerm.flatMap(x => x);
-  return _.uniqBy(results, 'uuid');
+  return uniqBy(results, 'uuid');
 }
 
 function* explodeDrugResultWithCommonMedicationData(drug: Drug, encounterUuid: string): Generator<OrderBasketItem> {
