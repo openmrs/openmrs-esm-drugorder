@@ -26,8 +26,6 @@ import { paginate } from '../utils/pagination';
 import { connect } from 'unistore/react';
 import { OrderBasketStore, OrderBasketStoreActions, orderBasketStoreActions } from '../order-basket-store';
 import { Order } from '../types/order';
-import { getDrugByName } from '../api/api';
-import { createErrorHandler } from '@openmrs/esm-error-handling';
 import { OrderBasketItem } from '../types/order-basket-item';
 
 export interface ActiveMedicationsProps {
