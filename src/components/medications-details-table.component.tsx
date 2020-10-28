@@ -209,9 +209,8 @@ const MedicationsDetailsTable = connect<
             {showAddNewButton && (
               <TableToolbar>
                 <TableToolbarContent>
-                  <Button renderIcon={() => <Add16 />} onClick={() => alert('TODO')}>
-                    {' '}
-                    {/*TODO: Implement functionality*/}
+                  <Button renderIcon={() => <Add16 />}>
+                    {/* TODO: Navigate to order basket form once workspace providers are added. */}
                     {t('add', 'Add')}
                   </Button>
                 </TableToolbarContent>
