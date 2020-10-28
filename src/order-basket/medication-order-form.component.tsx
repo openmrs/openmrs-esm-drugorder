@@ -25,6 +25,7 @@ import { OrderBasketItem } from '../types/order-basket-item';
 import { daysDurationUnit } from '../constants';
 import { getCommonMedicationByUuid } from '../api/common-medication';
 import { OpenmrsResource } from '../types/openmrs-resource';
+import capitalize from 'lodash-es/capitalize';
 
 export interface MedicationOrderFormProps {
   initialOrderBasketItem: OrderBasketItem;
@@ -48,13 +49,15 @@ export default function MedicationOrderForm({
       <Header aria-label="" className={styles.medicationDetailsHeader}>
         <HeaderName prefix="">
           {orderBasketItem.isFreeTextDosage ? (
-            <strong>{orderBasketItem.commonMedicationName}</strong>
+            <strong>{capitalize(orderBasketItem.commonMedicationName)}</strong>
           ) : (
             <>
-              <strong>{orderBasketItem.commonMedicationName}</strong> &mdash; {orderBasketItem.route.name} &mdash;{' '}
-              {orderBasketItem.dosageUnit.name}
-              &mdash; <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;{' '}
-              <strong>{orderBasketItem.dosage.dosage}</strong>
+              <span>
+                <strong>{capitalize(orderBasketItem.commonMedicationName)}</strong> &mdash; {orderBasketItem.route.name}{' '}
+                &mdash; {orderBasketItem.dosageUnit.name} &mdash;{' '}
+                <span className={styles.label01}>{t('dose', 'Dose').toUpperCase()}</span> &mdash;{' '}
+                <strong>{orderBasketItem.dosage.dosage}</strong>
+              </span>
             </>
           )}
         </HeaderName>
