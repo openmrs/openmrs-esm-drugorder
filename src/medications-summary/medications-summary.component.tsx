@@ -13,7 +13,7 @@ export default function MedicationsSummary() {
 
   return (
     <>
-      <h1 className={styles.productiveHeading06}>{t('medications', 'Medications')}</h1>
+      <h1 className={styles.productiveHeading03}>{t('medications', 'Medications')}</h1>
       {activePatientOrders ? (
         <MedicationsDetailsTable
           title={t('activeMedications', 'Active Medications')}
