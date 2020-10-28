@@ -1,4 +1,4 @@
-import { chunk } from 'lodash-es/chunk';
+import chunk from 'lodash-es/chunk';
 
 /**
  * Paginates the specified array into a set of pages and returns the page with the specified page number.
