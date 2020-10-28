@@ -39,86 +39,6 @@ export interface ActiveMedicationsProps {
   showReorderButton: boolean;
 }
 
-function handleModifyClick(
-  items: Array<OrderBasketItem>,
-  setItems: (items: Array<OrderBasketItem>) => void,
-  medication: Order,
-) {
-  getDrugByName(medication.drug.concept.display).then(res => {
-    const drug = res.data.results[0];
-    setItems([
-      ...items,
-      {
-        previousOrder: !!medication.previousOrder ? medication.previousOrder.uuid : medication.uuid,
-        startDate: new Date(),
-        action: 'REVISE',
-        drug: drug,
-        dosage: {
-          dosage: getDosage(medication.drug.strength, medication.dose),
-          numberOfPills: medication.dose,
-        },
-        dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
-        frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
-        route: { conceptUuid: medication.route.uuid, name: medication.route.display },
-        encounterUuid: medication.encounter.uuid,
-        commonMedicationName: medication.drug.name,
-        isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
-        freeTextDosage:
-          medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
-        patientInstructions:
-          medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
-        asNeeded: medication.asNeeded,
-        asNeededCondition: medication.asNeededCondition,
-        duration: medication.duration,
-        durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
-        pillsDispensed: medication.quantity,
-        numRefills: medication.numRefills,
-        indication: medication.orderReasonNonCoded,
-      },
-    ]);
-  }, createErrorHandler);
-}
-
-function handleReorderClick(
-  items: Array<OrderBasketItem>,
-  setItems: (items: Array<OrderBasketItem>) => void,
-  medication: Order,
-) {
-  getDrugByName(medication.drug.concept.display).then(res => {
-    const drug = res.data.results[0];
-    setItems([
-      ...items,
-      {
-        previousOrder: null,
-        startDate: new Date(),
-        action: 'RENEWED',
-        drug: drug,
-        dosage: {
-          dosage: getDosage(medication.drug.strength, medication.dose),
-          numberOfPills: medication.dose,
-        },
-        dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
-        frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
-        route: { conceptUuid: medication.route.uuid, name: medication.route.display },
-        encounterUuid: medication.encounter.uuid,
-        commonMedicationName: medication.drug.name,
-        isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
-        freeTextDosage:
-          medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
-        patientInstructions:
-          medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
-        asNeeded: medication.asNeeded,
-        asNeededCondition: medication.asNeededCondition,
-        duration: medication.duration,
-        durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
-        pillsDispensed: medication.quantity,
-        numRefills: medication.numRefills,
-        indication: medication.orderReasonNonCoded,
-      },
-    ]);
-  }, createErrorHandler);
-}
-
 const MedicationsDetailsTable = connect<
   ActiveMedicationsProps,
   OrderBasketStore,
@@ -142,45 +62,6 @@ const MedicationsDetailsTable = connect<
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const [currentMedicationPage] = paginate(medications, page, pageSize);
-
-    const handleDiscontinueClick = useCallback(
-      (medication: Order) => {
-        getDrugByName(medication.drug.concept.display).then(res => {
-          const drug = res.data.results[0];
-          setItems([
-            ...items,
-            {
-              previousOrder: null,
-              action: 'DISCONTINUE',
-              drug: drug,
-              dosage: {
-                dosage: getDosage(medication.drug.strength, medication.dose),
-                numberOfPills: medication.dose,
-              },
-              dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
-              frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
-              route: { conceptUuid: medication.route.uuid, name: medication.route.display },
-              encounterUuid: medication.encounter.uuid,
-              commonMedicationName: medication.drug.name,
-              isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
-              freeTextDosage:
-                medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
-              patientInstructions:
-                medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
-              asNeeded: medication.asNeeded,
-              asNeededCondition: medication.asNeededCondition,
-              startDate: medication.dateActivated,
-              duration: medication.duration,
-              durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
-              pillsDispensed: medication.quantity,
-              numRefills: medication.numRefills,
-              indication: medication.orderReasonNonCoded,
-            },
-          ]);
-        }, createErrorHandler);
-      },
-      [items, setItems, medications],
-    );
 
     const tableHeaders = [
       { key: 'startDate', header: t('startDate', 'Start date'), isSortable: true, isVisible: true },
@@ -256,26 +137,14 @@ const MedicationsDetailsTable = connect<
                       <TableCell key={cell.id}>{cell.value?.content ?? cell.value}</TableCell>
                     ))}
                     <TableCell className="bx--table-column-menu">
-                      <OverflowMenu flipped>
-                        {showDiscontinueButton && (
-                          <OverflowMenuItem
-                            itemText={t('discontinue', 'Discontinue')}
-                            onClick={() => handleDiscontinueClick(medications[rowIndex])}
-                          />
-                        )}
-                        {showModifyButton && (
-                          <OverflowMenuItem
-                            itemText={t('modify', 'Modify')}
-                            onClick={() => handleModifyClick(items, setItems, medications[rowIndex])}
-                          />
-                        )}
-                        {showReorderButton && (
-                          <OverflowMenuItem
-                            itemText={t('reorder', 'Reorder')}
-                            onClick={() => handleReorderClick(items, setItems, medications[rowIndex])}
-                          />
-                        )}
-                      </OverflowMenu>
+                      <OrderBasketItemActions
+                        showDiscontinueButton={showDiscontinueButton}
+                        showModifyButton={showModifyButton}
+                        showReorderButton={showReorderButton}
+                        medication={medications[rowIndex]}
+                        items={items}
+                        setItems={setItems}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -297,5 +166,141 @@ const MedicationsDetailsTable = connect<
     );
   },
 );
+
+function OrderBasketItemActions({
+  showDiscontinueButton,
+  showModifyButton,
+  showReorderButton,
+  medication,
+  items,
+  setItems,
+}: {
+  showDiscontinueButton: boolean;
+  showModifyButton: boolean;
+  showReorderButton: boolean;
+  medication: Order;
+  items: Array<OrderBasketItem>;
+  setItems: (items: Array<OrderBasketItem>) => void;
+}) {
+  const { t } = useTranslation();
+
+  const handleDiscontinueClick = useCallback(() => {
+    getDrugByName(medication.drug.concept.display).then(res => {
+      const drug = res.data.results[0];
+      setItems([
+        ...items,
+        {
+          previousOrder: null,
+          action: 'DISCONTINUE',
+          drug: drug,
+          dosage: {
+            dosage: getDosage(medication.drug.strength, medication.dose),
+            numberOfPills: medication.dose,
+          },
+          dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
+          frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
+          route: { conceptUuid: medication.route.uuid, name: medication.route.display },
+          encounterUuid: medication.encounter.uuid,
+          commonMedicationName: medication.drug.name,
+          isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
+          freeTextDosage:
+            medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+          patientInstructions:
+            medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+          asNeeded: medication.asNeeded,
+          asNeededCondition: medication.asNeededCondition,
+          startDate: medication.dateActivated,
+          duration: medication.duration,
+          durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
+          pillsDispensed: medication.quantity,
+          numRefills: medication.numRefills,
+          indication: medication.orderReasonNonCoded,
+        },
+      ]);
+    }, createErrorHandler);
+  }, [items, setItems, medication]);
+
+  const handleModifyClick = useCallback(() => {
+    getDrugByName(medication.drug.concept.display).then(res => {
+      const drug = res.data.results[0];
+      setItems([
+        ...items,
+        {
+          previousOrder: !!medication.previousOrder ? medication.previousOrder.uuid : medication.uuid,
+          startDate: new Date(),
+          action: 'REVISE',
+          drug: drug,
+          dosage: {
+            dosage: getDosage(medication.drug.strength, medication.dose),
+            numberOfPills: medication.dose,
+          },
+          dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
+          frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
+          route: { conceptUuid: medication.route.uuid, name: medication.route.display },
+          encounterUuid: medication.encounter.uuid,
+          commonMedicationName: medication.drug.name,
+          isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
+          freeTextDosage:
+            medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+          patientInstructions:
+            medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+          asNeeded: medication.asNeeded,
+          asNeededCondition: medication.asNeededCondition,
+          duration: medication.duration,
+          durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
+          pillsDispensed: medication.quantity,
+          numRefills: medication.numRefills,
+          indication: medication.orderReasonNonCoded,
+        },
+      ]);
+    }, createErrorHandler);
+  }, [items, setItems, medication]);
+
+  const handleReorderClick = useCallback(() => {
+    getDrugByName(medication.drug.concept.display).then(res => {
+      const drug = res.data.results[0];
+      setItems([
+        ...items,
+        {
+          previousOrder: null,
+          startDate: new Date(),
+          action: 'RENEWED',
+          drug: drug,
+          dosage: {
+            dosage: getDosage(medication.drug.strength, medication.dose),
+            numberOfPills: medication.dose,
+          },
+          dosageUnit: { uuid: medication.doseUnits.uuid, name: medication.doseUnits.display },
+          frequency: { conceptUuid: medication.frequency.uuid, name: medication.frequency.display },
+          route: { conceptUuid: medication.route.uuid, name: medication.route.display },
+          encounterUuid: medication.encounter.uuid,
+          commonMedicationName: medication.drug.name,
+          isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
+          freeTextDosage:
+            medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+          patientInstructions:
+            medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+          asNeeded: medication.asNeeded,
+          asNeededCondition: medication.asNeededCondition,
+          duration: medication.duration,
+          durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
+          pillsDispensed: medication.quantity,
+          numRefills: medication.numRefills,
+          indication: medication.orderReasonNonCoded,
+        },
+      ]);
+    }, createErrorHandler);
+  }, [items, setItems, medication]);
+
+  return (
+    <OverflowMenu flipped>
+      {showDiscontinueButton && (
+        <OverflowMenuItem itemText={t('discontinue', 'Discontinue')} onClick={handleDiscontinueClick} />
+      )}
+      {showModifyButton && <OverflowMenuItem itemText={t('modify', 'Modify')} onClick={handleModifyClick} />}
+      {showReorderButton && <OverflowMenuItem itemText={t('reorder', 'Reorder')} onClick={handleReorderClick} />}
+    </OverflowMenu>
+  );
+}
 
 export default MedicationsDetailsTable;
