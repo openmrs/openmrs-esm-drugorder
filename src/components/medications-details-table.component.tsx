@@ -80,8 +80,11 @@ const MedicationsDetailsTable = connect<
             route: { conceptUuid: medication.route.uuid, name: medication.route.display },
             encounterUuid: medication.encounter.uuid,
             commonMedicationName: medication.drug.name,
-            isFreeTextDosage: !!medication.instructions,
-            patientInstructions: '',
+            isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
+            freeTextDosage:
+              medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+            patientInstructions:
+              medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
             asNeeded: medication.asNeeded,
             asNeededCondition: medication.asNeededCondition,
             startDate: medication.dateActivated,
@@ -89,8 +92,7 @@ const MedicationsDetailsTable = connect<
             durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
             pillsDispensed: medication.quantity,
             numRefills: medication.numRefills,
-            freeTextDosage: '',
-            indication: '',
+            indication: medication.orderReasonNonCoded,
           },
         ]);
       }, createErrorHandler);
@@ -115,16 +117,18 @@ const MedicationsDetailsTable = connect<
             route: { conceptUuid: medication.route.uuid, name: medication.route.display },
             encounterUuid: medication.encounter.uuid,
             commonMedicationName: medication.drug.name,
-            isFreeTextDosage: !!medication.instructions,
-            patientInstructions: '',
+            isFreeTextDosage: medication.dosingType === 'org.openmrs.FreeTextDosingInstructions',
+            freeTextDosage:
+              medication.dosingType === 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
+            patientInstructions:
+              medication.dosingType !== 'org.openmrs.FreeTextDosingInstructions' ? medication.dosingInstructions : '',
             asNeeded: medication.asNeeded,
             asNeededCondition: medication.asNeededCondition,
             duration: medication.duration,
             durationUnit: { uuid: medication.durationUnits.uuid, display: medication.durationUnits.display },
             pillsDispensed: medication.quantity,
             numRefills: medication.numRefills,
-            freeTextDosage: '',
-            indication: '',
+            indication: medication.orderReasonNonCoded,
           },
         ]);
       }, createErrorHandler);

@@ -57,6 +57,7 @@ function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patie
           : 'org.openmrs.SimpleDosingInstructions',
         dosingInstructions: order.isFreeTextDosage ? order.freeTextDosage : order.patientInstructions,
         concept: order.drug.concept.uuid,
+        orderReasonNonCoded: order.indication,
         dateActivated: toOmrsDateString(order.startDate),
       };
     } else if (order.action === 'REVISE') {
@@ -84,6 +85,7 @@ function medicationOrderToApiDto(orderBasketItems: Array<OrderBasketItem>, patie
           : 'org.openmrs.SimpleDosingInstructions',
         dosingInstructions: order.isFreeTextDosage ? order.freeTextDosage : order.patientInstructions,
         concept: order.drug.concept.uuid,
+        orderReasonNonCoded: order.indication,
         dateActivated: toOmrsDateString(order.startDate),
       };
     } else if (order.action === 'DISCONTINUE') {

@@ -15,6 +15,7 @@ export interface Order {
   dose: number;
   doseUnits: OpenmrsResource;
   dosingInstructions: string | null;
+  dosingType?: 'org.openmrs.FreeTextDosingInstructions' | 'org.openmrs.SimpleDosingInstructions';
   drug: Drug;
   duration: number;
   durationUnits: OpenmrsResource;
@@ -24,6 +25,7 @@ export interface Order {
   numRefills: number;
   orderNumber: string;
   orderReason: string | null;
+  orderReasonNonCoded: string | null;
   orderType: {
     conceptClasses: Array<any>;
     description: string;
