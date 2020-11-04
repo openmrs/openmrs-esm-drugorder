@@ -7,13 +7,22 @@ function setupOpenMRS() {
   attach('patient-chart-dashboard-medications', 'drugorder-widget');
 
   return {
-    lifecycle: () => import('./openmrs-esm-drugorder'),
-    activate: /^patient\/.+\/drugorder/,
+    pages: [
+      {
+        load: () => import('./spa-order-basket-app'),
+        route: /^patient\/.+\/drugorder\/basket/,
+      },
+    ],
     extensions: [
       {
         name: 'drugorder-widget',
         type: 'widget',
-        load: () => import('./openmrs-esm-drugorder-extension'),
+        load: () => import('./spa-medication-summary-extension'),
+      },
+      {
+        name: '/patient/:patientUuid/drugorder/basket',
+        type: 'workspace',
+        load: () => import('./spa-order-basket-extension'),
       },
     ],
   };

@@ -9,7 +9,7 @@ import { orderBasketStore } from './order-basket-store';
 
 defineConfigSchema('@openmrs/esm-drugorder-app', {});
 
-function ExtensionRoot() {
+function RootMedicationSummary() {
   return (
     <div className={styles.resetPatientChartWidgetContainer}>
       <BrowserRouter basename={window['getOpenmrsSpaBase']()}>
@@ -28,4 +28,4 @@ function ExtensionRoot() {
 export default openmrsRootDecorator({
   featureName: 'drugorder',
   moduleName: '@openmrs/esm-drugorder-app',
-})(ExtensionRoot);
+})(RootMedicationSummary);
