@@ -32,7 +32,7 @@ const FloatingOrderBasketButton = connect('items')(({ items }) => {
         // That could potentially be prohibited as well.
         attach(url, '/patient/:patientUuid/drugorder/basket');
 
-        switchTo('workspace', url);
+        switchTo('workspace', url, { title: t('orderBasket', 'Order Basket') });
       }}>
       <div className={styles.elementContainer}>
         <span>{t('orderBasket', 'Order Basket')}</span>
