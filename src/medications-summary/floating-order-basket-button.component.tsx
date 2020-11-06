@@ -22,16 +22,6 @@ const FloatingOrderBasketButton = connect('items')(({ items }) => {
       }
       onClick={() => {
         const url = '/patient/213da954-87a2-432d-91f6-a3c441851726/drugorder/basket';
-
-        // TODO: This is a temporary hack!
-        // Without this, the extension slot doesn't render anything.
-        // Should prob. be changed in esm-core (inside the `getExtensionIdsForExtensionSlot` function).
-        //
-        // On that note:
-        // It's currently possible to attach the same extension <> extensionSlot pair multiple times.
-        // That could potentially be prohibited as well.
-        attach(url, '/patient/:patientUuid/drugorder/basket');
-
         switchTo('workspace', url, { title: t('orderBasket', 'Order Basket') });
       }}>
       <div className={styles.elementContainer}>

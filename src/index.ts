@@ -1,11 +1,8 @@
 import { backendDependencies } from './openmrs-backend-dependencies';
-import { attach } from '@openmrs/esm-extensions';
 
 const importTranslation = require.context('../translations', false, /.json$/, 'lazy');
 
 function setupOpenMRS() {
-  attach('patient-chart-dashboard-medications', 'drugorder-widget');
-
   return {
     pages: [
       {
@@ -15,13 +12,13 @@ function setupOpenMRS() {
     ],
     extensions: [
       {
-        name: 'drugorder-widget',
-        type: 'widget',
+        id: 'drugorder-widget',
+        slot: 'patient-chart-dashboard-medications',
         load: () => import('./spa-medication-summary-extension'),
       },
       {
-        name: '/patient/:patientUuid/drugorder/basket',
-        type: 'workspace',
+        id: 'order-basket-workspace',
+        slot: '/patient/:patientUuid/drugorder/basket',
         load: () => import('./spa-order-basket-extension'),
       },
     ],
