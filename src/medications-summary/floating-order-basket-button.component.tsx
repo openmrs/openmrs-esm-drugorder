@@ -3,13 +3,21 @@ import { Button, Tag } from 'carbon-components-react';
 import { ShoppingBag16 } from '@carbon/icons-react';
 import { useTranslation } from 'react-i18next';
 import styles from './floating-order-basket-button.scss';
-import { useCurrentPatient } from '@openmrs/esm-api';
 import { connect } from 'unistore/react';
-import { attach, switchTo } from '@openmrs/esm-extensions';
+import { switchTo } from '@openmrs/esm-extensions';
+import { OrderBasketStoreActions, OrderBasketStore } from '../order-basket-store';
 
-const FloatingOrderBasketButton = connect('items')(({ items }) => {
+export interface FloatingOrderBasketButtonProps {
+  patientUuid: string;
+}
+
+const FloatingOrderBasketButton = connect<
+  FloatingOrderBasketButtonProps,
+  OrderBasketStoreActions,
+  OrderBasketStore,
+  {}
+>('items')(({ patientUuid, items }: FloatingOrderBasketButtonProps & OrderBasketStore) => {
   const { t } = useTranslation();
-  const [, , patientUuid] = useCurrentPatient();
 
   return (
     <Button
@@ -21,7 +29,7 @@ const FloatingOrderBasketButton = connect('items')(({ items }) => {
         process.env.NODE_ENV === 'production' ? {} : { bottom: '4rem' }
       }
       onClick={() => {
-        const url = '/patient/213da954-87a2-432d-91f6-a3c441851726/drugorder/basket';
+        const url = `/patient/${patientUuid}/drugorder/basket`;
         switchTo('workspace', url, { title: t('orderBasket', 'Order Basket') });
       }}>
       <div className={styles.elementContainer}>

@@ -8,11 +8,15 @@ import OrderBasket from './order-basket/order-basket.component';
 
 defineConfigSchema('@openmrs/esm-drugorder-app', {});
 
-function RootOrderBasket() {
+export interface RootOrderBasketProps {
+  patientUuid: string;
+}
+
+function RootOrderBasket({ patientUuid }: RootOrderBasketProps) {
   return (
     <BrowserRouter basename={window['getOpenmrsSpaBase']()}>
       <Provider store={orderBasketStore}>
-        <OrderBasket />
+        <OrderBasket patientUuid={patientUuid} />
       </Provider>
     </BrowserRouter>
   );
