@@ -1,5 +1,4 @@
-import { never, of } from 'rxjs';
-import { mockPatient } from './patient.mock';
+import { of } from 'rxjs';
 
 export function openmrsFetch() {
   return new Promise(() => {});
