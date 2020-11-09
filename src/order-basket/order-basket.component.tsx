@@ -24,12 +24,13 @@ import MedicationsDetailsTable from '../components/medications-details-table.com
 
 export interface OrderBasketProps {
   patientUuid: string;
+  closeWorkspace(): void;
 }
 
 const OrderBasket = connect<OrderBasketProps, OrderBasketStoreActions, OrderBasketStore, {}>(
   'items',
   orderBasketStoreActions,
-)(({ patientUuid, items, setItems }: OrderBasketProps & OrderBasketStore & OrderBasketStoreActions) => {
+)(({ patientUuid, items, closeWorkspace, setItems }: OrderBasketProps & OrderBasketStore & OrderBasketStoreActions) => {
   const { t } = useTranslation();
   const [durationUnits, setDurationUnits] = useState<Array<OpenmrsResource>>([]);
   const [encounterUuid, setEncounterUuid] = useState('');
@@ -82,7 +83,7 @@ const OrderBasket = connect<OrderBasketProps, OrderBasketStoreActions, OrderBask
       fetchActivePatientOrders();
 
       if (erroredItems.length == 0) {
-        history.push(`/patient/${patientUuid}/chart/orders`);
+        closeWorkspace();
       }
     });
     return () => abortController.abort();
@@ -90,7 +91,7 @@ const OrderBasket = connect<OrderBasketProps, OrderBasketStoreActions, OrderBask
 
   const handleCancelClicked = () => {
     setItems([]);
-    history.push(`/patient/${patientUuid}/chart/orders`);
+    closeWorkspace();
   };
 
   const openMedicationOrderFormForAddingNewOrder = (newOrderBasketItem: OrderBasketItem) => {
