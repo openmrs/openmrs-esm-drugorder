@@ -18,10 +18,10 @@ module.exports = {
     path.resolve(__dirname, "src/index.ts"),
   ],
   output: {
-    filename: 'openmrs-esm-drugorder.js',
+    filename: 'openmrs-esm-drugorder-app.js',
     libraryTarget: 'system',
     path: path.resolve(__dirname, 'dist'),
-    jsonpFunction: 'webpackJsonp_openmrs_esm_drugorder',
+    jsonpFunction: 'webpackJsonp_openmrs_esm_drugorder_app',
   },
   module: {
     rules: [

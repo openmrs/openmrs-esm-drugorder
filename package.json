@@ -2,7 +2,7 @@
   "name": "@openmrs/esm-drugorder-app",
   "version": "0.3.2",
   "description": "Drug order microfrontend for the OpenMRS SPA",
-  "main": "dist/openmrs-esm-drugorder.js",
+  "main": "dist/openmrs-esm-drugorder-app.js",
   "types": "src/index.ts",
   "license": "MIT",
   "homepage": "https://github.com/openmrs/openmrs-esm-drugorder#readme",
