@@ -41,8 +41,7 @@
   },
   "dependencies": {
     "@carbon/icons-react": "^10.18.0",
-    "carbon-components-react": "^7.19.0",
-    "dayjs": "^1.8.16",
+    "carbon-components-react": "^7.25.0",
     "lodash-es": "^4.17.15",
     "systemjs-webpack-interop": "^1.1.0"
   },
@@ -55,6 +54,7 @@
     "@openmrs/esm-styleguide": "3.x",
     "carbon-components": "^10.19.0",
     "carbon-icons": "^7.0.7",
+    "dayjs": "^1.8.16",
     "i18next": "^19.4.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
